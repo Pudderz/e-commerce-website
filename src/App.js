@@ -15,11 +15,13 @@ import { Footer } from './components/Footer';
 import { Basket } from './pages/Basket';
 import { LoginPage } from './pages/LoginPage';
 import { Profile } from './pages/Profile';
+import { Auth0 } from './components/Auth0';
 
 function App() {
   return (
     <div className="App">
       <Router>
+        <Auth0>
 
           <div>
         <Header/>
@@ -49,6 +51,7 @@ function App() {
           </Route>
         </Switch>
       </div>
+        </Auth0>
       
       <Footer/>
     </Router>
