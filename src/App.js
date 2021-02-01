@@ -13,7 +13,6 @@ import { FrontPage } from './pages/FrontPage';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { Basket } from './pages/Basket';
-import { LoginPage } from './pages/LoginPage';
 import { Profile } from './pages/Profile';
 import { Auth0 } from './components/Auth0';
 import { CartContextProvider } from './context/CartContext';
@@ -46,9 +45,6 @@ function App() {
           </Route>
           <Route path="/basket">
             <Basket/>
-          </Route>
-          <Route path="/login">
-            <LoginPage/>
           </Route>
           <Route path="/profile">
             <Profile/>
