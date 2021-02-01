@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react' 
 import { clearCart, fetchCart, handleAddToCart, removeItemFromCart, updateCartQty } from '../lib/commerce';
 
-const CartContext = React.createContext();
+export const CartContext = React.createContext();
 
 export const CartContextProvider = (props) => {
-    const [cart, setCart] = useState(initialState)
+    const [cart, setCart] = useState({})
     useEffect(() => {
         fetchCart(setCart);
     }, [])
