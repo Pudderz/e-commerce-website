@@ -13,21 +13,24 @@ export const RecentlyViewed = () => {
     
     return (
     <div>
-    Recently viewed (Browsing History)
     <hr/>
-    <ul style={{display:'flex', listStyle:'none'}}>
+    <h3 style={{textAlign:'start'}}>Recently Viewed</h3>
+    <ul style={{display:'flex', listStyle:'none', gap:'20px'}}>
         {history.map((item, index)=>(
-            <li key={index} style={{ width: "20%", boxSizing: "border-box" }}>
-            <h4>{item?.name}</h4>
-            <img src={item?.media?.source} alt={item?.name} height="300" />
-            <div dangerouslySetInnerHTML={{ __html: item?.description }}></div>
-            <p>{item?.price?.formatted_with_symbol}</p>
+            <li key={index} style={{  boxSizing: "border-box" }}>
+            {/* <h4>{item?.name}</h4> */}
+           
+
+               
             <Link to={{
               pathname: "/product",
               search: `?id=${item.id}`,
-            }}>Details</Link>
-            <p></p>
-            <a href={item?.checkout_url?.checkout}>Buy Now</a>
+            }}>
+               <img src={item?.media?.source} alt={item?.name} style={{maxWidth:'100%', maxHeight:'200px', objectFit:'cover'}} />
+            </Link>
+          {/* <p style={{margin:'0'}}>{item?.price?.formatted_with_symbol}</p> */}
+
+           
             {/* <button onClick={()=>handleAddToCart(item)}>Add To Basket</button> */}
             {/* <a href={item.checkout_url.checkout}>Add to Basket</a> */}
           </li>
