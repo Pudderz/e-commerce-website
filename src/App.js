@@ -16,6 +16,8 @@ import { Basket } from './pages/Basket';
 import { LoginPage } from './pages/LoginPage';
 import { Profile } from './pages/Profile';
 import { Auth0 } from './components/Auth0';
+import { CartContextProvider } from './context/CartContext';
+import { CategoryPage } from './pages/CategoryPage';
 
 function App() {
   return (
@@ -24,12 +26,17 @@ function App() {
         <Auth0>
 
           <div>
+            <CartContextProvider>
+               <div>
         <Header/>
         {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
         <Switch>
           <Route path="/store">
             <StorePage/>
+          </Route>
+          <Route path="/category">
+            <CategoryPage/>
           </Route>
           <Route path="/product">
             <ProductPage/>
@@ -51,6 +58,7 @@ function App() {
           </Route>
         </Switch>
       </div>
+            </CartContextProvider>
         </Auth0>
       
       <Footer/>

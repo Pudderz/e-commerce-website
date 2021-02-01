@@ -1,14 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext} from "react";
 import { Cart } from "../components/Cart";
 import { commerce } from "../lib/commerce";
-import {
-  Link
-} from "react-router-dom";
+import { Link } from "react-router-dom";
 import { RecentlyViewed } from "../components/RecentlyViewed";
-import Skeleton from '@material-ui/lab/Skeleton';
+import Skeleton from "@material-ui/lab/Skeleton";
+import { Breadcrumbs, Typography } from "@material-ui/core";
+import { CartContext} from '../context/CartContext';
+import hikingBackground from '../images/hikingBackground.jpg'
 export const StorePage = (props) => {
-  const [products, setProducts] = useState([]);
-  const [cart, setCart] = useState({});
+  const [products, setProducts] = useState(Array.from({length: 12}, ()=>0));
+  // const [cart, changeCart] = useState({});
+
+
+  const {cart, changeCart} = useContext(CartContext);
   const fetchProducts = () => {
     commerce.products
       .list()
@@ -24,47 +28,26 @@ export const StorePage = (props) => {
     commerce.cart
       .retrieve()
       .then((cart) => {
-        setCart(cart );
+        changeCart(cart);
       })
       .catch((error) => {
         console.error("There was an error fetching the cart", error);
       });
   };
 
-  const handleAddToCart= (item, quantity=1)=> {
-    commerce.cart.add(item.id, quantity).then((item) => {
-      setCart(item.cart)
-    }).catch((error) => {
-      console.error('There was an error adding the item to the cart', error);
-    });
+  const handleAddToCart = (item, quantity = 1) => {
+    commerce.cart
+      .add(item.id, quantity)
+      .then((item) => {
+        changeCart(item.cart);
+      })
+      .catch((error) => {
+        console.error("There was an error adding the item to the cart", error);
+      });
   };
-  const clearCart =()=>{
-    commerce.cart.empty().then((resp) => {
-      setCart(resp.cart)
-    }).catch((error) => {
-      console.error('There was an error emptying the cart', error);
-    });
-  };
-
-  const removeItemFromCart = (id) => {
-    commerce.cart.remove(id).then((resp) => {
-      setCart(resp.cart)
-    }).catch((error) => {
-      console.error('There was an error removing the item from the cart', error);
-    });
-  }
-
-  const updateCartQty = (id, newQuantity) => {
-    console.log(`updating ${id} to ${newQuantity}`)
-    commerce.cart.update(id, { quantity: newQuantity }).then((resp) => {
-      setCart(resp.cart)
-    }).catch((error) => {
-      console.log('There was an error updating the cart items', error);
-    });
-  }
-
 
   useEffect(() => {
+    window.scrollTo(0, 0)
     fetchProducts();
     fetchCart();
 
@@ -77,9 +60,18 @@ export const StorePage = (props) => {
   }, [products]);
   return (
     <div>
-      <h1>Test</h1>
-     <p>Shopping Cart - {cart.total_items} </p>
-     <button onClick={clearCart}>Clear Cart</button>
+      
+      <div style={{ backgroundColor: "grey", height: "600px", width: "100%", backgroundColor: '#CE1121', position:'relative'}}>
+        {/* <img src={webBanner} alt="" height="100%"/> */}
+        <img src={hikingBackground} alt="" height="100%" style={{position:'absolute', top:'0', bottom:'0', width:'100%', objectFit:'cover', left:'0'}}/>
+        Banner
+      </div>
+      <div style={{padding:'0 20px '}}>
+      <h1>Store Page</h1>
+      <Breadcrumbs aria-label="breadcrumb">
+        <Link to="/">Home</Link>
+        <Typography>Store</Typography>
+      </Breadcrumbs>
       <ul
         style={{
           display: "flex",
@@ -87,33 +79,61 @@ export const StorePage = (props) => {
           listStyle: "none",
           gap: "20px",
           margin: "auto",
+          justifyContent:'center',
+          padding:'0'
         }}
       >
+        
+
         {products.map((item, index) => (
+          
           <li key={index} style={{ width: "20%", boxSizing: "border-box" }}>
-            <h4>{item.name}</h4>
+            {typeof item !=='object'? ( 
+            <>
+            <Typography variant="h4">
+            <Skeleton style={{ margin: "11px auto" }} />
+          </Typography>
+          <Skeleton
+            variant="rect"
+            height={300}
+            width={225}
+            style={{ margin: "0px auto" }}
+          ></Skeleton>
+          <div></div>
+
+          <Skeleton height={25} style={{ margin: "20px auto 0" }}></Skeleton>
+          <Skeleton height={25} style={{ margin: "10px auto 0" }}></Skeleton>
+          </>
+          ):(
+              <>
+              <h4>{item.name}</h4>
+            <Link
+              to={{
+                pathname: "/product",
+                search: `?id=${item.id}`,
+              }}
+            >
             <img src={item.media.source} alt={item.name} height="300" />
-            <div dangerouslySetInnerHTML={{ __html: item.description }}></div>
+             </Link>
             <p>{item.price.formatted_with_symbol}</p>
-            <Link to={{
-              pathname: "/product",
-              search: `?id=${item.id}`,
-            }}>Details</Link>
-            <p></p>
             <a href={item.checkout_url.checkout}>Buy Now</a>
-            <button onClick={()=>handleAddToCart(item)}>Add To Basket</button>
+            <button onClick={() => handleAddToCart(item)}>Add To Basket</button>
+              </>
+            )}
+            
             {/* <a href={item.checkout_url.checkout}>Add to Basket</a> */}
           </li>
         ))}
       </ul>
-          {/* {JSON.stringify(cart)} */}
-          <Cart
-          cart={cart}
-          updateCartQty={updateCartQty}
-          emptyCart={clearCart}
-          removeItemFromCart={removeItemFromCart}
-          />
-          <RecentlyViewed/>
+      {/* {JSON.stringify(cart)} */}
+      {/* <Cart
+        cart={cart}
+        updateCartQty={updateCartQty}
+        emptyCart={clearCart}
+        removeItemFromCart={removeItemFromCart}
+      /> */}
+      <RecentlyViewed />
+      </div>
     </div>
   );
 };
