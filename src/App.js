@@ -1,4 +1,5 @@
 
+import React, {useRef} from 'react'
 import './App.css';
 import { StorePage } from './pages/StorePage';
 import {
@@ -15,16 +16,30 @@ import { Footer } from './components/Footer';
 import { Basket } from './pages/Basket';
 import { Profile } from './pages/Profile';
 import { Auth0 } from './components/Auth0';
+import { SnackbarProvider } from 'notistack';
+import { Button } from '@material-ui/core';
 import { CartContextProvider } from './context/CartContext';
 import { CategoryPage } from './pages/CategoryPage';
 
 function App() {
+
+
+  const notistackRef = useRef();
+  const onClickDismiss = key => () => { 
+    notistackRef.current.closeSnackbar(key);
+}
   return (
     <div className="App">
       <Router>
         <Auth0>
-
-          <div>
+          <SnackbarProvider maxSnack={3}
+          ref={notistackRef}
+          action={(key) => (
+            <Button onClick={onClickDismiss(key)} style={{color:'white'}}>
+                Dismiss
+            </Button>
+        )}
+          >
             <CartContextProvider>
                <div>
         <Header/>
@@ -55,6 +70,9 @@ function App() {
         </Switch>
       </div>
             </CartContextProvider>
+
+         
+      </SnackbarProvider>
         </Auth0>
       
       <Footer/>
