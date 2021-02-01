@@ -22,6 +22,8 @@ export const Footer = () => {
           <div
             className="flexFooter"
             style={{
+              display:'flex',
+              justifyContent:'space-between',
               width: "100%",
               maxWidth: "1300px",
               margin: "auto",
