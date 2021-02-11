@@ -1,17 +1,17 @@
-import React, { useState, useEffect, useContext} from "react";
-import { Cart } from "../components/Cart";
+import React, { useState, useEffect, useContext, useRef} from "react";
 import { commerce } from "../lib/commerce";
 import { Link } from "react-router-dom";
-import { RecentlyViewed } from "../components/RecentlyViewed";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { Button, Typography } from "@material-ui/core";
 import { CartContext} from '../context/CartContext';
-import hikingBackground from '../images/hikingBackground.jpg'
-
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import { ItemImage } from "./ItemImage";
 export const MostPopular = (props) => {
   const [products, setProducts] = useState(Array.from({length: 4}, ()=>0));
- 
-  const {cart, changeCart} = useContext(CartContext)
+ const container = useRef()
+ const isMin = useRef(false)
+ const {cart, changeCart} = useContext(CartContext)
 
   
   const fetchProducts = () => {
@@ -61,14 +61,20 @@ export const MostPopular = (props) => {
   }, [products]);
 
 
+
+  const handleMinimize = ()=>{
+    container.current.style.height =(isMin.current)? "fit-content" : "0px";
+    isMin.current = !isMin.current;
+  }
   return (
     <div>
     <div style={{display:'flex', justifyContent:'space-between'}}>
       <h3 style={{textAlign:'start', marginLeft:'20px'}}>Most Popular</h3>
-      <Button>{">"}</Button>
+      <Button onClick={handleMinimize} ><ExpandMoreIcon/><ExpandLessIcon/></Button>
     </div>
       
       <hr/>
+      <div ref={container} style={{height:'fit-content', overflow:'hidden'}}>
       <ul
         style={{
           display: "flex",
@@ -84,9 +90,10 @@ export const MostPopular = (props) => {
         
 
         {products.map((item, index) => (
-        <>
+          <li  key={index} style={{ width: "24%", boxSizing: "border-box" }}>
+     
         {typeof item !== 'object'?(
-          <li style={{ width: "20%", boxSizing: "border-box" }}>
+          <>
           <Typography variant="h4">
             <Skeleton style={{ margin: "11px auto" }} />
           </Typography>
@@ -100,30 +107,45 @@ export const MostPopular = (props) => {
 
           <Skeleton height={25} style={{ margin: "20px auto 0" }}></Skeleton>
           <Skeleton height={25} style={{ margin: "10px auto 0" }}></Skeleton>
-        </li>
+        </>
         ) : (
-            <li key={index} style={{ width: "24%", boxSizing: "border-box" }}>
+            <>
             <h4>{item.name}</h4>
-            <Link
-              to={{
-                pathname: "/product",
-                search: `?id=${item.id}`,
-              }}
-            >
-            <img src={item.media.source} alt={item.name}  style={{maxWidth:'100%', maxHeight:'300px'}} />
-            </Link>
+            
+            <ItemImage id={item.id} name={item.name} firstImage={item.media.source} secondImage={item.assets[1].url}/>
            
-            <p>{item.price.formatted_with_symbol}</p>
-            <a href={item.checkout_url.checkout}>Buy Now</a>
-            <button onClick={() => handleAddToCart(item)}>Add To Basket</button>
+           
+            <p style={{margin:'5px auto'}}>{item.price.formatted_with_symbol}</p>
+            <div style={{display:'flex', justifyContent:'center', gap:'20px'}}>
 
-          </li>
-        )}
+            <Button onClick={() => handleAddToCart(item)}>Add To Basket</Button>
+            </div>
+            </>
+            
+
           
-          </>
+        )}
+        </li>
+          // {/* <li key={index} style={{ width: "24%", boxSizing: "border-box" }}>
+            
+          //   <Link
+          //     to={{
+          //       pathname: "/product",
+          //       search: `?id=${item.id}`,
+          //     }}
+          //   >
+          //   <img src={item.media.source} alt={item.name}  style={{maxWidth:'100%', maxHeight:'300px'}} />
+          //   </Link>
+          //  <h4 style={{margin:'10px auto 0'}}>{item.name}</h4>
+          //   <p style={{margin:'auto'}}>{item.price.formatted_with_symbol}</p>
+
+          // </li> */}
+      
         ))}
       </ul>
       <hr/>
+      </div>
+     
     </div>
   );
 };
