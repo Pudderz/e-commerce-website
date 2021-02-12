@@ -1,0 +1,25 @@
+[
+  {
+    "productId": "",
+    "numOfReviews": 2,
+    "averageRating": "3.5",
+    "allProductReviews": [
+      {
+        "id": 1,
+        "name": "Phineas Daber",
+        "profileImage": "",
+        "rating": "3",
+        "descriptionTitle": "",
+        "description": ""
+      },
+      {
+        "id": 2,
+        "name": "Robert Chitol",
+        "profileImage": "",
+        "rating": "4",
+        "descriptionTitle": "",
+        "description": "Generally speaking its a good tablet, it works nicely though there are quite a few bugs with the touch controls and the buttons sometimes decide not to work. I would normally brush these off but after spending £500 it seems only fair to point them out. However my biggest complain is that the nibs are just awful, I've had it for less than a week and the first nib is completely unusable and I'm halfway through the second nib. I Must have used it for less than 5 hours so far. It does come with replacement nibs but at the current rate they will last me till the end of the month at tops. When I contacted Wacom they suggested I get the smooth texture to apply to my tablet, I wouldn't mind but they cost £40 each which in my opinion is really cheeky including I've just spend £500 on a new tables. Its a shame because other than that I've enjoyed using the product so far. Not sure if I'd recommend honestly."
+      }
+    ]
+  }
+]
