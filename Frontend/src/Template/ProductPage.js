@@ -17,7 +17,7 @@ import { RecentProducts } from "../components/RecentProducts";
 import { ReviewProduct } from "../components/ReviewProduct";
 import { CartContext } from "../context/CartContext";
 import { SelectSize } from "../components/SelectSize";
-
+import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 export const ProductPage = () => {
   const [product, setProduct] = useState({});
   // const [cart, setCart] = useState({});
@@ -58,6 +58,7 @@ export const ProductPage = () => {
 
   useEffect(() => {
     console.log(product);
+
   }, [product]);
 
   useEffect(() => {
@@ -88,7 +89,6 @@ export const ProductPage = () => {
   };
   return (
     <div style={{ padding: "0 20px" }}>
-
       <div
         style={{
           display: "flex",
@@ -96,13 +96,14 @@ export const ProductPage = () => {
           width: "fit-content",
           textAlign: "start",
           marginTop: "50px",
+          flexFlow:'wrap'
         }}
       >
-        <div>
+        
           {/* Product Images */}
           <ProductImages images={product.assets} />
-        </div>
-        <div>
+        
+        <div style={{maxWidth:'80%', padding:' 0 40px'}}>
           <div>
             <h1>{product.name}</h1>
             {/* +Review bar */}
@@ -110,35 +111,29 @@ export const ProductPage = () => {
             {/*     font-size: 16px;
     margin: 0; */}
             <h2>{product?.price?.formatted_with_symbol}</h2>
-            <p style={{color:'green'}}>In Stock ({product.quantity} left)</p>
-            
-            <label htmlFor="sizes" style={{fontWeight:'bold'}}>Select size</label>
-            <SelectSize availableSizes={[4,6, 8 ,9]}/>
-            {/* <select
-              name="sizes"
-              id="sizes"
-              style={{ width: "100%", height: "30px" }}
-            >
-              <option disabled>Select a size</option>
-              <option value="5">UK 5</option>
-              <option value="6">UK 6</option>
-              <option value="7">UK 7</option>
-              <option value="8">UK 8</option>
-            </select> */}
+            <p style={{ color: "green" }}>In Stock ({product.quantity} left)</p>
+
+            <label htmlFor="sizes" style={{ fontWeight: "bold" }}>
+              Select size
+            </label>
+            <SelectSize availableSizes={[4, 6, 8, 9]} productVariants={product.variants}/>
             <a href="#!">Size Guide</a>
-            {/* <p>Colours Available:</p> */}
-            {/* Available sizes section */}
-            {/* <input type="text" />
-            <button>{"<"}</button>
-            <button>{">"}</button> */}
-<hr/>
-            <Button
-              onClick={() => handleAddToCart(product, 1)}
-              variant="contained"
-            >
-              ADD TO BASKET
-            </Button>
-            <Button variant="contained">BUY NOW</Button>
+            <hr />
+            <div style={{ justifyContent: "space-between", display: "flex" }}>
+              <Button
+                onClick={() => handleAddToCart(product, 1)}
+                variant="contained"
+                startIcon={<ShoppingCartIcon />}
+                style={{
+                  backgroundColor: "#bc2334",
+                  color: "white",
+                  width: "60%",
+                }}
+              >
+                ADD TO BASKET
+              </Button>
+              <Button variant="contained">BUY NOW</Button>
+            </div>
           </div>
 
           {/* tabbed sections with information  */}
@@ -194,14 +189,47 @@ export const ProductPage = () => {
             <option value="8">UK 8</option>
           </select>
 
-          <Button>Add to Basket</Button>
-          <Button>Save</Button>
+          <div
+            style={{
+              justifyContent: "space-between",
+              display: "flex",
+              width: "400px",
+              maxWidth: "100%",
+            }}
+          >
+            <Button
+              onClick={() => handleAddToCart(product, 1)}
+              variant="contained"
+              startIcon={<ShoppingCartIcon />}
+              style={{
+                backgroundColor: "#bc2334",
+                color: "white",
+                width: "60%",
+                height: "fit-content",
+                margin: "1em 1em 0",
+              }}
+            >
+              ADD TO BASKET
+            </Button>
+            <Button
+              variant="contained"
+              style={{
+                backgroundColor: "#bc2334",
+                color: "white",
+                width: "40%",
+                height: "fit-content",
+                margin: "1em 0",
+              }}
+            >
+              BUY NOW
+            </Button>
+          </div>
         </div>
       </div>
       <hr />
-      <ProductTabs />
+      <ProductTabs product={product} />
       <hr />
-      <ReviewProduct />
+      {/* <ReviewProduct /> */}
       <RecentlyViewed />
     </div>
   );
