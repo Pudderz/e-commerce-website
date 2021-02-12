@@ -15,7 +15,7 @@ export const RecentlyViewed = () => {
     <div>
     <hr/>
     <h3 style={{textAlign:'start'}}>Recently Viewed</h3>
-    <ul style={{display:'flex', listStyle:'none', gap:'20px'}}>
+    <ul style={{display:'flex', listStyle:'none', gap:'20px',flexFlow:'wrap', padding:'0', justifyContent:'center'}}>
         {history.map((item, index)=>(
             <li key={index} style={{  boxSizing: "border-box" }}>
             {/* <h4>{item?.name}</h4> */}
@@ -26,7 +26,7 @@ export const RecentlyViewed = () => {
               pathname: "/product",
               search: `?id=${item.id}`,
             }}>
-               <img src={item?.media?.source} alt={item?.name} style={{maxWidth:'100%', maxHeight:'200px', objectFit:'cover'}} />
+               <img src={item?.media?.source} alt={item?.name} style={{maxWidth:'100%', maxHeight:'200px', objectFit:'cover', minWidth:'160px'}} />
             </Link>
           {/* <p style={{margin:'0'}}>{item?.price?.formatted_with_symbol}</p> */}
 
