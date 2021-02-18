@@ -1,30 +1,33 @@
 import {
   Breadcrumbs,
   Button,
-  Paper,
-  Tabs,
   Typography,
 } from "@material-ui/core";
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext,useRef } from "react";
 import { Link } from "react-router-dom";
 import { ProductImages } from "../components/ProductImages";
 import { ProductTabs } from "../components/ProductTabs";
 import { RecentlyViewed } from "../components/RecentlyViewed";
 import { commerce } from "../lib/commerce";
 import { addToHistory } from "../lib/localStorage";
-import { SnackbarProvider, useSnackbar } from "notistack";
-import { RecentProducts } from "../components/RecentProducts";
-import { ReviewProduct } from "../components/ReviewProduct";
+import { useSnackbar } from "notistack";
 import { CartContext } from "../context/CartContext";
 import { SelectSize } from "../components/SelectSize";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
+
+
 export const ProductPage = () => {
   const [product, setProduct] = useState({});
   // const [cart, setCart] = useState({});
   const [currentTab, setCurrentTab] = useState(0);
-
+  const [size, setSize] = useState('')
   const { cart, changeCart } = useContext(CartContext);
   const { enqueueSnackbar } = useSnackbar();
+  const sizeRef = useRef({});
+  const sizeId = useRef();
+
+
+  const [sizeInfo, setSizeInfo] = useState({});
 
   const fetchItem = (id) => {
     commerce.products
@@ -48,6 +51,7 @@ export const ProductPage = () => {
       });
   };
 
+
   useEffect(() => {
     let search = window.location.search;
     let params = new URLSearchParams(search);
@@ -56,22 +60,40 @@ export const ProductPage = () => {
     window.scrollTo(0, 0);
   }, []);
 
+
+
   useEffect(() => {
     console.log(product);
+    console.log(product?.variants)
+    if(typeof product?.variants !== "undefined" && product?.variants?.length !==0){
+let sizeObject = {};
+      product.variants.forEach((variant)=>{
 
+        if(variant.name==="size"){
+
+          sizeId.current = variant.id;
+          variant.options.forEach((sizes,index)=>{
+            sizeObject[sizes.name]= {id:sizes.id, quantity: sizes.quantity}
+            
+          })
+          setSizeInfo(sizeObject);
+        }
+      })
+    }
   }, [product]);
 
   useEffect(() => {
     fetchCart();
-
     return () => {
       addToHistory(product);
     };
   }, [product]);
 
+
   const handleAddToCart = (item, quantity = 1) => {
-    commerce.cart
-      .add(item.id, quantity)
+    if(size!==''&&  typeof sizeInfo[`${size}`]?.id !=="undefined"){
+      commerce.cart
+      .add(item.id, quantity,{[sizeId.current]: sizeInfo[`${size}`].id})
       .then((item) => {
         changeCart(item.cart);
         enqueueSnackbar("Item added to the basket", { variant: "success" });
@@ -82,11 +104,24 @@ export const ProductPage = () => {
           variant: "error",
         });
       });
+    }else{
+      enqueueSnackbar("Please Select a size", {
+        variant: "error",
+      });
+    }
+    
   };
 
   const handleTab = (tabNumber) => {
     setCurrentTab(tabNumber);
   };
+
+
+  const changeSize = (size)=>{
+    setSize(size)
+  }
+
+
   return (
     <div style={{ padding: "0 20px" }}>
       <div
@@ -111,12 +146,12 @@ export const ProductPage = () => {
             {/*     font-size: 16px;
     margin: 0; */}
             <h2>{product?.price?.formatted_with_symbol}</h2>
-            <p style={{ color: "green" }}>In Stock ({product.quantity} left)</p>
+            <p style={{ color: "green" }}>In Stock {size!==""? ` UK ${size} (${sizeInfo[size]?.quantity || 0} left)`: `(${product.quantity} left)`}</p>
 
             <label htmlFor="sizes" style={{ fontWeight: "bold" }}>
               Select size
             </label>
-            <SelectSize availableSizes={[4, 6, 8, 9]} productVariants={product.variants}/>
+            <SelectSize availableSizes={[4, 6, 8, 9]} productVariants={product.variants} changeSize={changeSize} size={size}/>
             <a href="#!">Size Guide</a>
             <hr />
             <div style={{ justifyContent: "space-between", display: "flex" }}>
@@ -145,7 +180,7 @@ export const ProductPage = () => {
 
       <div
         style={{
-          top: "0px",
+          top: "4px",
           position: "sticky",
           height: "fit-content",
           display: "flex",
@@ -177,16 +212,20 @@ export const ProductPage = () => {
             justifyContent: "space-between",
           }}
         >
+
+
           <select
             name="sizes"
             id="sizes"
             style={{ margin: "1em", height: "30px" }}
+            value={size}
+            onChange={(e)=>changeSize(e.target.value)}
           >
-            <option disabled>Select a size</option>
-            <option value="5">UK 5</option>
-            <option value="6">UK 6</option>
-            <option value="7">UK 7</option>
-            <option value="8">UK 8</option>
+            <option value="" disabled>Select a size</option>
+            {[4, 6, 8, 9].map((num, i)=>(
+              <option value={num} key={i}>UK {num}</option>
+            ))}
+
           </select>
 
           <div

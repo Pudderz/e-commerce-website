@@ -1,8 +1,21 @@
 import { Button } from "@material-ui/core";
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 const ALL_SIZES = [3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9];
-export const SelectSize = ({ availableSizes }) => {
+
+
+
+export const SelectSize = ({ availableSizes, changeSize,size }) => {
+  
+  const [selectedSize, setSelectedSize] = useState(null)
+
+  useEffect(() => {
+    setSelectedSize(size);
+  }, [size])
+
+  const handleButtonChange = (e)=>{
+    changeSize(e.target.textContent);
+  }
   return (
     <div
       style={{
@@ -20,6 +33,8 @@ export const SelectSize = ({ availableSizes }) => {
           return (
             <Button
               key={index}
+              className={`availableSize ${(number==selectedSize) && 'selected'}`}
+              onClick={handleButtonChange}
               style={{
                 border: "1px solid #ebedee",
                 borderRadius: "0",
