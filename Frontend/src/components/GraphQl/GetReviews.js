@@ -16,13 +16,13 @@ export const GetReviews = ({productId, data}) => {
     return (
         <>
         <div>
-            {data?.getAllProducts[0].numOfReviews} Reviews
+            {data?.getProduct?.[0]?.numOfReviews} Reviews
         </div>
         <div>
-        Average Rating: {data?.getAllProducts[0].averageRating}/5
+        Average Rating: {data?.getProduct?.[0]?.averageRating}/5
         </div>
         <ol style={{ listStyle: "none", padding: "0" }}>
-            {data?.getAllProducts[0].allProductReviews.map((review,index)=>(
+            {data?.getProduct?.[0]?.allProductReviews.map((review,index)=>(
                  <li key={index} style={{margin:'20px 0'}}>
                  <div style={{ display: "flex" }}>
                    <Avatar src={review?.profileImage}/>

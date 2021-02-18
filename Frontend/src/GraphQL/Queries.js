@@ -1,13 +1,12 @@
 import {gql} from '@apollo/client'
 
 export const LOAD_REVIEWS = gql`
-query {
-    getAllProducts {
+query($productId: String!, $productName: String!) {
+    getProduct(productId: $productId, productName: $productName) {
       productId,
       numOfReviews,
       averageRating,
       allProductReviews {
-        id,
         name,
         rating,
         descriptionTitle,

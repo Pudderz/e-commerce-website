@@ -3,6 +3,7 @@ import { gql } from "@apollo/client";
 export const addReview = gql`
   mutation(
     $productId: String!
+    $productName: String!
     $name: String!
     $profileImage: String!
     $rating: String!
@@ -11,13 +12,14 @@ export const addReview = gql`
   ) {
     createReview(
       productId: $productId
+      productName: $productName
       name: $name
       profileImage: $profileImage
       rating: $rating
       description: $description
       descriptionTitle: $descriptionTitle
     ){
-      id
+      productId
     }
   }
 `;

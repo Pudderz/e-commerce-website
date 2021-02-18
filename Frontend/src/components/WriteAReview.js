@@ -13,7 +13,7 @@ if authenicated open modal popup
 return snackbar on success or error message
 
 */
-export const WriteAReview = ({ productId, handleRefetch }) => {
+export const WriteAReview = ({ productId, handleRefetch, productName }) => {
   const { user, isAuthenticated, isLoading } = useAuth0();
   const [value, setValue] = useState(2);
   const [hover, setHover] = useState(-1);
@@ -21,7 +21,7 @@ export const WriteAReview = ({ productId, handleRefetch }) => {
   const [sent, setSent] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-
+console.log(user)
   const [
     createReview,
     { loading: mutationLoading, error: mutationError, data },
@@ -44,9 +44,10 @@ export const WriteAReview = ({ productId, handleRefetch }) => {
     );
     createReview({
       variables: {
-        productId: `${productId}`,
-        name: `${user?.nickname}`,
-        profileImage: `${user?.picture}`,
+        productId: productId,
+        productName: productName,
+        name: user?.nickname,
+        profileImage: user?.picture,
         rating: `${value}`,
         descriptionTitle: title,
         description: description,
@@ -75,8 +76,7 @@ export const WriteAReview = ({ productId, handleRefetch }) => {
     <div>
       {isAuthenticated ? (
         <>
-          <Button variant="contained">Write a customer review</Button>
-
+ 
           <form style={{ display: "grid" }} onSubmit={handleSubmit}>
             <h3>Write a review</h3>
             <label>Rating</label>

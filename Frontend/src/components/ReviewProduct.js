@@ -6,8 +6,10 @@ import { addReview } from "../GraphQL/Mutations";
 import { useLazyQuery, useMutation } from "@apollo/client";
 import {useQuery, gql} from '@apollo/client'
 import { LOAD_REVIEWS } from '../GraphQL/Queries';
-export const ReviewProduct = ({ productId }) => {
-  const { error, loading, data, refetch } = useQuery(LOAD_REVIEWS);
+export const ReviewProduct = ({ productId, productName }) => {
+  const { error, loading, data, refetch } = useQuery(LOAD_REVIEWS, {
+    variables: { productId, productName },
+  });
 
   const handleRefetch = () => {
     refetch();
@@ -21,7 +23,7 @@ export const ReviewProduct = ({ productId }) => {
         <h3>Review this product</h3>
         <p>Share your thoughts with other customers</p>
         <Button variant="contained">Write a customer review</Button>
-        <WriteAReview handleRefetch={handleRefetch} />
+        <WriteAReview handleRefetch={handleRefetch} productId={productId} productName={productName}/>
         <hr />
       </div>
 
