@@ -11,6 +11,7 @@ const {
 } = graphql;
 const { ProductType, ProductReviews } = require("./TypeDefs/UserType");
 const reviewData = require("../reviewDataExample.json");
+const isTokenValid = require("../Authenication/validate");
 const Review = require("../models/review");
 const Product = require("../models/products");
 
@@ -67,6 +68,12 @@ const Mutation = new GraphQLObjectType({
         //   firstName: args.firstName,
         //   lastName: args.lastName,
         // });
+        const { db, token } = await context();
+        // Tests if user is authenticated to create a review
+        const { error } = await isTokenValid(token);
+
+        if (error) return null;
+
         let product = new Product({
           productId: args.productId,
           productName: args.productName,
@@ -89,6 +96,15 @@ const Mutation = new GraphQLObjectType({
         description: { type: GraphQLString },
       },
       resolve: async (parent, args, context) => {
+        const { db, token } = await context();
+        // Tests if user is authenticated to create a review
+        let { error } = await isTokenValid(token);
+        console.log(`is Authenicated - ${!error}`);
+
+        error = false;
+
+        //Return null if not authenticated
+        if (error) return null;
 
         let review = new Review({
           productId: args.productId,
@@ -153,6 +169,7 @@ const rating = (1 * product.averageRating * product.numOfReviews +
           
         }
 
+        return !error ? review.save() : null;
         // for(product in reviewData){
         //   if(product.productId === args.productId){
         //     product.allProductReviews.push({
