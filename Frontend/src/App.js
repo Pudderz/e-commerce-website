@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import "./App.css";
+import "./App.scss";
 import { StorePage } from "./pages/StorePage";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { ProductPage } from "./Template/ProductPage";

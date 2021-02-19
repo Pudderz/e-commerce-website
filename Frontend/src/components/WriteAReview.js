@@ -13,7 +13,12 @@ if authenicated open modal popup
 return snackbar on success or error message
 
 */
-export const WriteAReview = ({ productId, handleRefetch, productName }) => {
+export const WriteAReview = ({
+  productId,
+  handleRefetch,
+  productName,
+  showForm,
+}) => {
   const { user, isAuthenticated, isLoading } = useAuth0();
   const [value, setValue] = useState(2);
   const [hover, setHover] = useState(-1);
@@ -21,7 +26,7 @@ export const WriteAReview = ({ productId, handleRefetch, productName }) => {
   const [sent, setSent] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-console.log(user)
+  console.log(user);
   const [
     createReview,
     { loading: mutationLoading, error: mutationError, data },
@@ -33,7 +38,7 @@ console.log(user)
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     console.log(
       productId,
       user?.nickname,
@@ -67,19 +72,25 @@ console.log(user)
     }
   }, [mutationLoading]);
 
-
-  if(sent) return(
-    <h3>Thank you for reviewing the product</h3>
-  )
+  if (sent) return <h3>Thank you for reviewing the product</h3>;
 
   return (
     <div>
       {isAuthenticated ? (
-        <>
- 
-          <form style={{ display: "grid" }} onSubmit={handleSubmit}>
-            <h3>Write a review</h3>
-            <label>Rating</label>
+       
+          <form
+            onSubmit={handleSubmit}
+            style={{
+              display: !showForm ? "none" : "grid",
+              border: "1px solid gray",
+              padding: "20px",
+              gap: "20px",
+            }}
+          >
+            <h3 style={{margin:'10px 0 0'}}>Write a review</h3>
+
+            <div style={{display:'grid'}}>
+              <label>Rating</label>
             <Rating
               name="hover-feedback"
               value={value}
@@ -91,27 +102,44 @@ console.log(user)
                 setHover(newHover);
               }}
             />
-            <hr style={{ width: "100%" }} />
-            <label>Title</label>
-            <TextField
-              required
-              value={title}
-              onChange={(e) => {
-                setTitle(e.target.value);
-              }}
-            />
+            </div>
+            
+            {/* <hr style={{ width: "100%" }} /> */}
+            <div style={{ display: "grid" }}>
+              <label>Title</label>
+              <TextField
+                required
+                placeholder="Title..."
+                value={title}
+                onChange={(e) => {
+                  setTitle(e.target.value);
+                }}
+              />
+            </div>
 
-            <label>Description</label>
-            <TextField
-              required
-              value={description}
-              onChange={(e) => {
-                setDescription(e.target.value);
-              }}
-            />
-            <Button type="submit">Submit</Button>
+            <div style={{ display: "grid" }}>
+              <label>Description</label>
+              <TextField
+                required
+                value={description}
+                onChange={(e) => {
+                  setDescription(e.target.value);
+                }}
+                multiline
+                placeholder="Description..."
+              />
+            </div>
+
+            <Button
+              variant="contained"
+              style={{ width: "fit-content", backgroundColor:'#555', color:'white' }}
+              type="submit"
+              
+            >
+              Submit
+            </Button>
           </form>
-        </>
+       
       ) : (
         <>
           <h3>You need to be logged in to write a review</h3>

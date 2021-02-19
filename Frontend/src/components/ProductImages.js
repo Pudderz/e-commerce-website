@@ -6,15 +6,10 @@ import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 
 
 export const ProductImages = ({ images }) => {
-  console.log(typeof images === "undefined");
+
   const [main, setMain] = useState(0);
-  const [maxNumber, setMaxNumber] = useState(0);
   const [loaded, setLoading] = useState(false);
 
-  useEffect(() => {
-    setMaxNumber(images?.length);
-    return () => {};
-  }, [images]);
   const changeMain = (index) => setMain(index);
 
   const handleNextImage = (incrementBy = 1) => {
@@ -26,17 +21,12 @@ export const ProductImages = ({ images }) => {
     }
   };
 
-  useEffect(() => {
-    console.log(main);
-    console.log(typeof images);
-    return () => {};
-  }, [main]);
-
   const placeholder = Array.from({ length: 8 }, (v, i) => 0);
+
   return (
-    <div style={{ display: "flex", minWidth:'650px', margin:'auto' }}>
-      <div>
-        <ul style={{ listStyle: "none" }}>
+    <div className="productImages" >
+      <div >
+        <ul style={{ listStyle: "none", maxWidth:'100%', overflow:'auto' }}>
           {loaded === false ? (
             <>
               {placeholder?.map((placeholder, index) => (
@@ -63,7 +53,7 @@ export const ProductImages = ({ images }) => {
         </ul>
         {/* All Images */}
       </div>
-      <div style={{ display: "flex", position:'relative' }}>
+      <div className="imageContainer" style={{ display: "flex", position:'relative', maxWidth:'100%', justifyContent:'center'}}>
         <Button
           varitan="contained"
           onClick={() => handleNextImage(-1)}
@@ -74,6 +64,7 @@ export const ProductImages = ({ images }) => {
             width: "50px",
             height: "50px",
             alignSelf: "center",
+            left:'0'
             // position: "absolute",
             // backgroundColor: "white",
             
@@ -85,6 +76,7 @@ export const ProductImages = ({ images }) => {
 
         {/* <Skeleton variant="rect"> */}
 
+{/* Displays skeleton till image is loaded */}
         {loaded === false ? (
           <>
             <Skeleton
@@ -113,7 +105,7 @@ export const ProductImages = ({ images }) => {
                 maxWidth: "700px",
                 objectFit: "cover",
                 margin: "20px 0",
-                width: "100%",
+                width: "80%",
               }}
             />
           </>
@@ -130,7 +122,8 @@ export const ProductImages = ({ images }) => {
           height: "50px",
           alignSelf: "center",
           // position: "absolute",
-          // backgroundColor: "white",
+          // backgr oundColor: "white",
+          right:'0'
          
         }}
         ><ArrowForwardIosIcon/></Button>

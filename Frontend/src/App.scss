@@ -1,0 +1,79 @@
+body{
+  text-align: center;
+}
+.leaflet-container {
+  width: 100%;
+  height: 300px;
+}
+
+/* Product Pages Select size component */
+.availableSize:hover {
+  background-color: #4d5461 !important;
+  color: #fff;
+  transition: 0.5s all;
+  -webkit-transition: 0.5s all;
+  -moz-transition: 0.5s all;
+  -ms-transition: 0.5s all;
+  -o-transition: 0.5s all;
+}
+
+.selected {
+  background-color: #4d5461 !important;
+  color: #fff;
+}
+
+/* Checkout Shipping Form */
+
+.row {
+  display: flex;
+  gap: 30px;
+  justify-content: space-between;
+}
+
+.inputContainer {
+  margin: 20px 0;
+  text-align: start;
+  width: 100%;
+}
+
+.inputContainer p {
+  margin: 0 0 5px;
+}
+
+.inputContainer input {
+  height: 25px;
+  width: 100%;
+  font-size: 18px;
+}
+
+/* Product Pages */
+
+/* Image list */
+
+
+.productImages {
+  display:flex;
+  // min-width: min(calc(100%,650px));
+  margin:auto;
+
+}
+
+@media (max-width: 1200px) {
+  .productImages {
+    flex-flow: column-reverse;
+  }
+
+  .productImages div ul {
+    display: flex;
+  }
+}
+
+@media (max-width: 700px) {
+  .imageContainer{
+    max-width: 80%;
+    button{
+      position: absolute;
+    }
+  }
+}
+
