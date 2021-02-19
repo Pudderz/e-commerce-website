@@ -151,7 +151,7 @@ let sizeObject = {};
             <label htmlFor="sizes" style={{ fontWeight: "bold" }}>
               Select size
             </label>
-            <SelectSize availableSizes={[4, 6, 8, 9]} productVariants={product.variants} changeSize={changeSize} size={size}/>
+            <SelectSize availableSizes={sizeInfo} productVariants={product.variants} changeSize={changeSize} size={size}/>
             <a href="#!">Size Guide</a>
             <hr />
             <div style={{ justifyContent: "space-between", display: "flex" }}>
@@ -250,7 +250,7 @@ let sizeObject = {};
             >
               ADD TO BASKET
             </Button>
-            <Button
+            {/* <Button
               variant="contained"
               style={{
                 backgroundColor: "#bc2334",
@@ -261,13 +261,13 @@ let sizeObject = {};
               }}
             >
               BUY NOW
-            </Button>
+            </Button> */}
           </div>
         </div>
       </div>
       <hr />
       <ProductTabs product={product} />
-      <hr />
+      
       {/* <ReviewProduct /> */}
       <RecentlyViewed />
     </div>

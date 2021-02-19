@@ -1,7 +1,7 @@
 import { Button } from "@material-ui/core";
 import React, { useState, useEffect } from "react";
 
-const ALL_SIZES = [3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9];
+const ALL_SIZES = [3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5];
 
 
 
@@ -16,6 +16,7 @@ export const SelectSize = ({ availableSizes, changeSize,size }) => {
   const handleButtonChange = (e)=>{
     changeSize(e.target.textContent);
   }
+
   return (
     <div
       style={{
@@ -29,10 +30,13 @@ export const SelectSize = ({ availableSizes, changeSize,size }) => {
       }}
     >
       {ALL_SIZES.map((number, index) => {
-        if (availableSizes.includes(number)) {
+        // Tests if that size is in the availableSizes object
+        // If not an avaliable size disable button
+
           return (
             <Button
               key={index}
+              disabled={!(number in availableSizes)}
               className={`availableSize ${(number==selectedSize) && 'selected'}`}
               onClick={handleButtonChange}
               style={{
@@ -46,23 +50,7 @@ export const SelectSize = ({ availableSizes, changeSize,size }) => {
               {number}
             </Button>
           );
-        } else {
-          return (
-            <Button
-              key={index}
-              disabled
-              style={{
-                border: "1px solid #ebedee",
-                borderRadius: "0",
-                width: "20%",
-                borderLeft: "none",
-                borderTop: "none",
-              }}
-            >
-              {number}
-            </Button>
-          );
-        }
+        
       })}
     </div>
   );
