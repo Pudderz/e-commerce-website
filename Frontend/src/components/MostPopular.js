@@ -9,11 +9,14 @@ import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import { ItemImage } from "./ItemImage";
 export const MostPopular = (props) => {
   const [products, setProducts] = useState(Array.from({length: 4}, ()=>0));
- const container = useRef()
- const isMin = useRef(false)
- const {cart, changeCart} = useContext(CartContext)
+  const container = useRef();
+  const isMin = useRef(false);
 
-  
+  // Currently fetches 4 most recent products
+  // ToDO:
+  // implement google analytics to work out the most popular product pages for this component
+
+
   const fetchProducts = () => {
     commerce.products
       .list({limit: 4})
@@ -25,47 +28,15 @@ export const MostPopular = (props) => {
       });
   };
 
-  const fetchCart = () => {
-    commerce.cart
-      .retrieve()
-      .then((cart) => {
-        changeCart(cart);
-      })
-      .catch((error) => {
-        console.error("There was an error fetching the cart", error);
-      });
-  };
-
-  const handleAddToCart = (item, quantity = 1) => {
-    commerce.cart
-      .add(item.id, quantity)
-      .then((item) => {
-        changeCart(item.cart);
-      })
-      .catch((error) => {
-        console.error("There was an error adding the item to the cart", error);
-      });
-  };
-
-
   useEffect(() => {
     fetchProducts();
-    fetchCart();
-
-    return () => {};
   }, []);
-
-  useEffect(() => {
-    console.log(products);
-    return () => {};
-  }, [products]);
-
-
 
   const handleMinimize = ()=>{
     container.current.style.height =(isMin.current)? "fit-content" : "0px";
     isMin.current = !isMin.current;
   }
+
   return (
     <div>
     <div style={{display:'flex', justifyContent:'space-between'}}>
@@ -118,7 +89,6 @@ export const MostPopular = (props) => {
             <p style={{margin:'5px auto'}}>{item.price.formatted_with_symbol}</p>
             <div style={{display:'flex', justifyContent:'center', gap:'20px'}}>
 
-            <Button onClick={() => handleAddToCart(item)}>Add To Basket</Button>
             </div>
             </>
             
@@ -126,20 +96,7 @@ export const MostPopular = (props) => {
           
         )}
         </li>
-          // {/* <li key={index} style={{ width: "24%", boxSizing: "border-box" }}>
-            
-          //   <Link
-          //     to={{
-          //       pathname: "/product",
-          //       search: `?id=${item.id}`,
-          //     }}
-          //   >
-          //   <img src={item.media.source} alt={item.name}  style={{maxWidth:'100%', maxHeight:'300px'}} />
-          //   </Link>
-          //  <h4 style={{margin:'10px auto 0'}}>{item.name}</h4>
-          //   <p style={{margin:'auto'}}>{item.price.formatted_with_symbol}</p>
 
-          // </li> */}
       
         ))}
       </ul>

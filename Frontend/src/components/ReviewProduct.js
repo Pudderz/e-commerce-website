@@ -1,12 +1,12 @@
-import { Avatar, Button } from "@material-ui/core";
-import React from "react";
+import { Button } from "@material-ui/core";
+import React, { useState } from "react";
 import { GetReviews } from "./GraphQl/GetReviews";
 import { WriteAReview } from "./WriteAReview";
-import { addReview } from "../GraphQL/Mutations";
-import { useLazyQuery, useMutation } from "@apollo/client";
-import {useQuery, gql} from '@apollo/client'
-import { LOAD_REVIEWS } from '../GraphQL/Queries';
+import { useQuery } from "@apollo/client";
+import { LOAD_REVIEWS } from "../GraphQL/Queries";
 export const ReviewProduct = ({ productId, productName }) => {
+  const [showForm, setShowForm] = useState(false);
+
   const { error, loading, data, refetch } = useQuery(LOAD_REVIEWS, {
     variables: { productId, productName },
   });
@@ -14,6 +14,11 @@ export const ReviewProduct = ({ productId, productName }) => {
   const handleRefetch = () => {
     refetch();
   };
+
+  const handleWriteReview = () => {
+    setShowForm(true);
+  };
+
   return (
     <div style={{ textAlign: "start", margin: "auto" }}>
       <h2>Customer Reviews</h2>
@@ -22,12 +27,24 @@ export const ReviewProduct = ({ productId, productName }) => {
         <hr />
         <h3>Review this product</h3>
         <p>Share your thoughts with other customers</p>
-        <Button variant="contained">Write a customer review</Button>
-        <WriteAReview handleRefetch={handleRefetch} productId={productId} productName={productName}/>
-        <hr />
+        <Button
+          variant="contained"
+          style={{ display: showForm ? "none" : "block" }}
+          onClick={handleWriteReview}
+        >
+          Write a customer review
+        </Button>
+        <WriteAReview
+          handleRefetch={handleRefetch}
+          productId={productId}
+          productName={productName}
+          showForm={showForm}
+        />
+      
       </div>
 
-      <div>
+      {/* Will Add back when you can sort reviews  */}
+      {/* <div>
         <select>
           <option value="top" key="top">
             Top reviews
@@ -36,13 +53,13 @@ export const ReviewProduct = ({ productId, productName }) => {
             Most recent
           </option>
         </select>
-      </div>
+      </div> */}
 
-      <h3>Top reviews</h3>
+      <h3>Reviews</h3>
       <GetReviews productId={productId} data={data} />
-
-      <p>There are no reviews for this item. Be the first to review it!</p>
-      
+      {typeof data === "undefined" && (
+        <p>There are no reviews for this item. Be the first to review it!</p>
+      )}
     </div>
   );
 };
