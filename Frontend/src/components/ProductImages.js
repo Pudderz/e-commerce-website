@@ -1,6 +1,6 @@
 import { Button } from "@material-ui/core";
 import Skeleton from "@material-ui/lab/Skeleton";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 
@@ -29,11 +29,11 @@ export const ProductImages = ({ images }) => {
         <ul style={{ listStyle: "none", maxWidth:'100%', overflow:'auto' }}>
           {loaded === false ? (
             <>
-              {placeholder?.map((placeholder, index) => (
+              {placeholder?.map((e, index) => (
                 <li key={index}>
                   <Skeleton>
                     <Button>
-                      <img src="" height="50" />
+                      <img src="" alt="placeholder image" height="50" />
                     </Button>
                   </Skeleton>
                 </li>
@@ -51,9 +51,10 @@ export const ProductImages = ({ images }) => {
             </>
           )}
         </ul>
+
         {/* All Images */}
       </div>
-      <div className="imageContainer" style={{ display: "flex", position:'relative', maxWidth:'100%', justifyContent:'center'}}>
+      <div className="imageContainer" >
         <Button
           varitan="contained"
           onClick={() => handleNextImage(-1)}
@@ -89,7 +90,7 @@ export const ProductImages = ({ images }) => {
                 src={images?.[main]?.url}
                 alt=""
                 height="500"
-                width="500"
+                width="700"
                 onLoad={() => setLoading(true)}
               />
             </Skeleton>
@@ -101,12 +102,7 @@ export const ProductImages = ({ images }) => {
               alt=""
               height="500"
               onLoad={() => setLoading(true)}
-              style={{
-                maxWidth: "700px",
-                objectFit: "cover",
-                margin: "20px 0",
-                width: "80%",
-              }}
+            
             />
           </>
         )}
@@ -115,14 +111,11 @@ export const ProductImages = ({ images }) => {
 
         <Button onClick={() => handleNextImage(1)}
         style={{
-          // fontSize: "25px",
           height: "fit-content",
           borderRadius: "50px",
           width: "50px",
           height: "50px",
           alignSelf: "center",
-          // position: "absolute",
-          // backgr oundColor: "white",
           right:'0'
          
         }}

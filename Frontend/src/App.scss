@@ -1,4 +1,4 @@
-body{
+body {
   text-align: center;
 }
 .leaflet-container {
@@ -50,14 +50,28 @@ body{
 
 /* Image list */
 
-
 .productImages {
-  display:flex;
+  display: flex;
   // min-width: min(calc(100%,650px));
-  margin:auto;
-
+  margin: auto;
+  max-width: 100%;
 }
 
+
+.imageContainer{
+  display: flex;
+  position: relative;
+  max-width: 100%;
+  justify-content: center;
+  img{
+    max-width: 700px;
+    object-fit: cover;
+    margin: 20px 0;
+    width: 80%;
+    height: auto;
+    max-height: 500px;
+  }
+}
 @media (max-width: 1200px) {
   .productImages {
     flex-flow: column-reverse;
@@ -65,15 +79,24 @@ body{
 
   .productImages div ul {
     display: flex;
+    padding: 0;
+    justify-content: center;
   }
+
+  
 }
 
 @media (max-width: 700px) {
-  .imageContainer{
-    max-width: 80%;
-    button{
+  .imageContainer {
+    max-width: 100%;
+    button {
       position: absolute;
     }
+    img{
+      object-fit: contain;
+    }
+  }
+  
   }
 }
 
