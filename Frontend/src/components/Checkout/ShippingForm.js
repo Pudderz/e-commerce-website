@@ -1,24 +1,18 @@
 import React, { Component } from "react";
 
+export default class ShippingForm extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      receiveNewsletter: true,
       saveInfo: true,
     };
 
-    this.toggleNewsletter = this.toggleNewsletter.bind(this);
   }
 
-  toggleNewsletter() {
-    this.setState({
-      receiveNewsletter: !this.state.receiveNewsletter,
-    });
-  }
 
   render() {
-    const { receiveNewsletter } = this.state;
+  
 
     return (
       <div className="shippingForm">
@@ -29,12 +23,7 @@ import React, { Component } from "react";
               <input name="firstName" required />
             </label>
           </div>
-          <div className="inputContainer">
-            <label>
-              <p>Middle name (optional)</p>
-              <input />
-            </label>
-          </div>
+          
           <div className="inputContainer">
             <label>
               <p>Last name*</p>
@@ -93,6 +82,7 @@ import React, { Component } from "react";
                 name="deliveryRegion"
                 required
               />
+              
             </label>
           </div>
           <div className="inputContainer">

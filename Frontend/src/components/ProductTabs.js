@@ -1,4 +1,4 @@
-import { AppBar, Tab, Tabs } from "@material-ui/core";
+import { Tab, Tabs } from "@material-ui/core";
 import React, { useState } from "react";
 import SwipeableViews from "react-swipeable-views";
 import Typography from "@material-ui/core/Typography";
@@ -49,7 +49,7 @@ export const ProductTabs = ({ product }) => {
       <Tabs
         value={value}
         onChange={handleChange}
-        //   variant="fullWidth"
+          variant="fullWidth"
         aria-label="full width tabs example"
       >
         <Tab label="Description"></Tab>

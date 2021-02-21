@@ -1,6 +1,6 @@
 import React from "react";
 
-import { MapContainer , TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer , TileLayer } from "react-leaflet";
 
 // Aim to display a store locator to find a local store
 

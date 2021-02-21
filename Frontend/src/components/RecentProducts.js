@@ -1,13 +1,10 @@
 import React, { useState, useEffect, useContext,useRef } from "react";
-import { Cart } from "../components/Cart";
 import { commerce } from "../lib/commerce";
-import { Link } from "react-router-dom";
-import { RecentlyViewed } from "../components/RecentlyViewed";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { Button, Typography } from "@material-ui/core";
 import { CartContext } from "../context/CartContext";
-import hikingBackground from "../images/hikingBackground.jpg";
-import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
+// import hikingBackground from "../images/hikingBackground.jpg";
+// import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import { ItemImage } from "./ItemImage";
 
 
@@ -15,7 +12,7 @@ export const RecentProducts = (props) => {
   const [products, setProducts] = useState(Array.from({length: 8}, ()=>0));
   // const [cart, changeCart] = useState({});
 
-  const { cart, changeCart } = useContext(CartContext);
+  const {  changeCart } = useContext(CartContext);
   const container = useRef()
   const isMin = useRef(false)
   const fetchProducts = () => {
@@ -71,16 +68,17 @@ export const RecentProducts = (props) => {
           display: "flex",
           flexFlow: "wrap",
           listStyle: "none",
-          gap: "20px",
+          gap:'20px',
           margin: "auto",
-          padding: "0",
+          padding: "20px",
+          boxSizing:'border-box',
           justifyContent: "center",
         }}
       >
         
 
         {products.map((item, index) => (
-          <li key={index} style={{ width: "24%", boxSizing: "border-box" }}>
+          <li key={index} style={{ width: "24%",minWidth:'150px',maxWidth:'300px', boxSizing: "border-box", flexGrow:'1' }}>
           
             {typeof item!== 'object'?(
               <>

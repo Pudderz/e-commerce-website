@@ -7,7 +7,7 @@ import { LOAD_REVIEWS } from "../GraphQL/Queries";
 export const ReviewProduct = ({ productId, productName }) => {
   const [showForm, setShowForm] = useState(false);
 
-  const { error, loading, data, refetch } = useQuery(LOAD_REVIEWS, {
+  const { data, refetch } = useQuery(LOAD_REVIEWS, {
     variables: { productId, productName },
   });
 

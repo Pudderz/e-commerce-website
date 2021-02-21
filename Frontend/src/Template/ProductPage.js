@@ -18,12 +18,10 @@ import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 
 export const ProductPage = () => {
   const [product, setProduct] = useState({});
-  // const [cart, setCart] = useState({});
-  const [currentTab, setCurrentTab] = useState(0);
+
   const [size, setSize] = useState('')
-  const { cart, changeCart } = useContext(CartContext);
+  const { changeCart } = useContext(CartContext);
   const { enqueueSnackbar } = useSnackbar();
-  const sizeRef = useRef({});
   const sizeId = useRef();
 
 
@@ -40,16 +38,6 @@ export const ProductPage = () => {
       });
   };
 
-  const fetchCart = () => {
-    commerce.cart
-      .retrieve()
-      .then((cart) => {
-        changeCart(cart);
-      })
-      .catch((error) => {
-        console.error("There was an error fetching the cart", error);
-      });
-  };
 
 
   useEffect(() => {
@@ -63,8 +51,6 @@ export const ProductPage = () => {
 
 
   useEffect(() => {
-    console.log(product);
-    console.log(product?.variants)
     if(typeof product?.variants !== "undefined" && product?.variants?.length !==0){
 let sizeObject = {};
       product.variants.forEach((variant)=>{
@@ -83,7 +69,7 @@ let sizeObject = {};
   }, [product]);
 
   useEffect(() => {
-    fetchCart();
+    
     return () => {
       addToHistory(product);
     };
@@ -112,10 +98,6 @@ let sizeObject = {};
     
   };
 
-  const handleTab = (tabNumber) => {
-    setCurrentTab(tabNumber);
-  };
-
 
   const changeSize = (size)=>{
     setSize(size)
@@ -131,20 +113,21 @@ let sizeObject = {};
           width: "fit-content",
           textAlign: "start",
           marginTop: "50px",
-          flexFlow:'wrap'
+          flexFlow:'wrap',
+          maxWidth:'100%',
         }}
       >
         
           {/* Product Images */}
           <ProductImages images={product.assets} />
         
-        <div style={{maxWidth:'80%', padding:' 0 40px'}}>
-          <div>
+    
+          <div className="itemDescription">
             <h1>{product.name}</h1>
             {/* +Review bar */}
 
-            {/*     font-size: 16px;
-    margin: 0; */}
+            
+            
             <h2>{product?.price?.formatted_with_symbol}</h2>
             <p style={{ color: "green" }}>In Stock {size!==""? ` UK ${size} (${sizeInfo[size]?.quantity || 0} left)`: `(${product.quantity} left)`}</p>
 
@@ -169,7 +152,7 @@ let sizeObject = {};
               </Button>
               <Button variant="contained">BUY NOW</Button>
             </div>
-          </div>
+          
 
           {/* tabbed sections with information  */}
         </div>
@@ -179,18 +162,19 @@ let sizeObject = {};
        */}
 
       <div
-        style={{
-          top: "4px",
-          position: "sticky",
-          height: "fit-content",
-          display: "flex",
-          justifyContent: "space-between",
-          backgroundColor: "white",
-          zIndex: "2",
-          margin: "0 -20px",
-          padding: " 0",
-          width: "81%",
-        }}
+      className="itemNav"
+        // style={{
+        //   top: "4px",
+        //   position: "sticky",
+        //   height: "fit-content",
+        //   display: "flex",
+        //   justifyContent: "space-between",
+        //   backgroundColor: "white",
+        //   zIndex: "2",
+        //   margin: "0 -20px",
+        //   padding: " 0",
+        //   width: "81%",
+        // }}
       >
         <Breadcrumbs aria-label="breadcrumb" style={{ margin: "1em" }}>
           <Link to="/">Home</Link>
@@ -205,6 +189,7 @@ let sizeObject = {};
         </div>
 
         <div
+        
           style={{
             display: "flex",
             minWidth: "30%",

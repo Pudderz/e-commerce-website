@@ -39,7 +39,8 @@ export const FollowInstagram = () => {
       <h3 style={{ margin: "80px 0 15px" }}>
         Or connect with us on social media
       </h3>
-      <InstagramIcon fontSize="large" /> <TwitterIcon fontSize="large" />
+      <InstagramIcon fontSize="large" /> 
+      <TwitterIcon fontSize="large" />
       <FacebookIcon fontSize="large" />
     </div>
   );

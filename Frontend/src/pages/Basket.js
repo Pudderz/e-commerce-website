@@ -1,10 +1,8 @@
 import { Button, IconButton, Tooltip } from "@material-ui/core";
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import {
-  commerce,
   fetchCart,
-  handleAddToCart,
   updateCartQty,
 } from "../lib/commerce";
 import { CartContext } from "../context/CartContext";
@@ -33,12 +31,12 @@ export const Basket = () => {
       <hr />
       <table style={{ width: "80%", textAlign: "center",
                 margin:'auto' }}>
-        <tr>
-          <th>Item</th>
-          <th>Price</th>
-          <th>Quantity</th>
-          <th>Total Price</th>
-          <th>Remove</th>
+        <tr >
+          <th style={{position:'sticky', top:'69px', boxShadow: '0 2px 2px -1px rgba(0, 0, 0, 0.4)', zIndex:'3', backgroundColor:'#eee'}}>Item</th>
+          <th style={{position:'sticky', top:'69px', boxShadow: '0 2px 2px -1px rgba(0, 0, 0, 0.4)', zIndex:'3', backgroundColor:'#eee'}}>Price</th>
+          <th style={{position:'sticky', top:'69px', boxShadow: '0 2px 2px -1px rgba(0, 0, 0, 0.4)', zIndex:'3', backgroundColor:'#eee'}}>Quantity</th>
+          <th style={{position:'sticky', top:'69px', boxShadow: '0 2px 2px -1px rgba(0, 0, 0, 0.4)', zIndex:'3', backgroundColor:'#eee'}}>Total Price</th>
+          <th style={{position:'sticky', top:'69px', boxShadow: '0 2px 2px -1px rgba(0, 0, 0, 0.4)', zIndex:'3', backgroundColor:'#eee'}}>Remove</th>
         </tr>
         {cart?.line_items?.map((item) => (
           <tr key={item.id}>
@@ -55,8 +53,11 @@ export const Basket = () => {
                 <div style={{height:'200px', width:'150px', position:'relative'}}>
                    <img src={item?.media?.source} alt="" style={{position:'absolute', top:'0', bottom:'0', objectFit:'cover', left:'0', right:'0', width:'100%', height: '100%'}}/>
                 </div>
-                
-              <h3 style={{ width: "fit-content" }}>{item.name}</h3>
+                <div>
+                   <h3 style={{ width: "fit-content" }}>{item.name}</h3>
+                   <p style={{textAlign:'start'}}>Size: {item?.variants?.[0]?.option_name}</p>
+                </div>
+             
               </div>
              
             </td>
@@ -81,7 +82,7 @@ export const Basket = () => {
               </div>
             </td>
             <td>
-              <p>{`${item.price?.raw * item.quantity}`}</p>
+              <p>{`£${item.price?.raw * item.quantity}`}</p>
             </td>
             <td>
               <Tooltip title="Remove Item">
@@ -93,13 +94,15 @@ export const Basket = () => {
           </tr>
         ))}
       </table>
-
-      <hr />
+<div style={{position:'sticky', bottom:'0px', boxShadow: '0 2px 2px -1px rgba(0, 0, 0, 0.4)', zIndex:'3', backgroundColor:'#fff', padding:'0 0 20px'}}>
+  <hr />
       <p>
         Subtotal({cart?.total_items || 0} items):{" "}
         {cart?.subtotal?.formatted_with_symbol}
       </p>
       <Link to="checkout">Proceed to checkout</Link>
+</div>
+      
     </div>
   );
 };

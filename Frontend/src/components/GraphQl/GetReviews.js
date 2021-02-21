@@ -1,13 +1,10 @@
-import React, { useEffect } from "react";
-import { useQuery, gql } from "@apollo/client";
-import { LOAD_REVIEWS } from "../../GraphQL/Queries";
+import React from "react";
 import { Avatar } from "@material-ui/core";
 import Rating from "@material-ui/lab/Rating";
 
-export const GetReviews = ({ productId, data }) => {
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
+export const GetReviews = ({ data }) => {
+
+
   return (
     <>
       {data?.getProduct?.[0]?.numOfReviews && (

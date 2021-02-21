@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import "./App.scss";
 import { StorePage } from "./pages/StorePage";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import { ProductPage } from "./Template/ProductPage";
 import { FindAStore } from "./pages/FindAStore";
 import { FrontPage } from "./pages/FrontPage";

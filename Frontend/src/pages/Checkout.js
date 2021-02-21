@@ -1,21 +1,13 @@
 import {
   Breadcrumbs,
   Button,
-  IconButton,
-  Tooltip,
   Typography,
 } from "@material-ui/core";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import ShippingForm from "../components/Checkout/ShippingForm";
 import { CartContext } from "../context/CartContext";
-import {
-  commerce,
-  fetchCart,
-  handleAddToCart,
-  updateCartQty,
-} from "../lib/commerce";
 
 const CARD_OPTIONS = {
   iconStyle: "solid",
@@ -40,16 +32,16 @@ const CARD_OPTIONS = {
 };
 
 export const Checkout = () => {
-  const { cart, changeCart } = useContext(CartContext);
+  const { cart } = useContext(CartContext);
   const stripe = useStripe();
   const elements = useElements();
 
   const [shippingInfo, setShippingInfo] = useState({});
-  const [userInfo, , setUserInfo] = useState({
-    firstname: "",
-    lastname: "",
-    customerEmail: "",
-  });
+  // const [userInfo, , setUserInfo] = useState({
+  //   firstname: "",
+  //   lastname: "",
+  //   customerEmail: "",
+  // });
 
   const changeShippingInfo = (target, value) => {
     setShippingInfo({
@@ -91,7 +83,7 @@ export const Checkout = () => {
     <>
       <div style={{ margin: "30px 0 0  20px" }}>
         <Breadcrumbs aria-label="breadcrumb">
-          <Link to="/">Cart</Link>
+          <Link to="/basket">Cart</Link>
           <Typography>Checkout</Typography>
         </Breadcrumbs>
       </div>
@@ -114,10 +106,14 @@ export const Checkout = () => {
               shippingInfo={shippingInfo}
               changeShippingInfo={changeShippingInfo}
             />
-            <h3>Payment Detail</h3>
+            <h3 >Payment Detail</h3>
             <div style={{border:'1px solid gray', padding:'10px'}}>
-            <label>Credict/debit card</label>
+            <label style={{textAlign:'start'}}>
+            <p style={{margin:'2px 0 10px'}}>Credit/Debit card</p>
+            <hr/>
             <CardElement options={CARD_OPTIONS} />
+            </label>
+            
             <Button
               variant="contained"
               color="secondary"

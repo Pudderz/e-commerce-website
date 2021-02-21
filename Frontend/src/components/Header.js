@@ -9,12 +9,7 @@ import { LoginButton } from "./LoginButton";
 import { Switch } from "@material-ui/core";
 import Popover from "@material-ui/core/Popover";
 import { LogoutButton } from "./LogoutButton";
-import {
-  commerce,
-  fetchCart,
-  handleAddToCart,
-  updateCartQty,
-} from "../lib/commerce";
+import { fetchCart, updateCartQty } from "../lib/commerce";
 import DeleteIcon from "@material-ui/icons/Delete";
 /* 
 HEADER COMPONENT
@@ -29,9 +24,11 @@ Basket Button showing num of items in Basket (onClick goes to basket page)
 */
 
 export const Header = () => {
-  const { user, isAuthenticated, isLoading } = useAuth0();
-  const { cart, changeCart } = useContext(CartContext);
-
+  const { user, isAuthenticated } = useAuth0();
+  const { cart, changeCart, removeFromCart, updateQty } = useContext(
+    CartContext
+  );
+  const [anchorBasketEl, setAnchorBasketEl] = useState(null);
   const [anchorProfileEl, setAnchorProfileEl] = useState(null);
 
   const handleProfileClick = (event) => {
@@ -42,10 +39,6 @@ export const Header = () => {
     setAnchorProfileEl(null);
   };
 
-  const openProfile = Boolean(anchorProfileEl);
-
-  const [anchorBasketEl, setAnchorBasketEl] = useState(null);
-
   const handleBasketClick = (event) => {
     setAnchorBasketEl(event.currentTarget);
   };
@@ -54,19 +47,19 @@ export const Header = () => {
     setAnchorBasketEl(null);
   };
 
+  const openProfile = Boolean(anchorProfileEl);
+
   const openBasket = Boolean(anchorBasketEl);
 
   useEffect(() => {
     fetchCart(changeCart);
   }, []);
 
-  useEffect(() => {
-    console.log(cart);
-  }, [cart]);
-
-  const updateQty = (id, newQuantity) => {
-    updateCartQty(id, newQuantity, changeCart);
+  const updateItemQty = (id, newQuantity) => {
+    updateQty(id, newQuantity);
   };
+
+  const removeItem = (id)=> removeFromCart(id);
 
   const handledarkmodeChange = () => {};
   return (
@@ -88,19 +81,27 @@ export const Header = () => {
           style={{
             display: "flex",
             listStyle: "none",
-            justifyContent: "space-around",
+            justifyContent: "space-between",
             margin: "0",
+            maxWidth: "100%",
+            boxSizing: "border-box",
+            padding: "0 20px",
           }}
         >
           <li>
-            <Link to="/">Home</Link>
+            <div style={{ display: "flex", gap: "20px", margin: "10px 0" }}>
+              <Link className="link" to="/">
+                Home
+              </Link>
+              <Link className="link" to="/store">
+                Store
+              </Link>
+            </div>
           </li>
-          <li>
-            <Link to="/store">Store</Link>
-          </li>
-          <li>
+
+          {/* <li>
             <Link to="/findastore">Find a Nearby Store</Link>
-          </li>
+          </li> */}
 
           <li>
             <ul
@@ -109,6 +110,7 @@ export const Header = () => {
                 listStyle: "none",
                 justifyContent: "space-around",
                 width: "100%",
+                padding: "0",
               }}
             >
               <li>
@@ -156,7 +158,9 @@ export const Header = () => {
                   >
                     <div style={{ padding: "5px" }}>
                       <p>Contents</p>
-                      <Link to="/profile">Profile</Link>
+                      <Link className="link" to="/profile">
+                        Profile
+                      </Link>
                       <LogoutButton />
                     </div>
                   </Popover>
@@ -215,8 +219,9 @@ export const Header = () => {
                         <div>
                           <h3>Your Basket is empty</h3>
                           <p>
-                            Continue shopping on the <a href="">homepage</a>,
-                            browse our discounts, or visit your Wish List
+                            Continue shopping on the{" "}
+                            <Link to="/">homepage</Link>, browse our discounts,
+                            or visit your Wish List
                           </p>
                         </div>
                       ) : (
@@ -291,7 +296,7 @@ export const Header = () => {
                                     <Tooltip title="Add 1">
                                       <Button
                                         onClick={() =>
-                                          updateQty(item.id, item.quantity + 1)
+                                          updateItemQty(item.id, item.quantity + 1)
                                         }
                                       >
                                         +
@@ -300,7 +305,7 @@ export const Header = () => {
                                     <Tooltip title="Remove 1">
                                       <Button
                                         onClick={() =>
-                                          updateQty(item.id, item.quantity - 1)
+                                          updateItemQty(item.id, item.quantity - 1)
                                         }
                                       >
                                         -
@@ -308,7 +313,7 @@ export const Header = () => {
                                     </Tooltip>
                                     <Tooltip title="Remove Item">
                                       <IconButton
-                                        onClick={() => updateQty(item.id, 0)}
+                                        onClick={() => removeItem(item.id)}
                                       >
                                         <DeleteIcon fontSize="small" />
                                       </IconButton>
@@ -322,25 +327,42 @@ export const Header = () => {
                         </div>
                       )}
                     </ul>
-                    <div style={{position:'sticky', bottom:'0', backgroundColor:'#fff'}}>
-                    <hr />
                     <div
                       style={{
-                        margin: "auto",
-                        padding: " 5px 0 10px",
-                        width: "fit-content",
-                        boxSizing: "border-box",
-                        textAlign:'center',
+                        position: "sticky",
+                        bottom: "0",
+                        backgroundColor: "#fff",
                       }}
                     >
-                     
-                      <p style={{margin:'5px 0'}}>SubTotal() items()</p>
-                      <Link to="basket" onClick={handleBasketClose}>
-                        Go To Basket
-                      </Link>
-                    </div>  
+                      <hr />
+                      <div
+                        style={{
+                          margin: "auto",
+                          padding: " 5px 0 10px",
+                          width: "fit-content",
+                          boxSizing: "border-box",
+                          textAlign: "center",
+                        }}
+                      >
+                        <p style={{ margin: "5px 0" }}>
+                          Subtotal({cart?.total_items || 0} item
+                          {cart?.total_items > 1 && "s"}):{" "}
+                          {cart?.subtotal?.formatted_with_symbol}
+                        </p>
+
+                        <Link
+                          to="basket"
+                          onClick={handleBasketClose}
+                          style={{ padding: "0 20px 0 0" }}
+                        >
+                          Go To Basket
+                        </Link>
+
+                        <Link to="checkout" onClick={handleBasketClose}>
+                          Go To Checkout
+                        </Link>
+                      </div>
                     </div>
-                    
                   </div>
                 </Popover>
               </li>

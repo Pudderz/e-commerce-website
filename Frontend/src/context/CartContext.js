@@ -14,7 +14,8 @@ export const CartContextProvider = (props) => {
   const { getAccessTokenSilently } = useAuth0();
 
   const [cart, setCart] = useState({});
-  useEffect(async () => {
+  useEffect(()=>{
+    (async () => {
     fetchCart(setCart);
     try {
       const token = await getAccessTokenSilently();
@@ -25,6 +26,7 @@ export const CartContextProvider = (props) => {
     } catch (err) {
       console.log(err);
     }
+  })();
   }, []);
 
   const addToCart = (item, quantity) => {
