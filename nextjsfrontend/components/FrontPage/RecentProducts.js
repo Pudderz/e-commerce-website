@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext,useRef } from "react";
-import { commerce } from "../lib/commerce";
+import { commerce } from "../../lib/commerce";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { Button, Typography } from "@material-ui/core";
-import { CartContext } from "../context/CartContext";
+import { CartContext } from "../../context/CartContext";
 // import hikingBackground from "../images/hikingBackground.jpg";
 // import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
-import { ItemImage } from "./ItemImage";
+import { ItemImage } from "../Common/ItemImage";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 

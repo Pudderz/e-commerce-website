@@ -1,10 +1,10 @@
 import React, { useState, useEffect} from "react";
-import { commerce } from "../lib/commerce";
+import { commerce } from "../../lib/commerce";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { Button, Typography } from "@material-ui/core";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
-import { ItemImage } from "./ItemImage";
+import { ItemImage } from "../Common/ItemImage";
 
 
 export const MostPopular = (props) => {

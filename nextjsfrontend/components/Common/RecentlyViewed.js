@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getHistory } from "../lib/localStorage";
+import { getHistory } from "../../lib/localStorage";
 import Link from "next/link";
 
 export const RecentlyViewed = () => {

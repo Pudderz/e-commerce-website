@@ -5,14 +5,14 @@ import {
   } from "@material-ui/core";
   import React, { useEffect, useState, useContext,useRef } from "react";
   import Link from "next/link";
-  import { ProductImages } from "../../components/ProductImages";
-  import { ProductTabs } from "../../components/ProductTabs";
-  import { RecentlyViewed } from "../../components/RecentlyViewed";
+  import { ProductImages } from "../../components/ProductPages/ProductImages";
+  import { ProductTabs } from "../../components/ProductPages/ProductTabs";
+  import { RecentlyViewed } from "../../components/Common/RecentlyViewed";
   import { commerce } from "../../lib/commerce";
   import { addToHistory } from "../../lib/localStorage";
   import { useSnackbar } from "notistack";
   import { CartContext } from "../../context/CartContext";
-  import { SelectSize } from "../../components/SelectSize";
+  import { SelectSize } from "../../components/ProductPages/SelectSize";
   import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
   
   

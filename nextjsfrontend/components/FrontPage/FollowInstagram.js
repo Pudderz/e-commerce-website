@@ -1,13 +1,14 @@
 import React from "react";
-import mountainRun from "../images/mountainRun.jpg";
-import hikingBackground from "../images/hikingBackground.jpg";
-import dog from "../images/dog.jpg";
-import shoesInWater from "../images/shoesInWater.jpg";
-import hikingBackground2 from "../images/hikingBackground2.jpg";
+import mountainRun from "../../images/mountainRun.jpg";
+import hikingBackground from "../../images/hikingBackground.jpg";
+import dog from "../../images/dog.jpg";
+import shoesInWater from "../../images/shoesInWater.jpg";
+import hikingBackground2 from "../../images/hikingBackground2.jpg";
 import InstagramIcon from "@material-ui/icons/Instagram";
 import FacebookIcon from "@material-ui/icons/Facebook";
 import TwitterIcon from "@material-ui/icons/Twitter";
 import { Link } from "@material-ui/core";
+
 export const FollowInstagram = () => {
   return (
     <div style={{ minHeight: "600px",maxWidth:'100%' }}>

@@ -2,11 +2,11 @@ import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import Link from 'next/link'
 import React, { useEffect } from "react";
-import { RecentlyViewed } from "../components/RecentlyViewed";
+import { RecentlyViewed } from "../components/Common/RecentlyViewed";
 import hikingBackground from "../images/hikingBackground.jpg";
-import { MostPopular } from "../components/MostPopular";
-import { RecentProducts } from "../components/RecentProducts";
-import { FollowInstagram } from "../components/FollowInstagram";
+import { MostPopular } from "../components/FrontPage/MostPopular";
+import { RecentProducts } from "../components/FrontPage/RecentProducts";
+import { FollowInstagram } from "../components/FrontPage/FollowInstagram";
 import LocalShippingIcon from "@material-ui/icons/LocalShipping";
 import PaymentIcon from "@material-ui/icons/Payment";
 import { Categories } from "../components/FrontPage/Categories";

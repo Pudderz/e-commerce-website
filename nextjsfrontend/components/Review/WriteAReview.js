@@ -2,8 +2,8 @@ import { Button, TextField } from "@material-ui/core";
 import React, { useState, useEffect } from "react";
 import Rating from "@material-ui/lab/Rating";
 import { useAuth0 } from "@auth0/auth0-react";
-import { LoginButton } from "./LoginButton";
-import { addReview } from "../GraphQL/Mutations";
+import { LoginButton } from "../Authentication/LoginButton";
+import { addReview } from "../../GraphQL/Mutations";
 import {  useMutation } from "@apollo/client";
 /*
 check if authenicated before hand

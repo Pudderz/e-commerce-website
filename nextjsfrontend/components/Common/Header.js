@@ -1,15 +1,15 @@
 import React, { useContext, useState, useEffect } from "react";
 import Link from 'next/link'
-import { CartContext } from "../context/CartContext";
+import { CartContext } from "../../context/CartContext";
 import ShoppingBasketIcon from "@material-ui/icons/ShoppingBasket";
 import { Avatar, Badge, Button, IconButton, Tooltip } from "@material-ui/core";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import { useAuth0 } from "@auth0/auth0-react";
-import { LoginButton } from "./LoginButton";
+import { LoginButton } from "../Authentication/LoginButton";
 import { Switch } from "@material-ui/core";
 import Popover from "@material-ui/core/Popover";
-import { LogoutButton } from "./LogoutButton";
-import { fetchCart, updateCartQty } from "../lib/commerce";
+import { LogoutButton } from "../Authentication/LogoutButton";
+import { fetchCart} from "../../lib/commerce";
 import DeleteIcon from "@material-ui/icons/Delete";
 /* 
 HEADER COMPONENT

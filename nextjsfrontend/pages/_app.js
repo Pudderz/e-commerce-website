@@ -1,9 +1,9 @@
 import '../styles/globals.css'
 import React, { useRef } from "react";
 import "../App.scss";
-import { Header } from "../components/Header";
-import { Footer } from "../components/Footer";
-import { Auth0 } from "../components/Auth0";
+import { Header } from "../components/Common/Header";
+import { Footer } from "../components/Common/Footer";
+import { Auth0 } from "../components/Authentication/Auth0";
 import { SnackbarProvider } from "notistack";
 import { Button } from "@material-ui/core";
 import { CartContextProvider } from "../context/CartContext";

@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { commerce } from "../../lib/commerce";
 import Link from "next/link";
-import { RecentlyViewed } from "../../components/RecentlyViewed";
+import { RecentlyViewed } from "../../components/Common/RecentlyViewed";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { Breadcrumbs, Typography } from "@material-ui/core";
 import runningBackground from "../../images/runningBackground.jpg";
 import hikingBackground from "../../images/hikingBackground2.jpg";
 import casualBackground from "../../images/casualBackground2.jpg";
-import { ItemImage } from "../../components/ItemImage";
+import { ItemImage } from "../../components/Common/ItemImage";
 
 export const CategoryPage = (props) => {
-    console.log(props);
-
   const [categoryInfo, setCategoryInfo] = useState({});
   const [category, setCategory] = useState("");
 

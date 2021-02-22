@@ -1,5 +1,5 @@
 import React from "react";
-
+import measureFoot from "../../images/how-to-measure-shoes.png";
 export const SizeGuide = () => {
   return (
     <div>
