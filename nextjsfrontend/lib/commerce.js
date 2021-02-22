@@ -64,3 +64,11 @@ export const updateCartQty = (id, newQuantity, setCart) => {
       console.log("There was an error updating the cart items", error);
     });
 };
+
+
+export const retreiveAllCategories = (setValue) => {
+  commerce.categories.list().then((categories) => {
+    setValue(categories.data);
+    console.log(categories.data);
+  });
+};
