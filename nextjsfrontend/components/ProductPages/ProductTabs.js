@@ -1,12 +1,10 @@
-import { Tab, Tabs } from "@material-ui/core";
 import React, { useState } from "react";
-// import SwipeableViews from "react-swipeable-views";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
-import measureFoot from "../images/how-to-measure-shoes.png";
-import { ReviewProduct } from "./ReviewProduct";
+import { ReviewProduct } from "../Review/ReviewProduct";
 import { SizeGuide } from "./SizeGuide";
 import { DeliveryAndReturns } from "./DeliveryAndReturns";
+import { Tab, Tabs } from "@material-ui/core";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -31,8 +29,9 @@ function TabPanel(props) {
 export const ProductTabs = ({ product }) => {
   const [value, setValue] = useState(0);
 
-  const handleChange = (newValue) => {
+  const handleChange = (event, newValue) => {
     setValue(newValue);
+    console.log(newValue);
   };
 
 
@@ -50,12 +49,12 @@ export const ProductTabs = ({ product }) => {
         value={value}
         onChange={handleChange}
           variant="fullWidth"
-        aria-label="full width tabs example"
+        aria-label="full width tabs of products information"
       >
-        <Tab label="Description"></Tab>
-        <Tab label="Size Guide"></Tab>
-        <Tab label="Delivery & Returns"></Tab>
-        <Tab label="Reviews"></Tab>
+        <Tab value={0} label="Description"></Tab>
+        <Tab value={1} label="Size Guide"></Tab>
+        <Tab value={2} label="Delivery & Returns"></Tab>
+        <Tab value={3} label="Reviews"></Tab>
       </Tabs>
 
         <TabPanel value={value} index={0}>
