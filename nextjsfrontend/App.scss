@@ -1,0 +1,266 @@
+body {
+  text-align: center;
+}
+.leaflet-container {
+  width: 100%;
+  height: 300px;
+}
+
+/* Product Pages Select size component */
+.availableSize:hover {
+  background-color: #4d5461 !important;
+  color: #fff;
+  transition: 0.5s all;
+  -webkit-transition: 0.5s all;
+  -moz-transition: 0.5s all;
+  -ms-transition: 0.5s all;
+  -o-transition: 0.5s all;
+}
+
+.selected {
+  background-color: #4d5461 !important;
+  color: #fff;
+}
+
+/* Checkout Shipping Form */
+
+.row {
+  display: flex;
+  gap: 30px;
+  justify-content: space-between;
+}
+
+.inputContainer {
+  margin: 20px 0;
+  text-align: start;
+  width: 100%;
+}
+
+.inputContainer p {
+  margin: 0 0 5px;
+}
+
+.inputContainer input {
+  height: 25px;
+  width: 100%;
+  font-size: 18px;
+}
+
+/* Product Pages */
+
+/* Image list */
+
+.productImages {
+  display: flex;
+  // min-width: min(calc(100%,650px));
+  margin: auto;
+  max-width: 100%;
+}
+
+
+.imageContainer{
+  display: flex;
+  position: relative;
+  max-width: 100%;
+  justify-content: center;
+  img{
+    max-width: 700px;
+    object-fit: cover;
+    margin: 20px 0;
+    width: 80%;
+    height: auto;
+    max-height: 500px;
+  }
+}
+@media (max-width: 1200px) {
+  .productImages {
+    flex-flow: column-reverse;
+  }
+
+  .productImages div ul {
+    display: flex;
+    padding: 0;
+    justify-content: center;
+  }
+
+  
+}
+
+@media (max-width: 700px) {
+  .imageContainer {
+    max-width: 100%;
+    button {
+      position: absolute;
+    }
+    img{
+      object-fit: contain;
+    }
+  }
+  
+}
+
+//
+.container {
+  transition: all 2.5s;
+  -webkit-transition: all 2.5s;
+  -moz-transition: all 2.5s;
+  -ms-transition: all 2.5s;
+  -o-transition: all 2.5s;
+  height: fit-content;
+  overflow: hidden;
+}
+
+.shrink {
+  height: 0;
+  transition: all 300ms ease-out;
+}
+
+@media (max-width: 800px) {
+}
+
+a.link {
+  color: black;
+  font-size: 20px;
+  text-decoration: none;
+  cursor: pointer;
+  font-weight: 700;
+  &:hover {
+    color: gray;
+  }
+}
+
+.highlights {
+  min-height: 300px;
+  width: 100%;
+  margin: 20 auto 0;
+  justify-content: space-around;
+  display: flex;
+  @media (max-width: 900px) {
+    display: grid;
+    gap: 30px;
+  }
+}
+
+.itemNav {
+  top: 0%;
+  position: sticky;
+  height: fit-content;
+  display: flex;
+  justify-content: space-between;
+  background-color: white;
+  z-index: 2;
+  margin: 0 -20px;
+  padding: 0;
+  width: 81%;
+  @media (max-width: 1200px) {
+    display: none;
+  }
+}
+.selectSize {
+  display: flex;
+  flex-flow: wrap;
+  width: 400px;
+  border-left: 1px solid #ebedee;
+  border-top: 1px solid #ebedee;
+  margin: 10px 0 20px;
+  font-size: 18px;
+}
+
+.itemDescription {
+  max-width: 80%;
+  padding: 0 40px;
+  @media (max-width: 1200px) {
+    .selectSize {
+      width: 100%;
+    }
+    margin: auto;
+    max-width: 100%;
+    padding: 0;
+    width: 90%;
+    button {
+      width: 50%;
+    }
+  }
+}
+
+.imageCategoryContainer {
+  height: 33vh;
+  position: relative;
+  background-color: black;
+
+  &:hover {
+    img {
+      opacity: 0.6;
+    }
+  }
+}
+
+
+.categoryText{
+  text-decoration: none;
+  position: absolute;
+  top: 40%;
+  z-index: 3;
+  width: 100%;
+  text-align: center;
+  color: white;
+  font-size: 4vh;
+  margin: auto;
+}
+
+@media (max-width: 1500px) {
+  
+}
+
+
+// Basket
+
+.tableHeader{
+  position: sticky;
+  top: 69px;
+  box-shadow: 0 2px 2px -1px rgba(0,0,0,0.4);
+  z-index: 3;
+  background-color: #eee;
+}
+
+
+.shoppingCartItem{
+  display:flex;
+  gap: 20px;
+  height: 100%;
+  img{
+    // position: absolute;
+
+    object-fit: contain;
+   
+    width: 100%;
+    height: 100%;
+  }
+    @media (max-width: 700px) {
+      img{
+        position: relative;
+        height: 100px;
+      }
+    }
+}
+
+
+
+.mainImage{
+  max-width: 200px;
+  max-height: 300px;
+  width: 100%;
+  height: 20vh;
+  object-fit: cover;
+  position: relative;
+}
+
+.secondaryImage{
+  position: absolute;
+  max-height: 300px;
+  max-width: 100%;
+  left: 0;
+  width: 100%;
+  height: 20vh;
+  object-fit: cover;
+}
