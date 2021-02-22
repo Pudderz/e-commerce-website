@@ -1,10 +1,7 @@
 import { Button, IconButton, Tooltip } from "@material-ui/core";
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import { Link } from "react-router-dom";
-import {
-  fetchCart,
-  updateCartQty,
-} from "../lib/commerce";
+import { fetchCart, updateCartQty } from "../lib/commerce";
 import { CartContext } from "../context/CartContext";
 import DeleteIcon from "@material-ui/icons/Delete";
 
@@ -12,54 +9,241 @@ import DeleteIcon from "@material-ui/icons/Delete";
 
 //shows total price
 export const Basket = () => {
-  const { cart, changeCart } = useContext(CartContext);
+  const { cart, changeCart, removeFromCart, updateQty } = useContext(CartContext);
 
+
+  const [isSmallDisplay, setIsSmallDisplay] = useState(false);
   useEffect(() => {
-    fetchCart(changeCart);
+    if (window.innerWidth < 700) {
+      setIsSmallDisplay(true);
+    } else {
+      setIsSmallDisplay(false);
+    }
+    window.addEventListener("resize", (e) => {
+      console.log(window.innerWidth);
+      if (window.innerWidth < 700 && isSmallDisplay === false) {
+        setIsSmallDisplay(true);
+      } else if (window.innerWidth >= 1000 && isSmallDisplay === true) {
+        setIsSmallDisplay(false);
+      }
+    });
+    return () => {
+      window.removeEventListener("resize", (e) => {
+        console.log(window.innerWidth);
+        if (window.innerWidth < 700 && isSmallDisplay === false) {
+          setIsSmallDisplay(true);
+        } else if (window.innerWidth >= 700 && isSmallDisplay === true) {
+          setIsSmallDisplay(false);
+        }
+      });
+    };
   }, []);
+
+
+ 
+ 
+  const updateItemQty = (id, newQuantity) => {
+    updateQty(id, newQuantity);
+  };
+
+  const removeItem = (id)=> removeFromCart(id);
+
 
   useEffect(() => {
     console.log(cart);
   }, [cart]);
 
-  const updateQty = (id, newQuantity) => {
-    updateCartQty(id, newQuantity, changeCart);
-  };
+ 
   return (
     <div>
       <h1>Shopping cart</h1>
       <hr />
-      <table style={{ width: "80%", textAlign: "center",
-                margin:'auto' }}>
-        <tr >
-          <th style={{position:'sticky', top:'69px', boxShadow: '0 2px 2px -1px rgba(0, 0, 0, 0.4)', zIndex:'3', backgroundColor:'#eee'}}>Item</th>
-          <th style={{position:'sticky', top:'69px', boxShadow: '0 2px 2px -1px rgba(0, 0, 0, 0.4)', zIndex:'3', backgroundColor:'#eee'}}>Price</th>
-          <th style={{position:'sticky', top:'69px', boxShadow: '0 2px 2px -1px rgba(0, 0, 0, 0.4)', zIndex:'3', backgroundColor:'#eee'}}>Quantity</th>
-          <th style={{position:'sticky', top:'69px', boxShadow: '0 2px 2px -1px rgba(0, 0, 0, 0.4)', zIndex:'3', backgroundColor:'#eee'}}>Total Price</th>
-          <th style={{position:'sticky', top:'69px', boxShadow: '0 2px 2px -1px rgba(0, 0, 0, 0.4)', zIndex:'3', backgroundColor:'#eee'}}>Remove</th>
+      {isSmallDisplay ?
+      (
+        <div style={{ padding: "10px" }}>
+        
+        <ul
+          style={{
+            listStyle: "none",
+            display: "grid",
+            gap: "50px",
+            padding: "0",
+            maxWidth: "100%",
+          }}
+        >
+          {cart?.line_items?.length === 0 ? (
+            <div>
+              <h3>Your Basket is empty</h3>
+              <p>
+                Continue shopping on the{" "}
+                <Link to="/">homepage</Link>, browse our discounts,
+                or visit your Wish List
+              </p>
+            </div>
+          ) : (
+            <div>
+              {cart?.line_items?.map((item) => (
+                <li key={item.id}>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "flex-start",
+                      gap: "20px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        backgroundColor: "blue",
+                        height: "100px",
+                        width: "100px",
+                        position: "relative",
+                        overflow: "hidden",
+                      }}
+                    >
+                      <Link
+                        to={{
+                          pathname: "/product",
+                          search: `?id=${item.product_id}`,
+                        }}
+                       
+                      >
+                        <img
+                          src={item?.media?.source}
+                          width="100"
+                          alt=""
+                          style={{
+                            position: "absolute",
+                            top: "0",
+                            left: "0",
+                            bottom: "0",
+                            objectFit: "cover",
+                            right: "0",
+                          }}
+                        />
+                      </Link>
+                    </div>
+
+                    <div style={{ display: "grid" }}>
+                      <h3
+                        style={{
+                          margin: "0",
+                          width: "fit-content",
+                        }}
+                      >
+                        {item.name}
+                      </h3>
+                      <p
+                        style={{
+                          margin: "0",
+                          width: "fit-content",
+                        }}
+                      >
+                       UK {item?.variants?.[0]?.option_name} {item.price?.formatted_with_symbol}
+                      </p>
+                      <p
+                        style={{
+                          margin: "0",
+                          width: "fit-content",
+                        }}
+                      >
+                        Quantity: {item.quantity}
+                      </p>
+                      <div style={{ width: "fit-content" }}>
+                        <Tooltip title="Add 1">
+                          <Button
+                            onClick={() =>
+                              updateItemQty(item.id, item.quantity + 1)
+                            }
+                          >
+                            +
+                          </Button>
+                        </Tooltip>
+                        <Tooltip title="Remove 1">
+                          <Button
+                            onClick={() =>
+                              updateItemQty(item.id, item.quantity - 1)
+                            }
+                          >
+                            -
+                          </Button>
+                          
+                        </Tooltip>
+                        <Tooltip title="Remove Item">
+                          <IconButton
+                            onClick={() => removeItem(item.id)}
+                          >
+                            <DeleteIcon fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                      </div>
+                    </div>
+                  </div>
+                  {/* <hr style={{margin:'0 0 5px'}}/> */}
+                </li>
+              ))}
+            </div>
+          )}
+        </ul>
+
+      </div>
+      ):(
+<table
+        style={{
+          width: "100%",
+          maxWidth: "1100px",
+          textAlign: "center",
+          margin: "auto",
+          overflow:'auto'
+        }}
+      >
+        <thead> 
+        <tr>
+          <th className="tableHeader">Item</th>
+          <th className="tableHeader">Price</th>
+          <th className="tableHeader">Quantity</th>
+          <th className="tableHeader">Total Price</th>
+          <th className="tableHeader">Remove</th>
         </tr>
+        </thead> 
+        <tbody>
+
+       
         {cart?.line_items?.map((item) => (
           <tr key={item.id}>
-   
             <td>
               <div
-              style={{
-                display: "flex",
-                gap:'20px',
-                height: "100%",
-  
-              }}
+              className="shoppingCartItem"
+               
               >
-                <div style={{height:'200px', width:'150px', position:'relative'}}>
-                   <img src={item?.media?.source} alt="" style={{position:'absolute', top:'0', bottom:'0', objectFit:'cover', left:'0', right:'0', width:'100%', height: '100%'}}/>
+                <div
+                  style={{
+                    height: "200px",
+                    maxWidth: "150px",
+                    width: "100%",
+                    position: "relative",
+                  }}
+                >
+                  <img
+                    src={item?.media?.source}
+                    alt=""
+               
+                  />
                 </div>
                 <div>
-                   <h3 style={{ width: "fit-content" }}>{item.name}</h3>
-                   <p style={{textAlign:'start'}}>Size: {item?.variants?.[0]?.option_name}</p>
+                  <h3
+                    style={{
+                      width: "fit-content",
+                      margin: "0",
+                      fontSize: "clamp(14px, 2vw, 20px)",
+                    }}
+                  >
+                    {item.name}
+                  </h3>
+                  <p style={{ textAlign: "start" }}>
+                    Size: {item?.variants?.[0]?.option_name}
+                  </p>
                 </div>
-             
               </div>
-             
             </td>
             <td>
               <p>{item.price?.formatted_with_symbol}</p>
@@ -72,37 +256,58 @@ export const Basket = () => {
                   height: "100%",
                 }}
               >
-                <Button onClick={() => updateQty(item.id, item.quantity + 1)}>
+                <Button
+                size="small"
+                  onClick={() => updateItemQty(item.id, item.quantity + 1)}
+                  style={{ padding: "0", width:'5px', minWidth:'20px', margin:'auto' }}
+                >
                   +
                 </Button>
                 <p>{item.quantity}</p>
-                <Button onClick={() => updateQty(item.id, item.quantity - 1)}>
+                <Button
+                  onClick={() => updateItemQty(item.id, item.quantity - 1)}
+                  style={{ padding: "0", width:'5px', minWidth:'20px', margin:'auto' }}
+                >
                   -
                 </Button>
               </div>
             </td>
             <td>
-              <p>{`£${item.price?.raw * item.quantity}`}</p>
+              <p>{`£${((item.price?.raw * 100 * item.quantity) / 100).toFixed(
+                2
+              )}`}</p>
             </td>
             <td>
               <Tooltip title="Remove Item">
-                <IconButton onClick={() => updateQty(item.id, 0)}>
+                <IconButton onClick={() => updateItemQty(item.id, 0)}>
                   <DeleteIcon fontSize="small" />
                 </IconButton>
               </Tooltip>
             </td>
           </tr>
         ))}
+        </tbody>
       </table>
-<div style={{position:'sticky', bottom:'0px', boxShadow: '0 2px 2px -1px rgba(0, 0, 0, 0.4)', zIndex:'3', backgroundColor:'#fff', padding:'0 0 20px'}}>
-  <hr />
-      <p>
-        Subtotal({cart?.total_items || 0} items):{" "}
-        {cart?.subtotal?.formatted_with_symbol}
-      </p>
-      <Link to="checkout">Proceed to checkout</Link>
-</div>
       
+      )}
+      
+      <div
+        style={{
+          position: "sticky",
+          bottom: "0px",
+          boxShadow: "0 2px 2px -1px rgba(0, 0, 0, 0.4)",
+          zIndex: "3",
+          backgroundColor: "#fff",
+          padding: "0 0 20px",
+        }}
+      >
+        <hr />
+        <p>
+          Subtotal({cart?.total_items || 0} items):{" "}
+          {cart?.subtotal?.formatted_with_symbol}
+        </p>
+        <Link to="checkout">Proceed to checkout</Link>
+      </div>
     </div>
   );
 };
