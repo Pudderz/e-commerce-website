@@ -1,9 +1,9 @@
 import { Button } from "@material-ui/core";
 import React, { useState } from "react";
-import { GetReviews } from "./GraphQl/GetReviews";
+import { GetReviews } from "./GetReviews";
 import { WriteAReview } from "./WriteAReview";
 import { useQuery } from "@apollo/client";
-import { LOAD_REVIEWS } from "../GraphQL/Queries";
+import { LOAD_REVIEWS } from "../../GraphQL/Queries";
 export const ReviewProduct = ({ productId, productName }) => {
   const [showForm, setShowForm] = useState(false);
 
