@@ -15,18 +15,16 @@ export const RecentlyViewed = () => {
     <div>
     <hr/>
     <h3 style={{textAlign:'start'}}>Recently Viewed</h3>
-    <ul style={{display:'flex', listStyle:'none', gap:'20px',flexFlow:'wrap', padding:'0', justifyContent:'center'}}>
+    <ul style={{display:'flex', listStyle:'none', gap:'20px',overflowX:'auto', overflowY:'hidden',padding:' 0 20px 10px', justifyContent:'start', maxHeight:'20vh', position:'relative'}}>
         {history.map((item, index)=>(
-            <li key={index} style={{  boxSizing: "border-box" }}>
-            {/* <h4>{item?.name}</h4> */}
-           
+            <li key={index} style={{  boxSizing: "border-box", maxHeight:'100%', width:'fit-content' }}>
 
                
             <Link to={{
               pathname: "/product",
               search: `?id=${item.id}`,
             }}>
-               <img src={item?.media?.source} alt={item?.name} style={{maxWidth:'100%', maxHeight:'200px', objectFit:'cover', minWidth:'160px'}} />
+               <img src={item?.media?.source} alt={item?.name} style={{maxWidth:'100%',height:'100%', maxHeight:'200px', objectFit:'cover', minWidth:'160px'}} />
             </Link>
           {/* <p style={{margin:'0'}}>{item?.price?.formatted_with_symbol}</p> */}
 

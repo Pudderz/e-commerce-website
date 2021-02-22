@@ -1,17 +1,15 @@
-import React, { useState, useEffect, useContext, useRef} from "react";
+import React, { useState, useEffect} from "react";
 import { commerce } from "../lib/commerce";
-import { Link } from "react-router-dom";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { Button, Typography } from "@material-ui/core";
-import { CartContext} from '../context/CartContext';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import { ItemImage } from "./ItemImage";
+
+
 export const MostPopular = (props) => {
   const [products, setProducts] = useState(Array.from({length: 4}, ()=>0));
-  const container = useRef();
-  const isMin = useRef(false);
-
+  const [shouldShrink, setShouldShrink] = useState(false);
   // Currently fetches 4 most recent products
   // ToDO:
   // implement google analytics to work out the most popular product pages for this component
@@ -21,7 +19,7 @@ export const MostPopular = (props) => {
     commerce.products
       .list({limit: 4})
       .then((item) => {
-        setProducts((items) => item.data);
+        setProducts(() => item.data);
       })
       .catch((error) => {
         console.log("There was an error fetching the products", error);
@@ -33,9 +31,9 @@ export const MostPopular = (props) => {
   }, []);
 
   const handleMinimize = ()=>{
-    container.current.style.height =(isMin.current)? "fit-content" : "0px";
-    isMin.current = !isMin.current;
+    setShouldShrink(!shouldShrink)
   }
+
 
   return (
     <div>
@@ -45,26 +43,46 @@ export const MostPopular = (props) => {
     </div>
       
       <hr/>
-      <div ref={container} style={{height:'fit-content', overflow:'hidden'}}>
+      <div className={`container ${(shouldShrink)? 'shrink':'dontShrink'}`} >
       <ul
         style={{
           display: "flex",
-          flexFlow: "wrap",
+          overflowX:'auto',
           listStyle: "none",
           gap: "20px",
-          margin: "auto",
+          margin: "0 20px",
           padding:'0',
-          justifyContent:'center'
+          justifyContent:'start'
         }}
       >
         
         
 
         {products.map((item, index) => (
-          <li  key={index} style={{ width: "24%", boxSizing: "border-box" }}>
+          <li  key={index} style={{ width: "24%", minWidth:'150px',boxSizing: "border-box" }}>
      
         {typeof item !== 'object'?(
           <>
+          {/* <>
+          <Skeleton>
+            <h4>nameee</h4>
+          </Skeleton>  
+            
+           <Skeleton
+            variant="rect"
+            height={300}
+            width={225}
+            style={{ margin: "0px auto", maxWidth:'25%', maxHeight:'20vh' }}
+          ></Skeleton>
+           <Skeleton>
+             <p style={{margin:'5px auto'}}>pricesss</p>
+            <div style={{display:'flex', justifyContent:'center', gap:'20px'}}>
+
+            </div>
+            
+           </Skeleton>
+            
+            </> */}
           <Typography variant="h4">
             <Skeleton style={{ margin: "11px auto" }} />
           </Typography>
@@ -72,7 +90,7 @@ export const MostPopular = (props) => {
             variant="rect"
             height={300}
             width={225}
-            style={{ margin: "0px auto" }}
+            style={{ margin: "0px auto" , maxWidth:'100%', maxHeight:'20vh' }}
           ></Skeleton>
           
 
@@ -81,11 +99,11 @@ export const MostPopular = (props) => {
         </>
         ) : (
             <>
-            <h4>{item.name}</h4>
+            
             
             <ItemImage id={item.id} name={item.name} firstImage={item.media.source} secondImage={item.assets[1].url}/>
            
-           
+           <h4 style={{margin: '5px 0', fontSize:'clamp(14px,2vw,17px)'}}>{item.name}</h4>
             <p style={{margin:'5px auto'}}>{item.price.formatted_with_symbol}</p>
             <div style={{display:'flex', justifyContent:'center', gap:'20px'}}>
 

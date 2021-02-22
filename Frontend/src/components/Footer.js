@@ -3,11 +3,11 @@ import { Link } from "react-router-dom";
 
 export const Footer = () => {
   return (
-    <div style={{ maxWidth: "100%", position: "relative" }}>
+
  
-      <footer className="grid">
+      <footer className="grid"style={{ maxWidth: "100%", position: "sticky", padding: "50px 0", top:'100%'   }}>
         <hr
-          style={{ maxWidth: "100%", maxWidth: "1300px", margin: "24px auto 0" }}
+          style={{ maxWidth: "1300px", margin: "24px auto 0" }}
         />
 
         <div
@@ -23,12 +23,12 @@ export const Footer = () => {
             boxSizing:'border-box'
           }}
         >
-          <Link to="/">Home</Link>
-          <Link to="/store">About </Link>
-          <Link to="/findastore">Find a Store</Link>
-          <Link to="/store">Products</Link>
+          <Link className="link" to="/">Home</Link>
+          <Link className="link" to="/store">About</Link>
+          <Link className="link" to="/findastore">Find a Store</Link>
+          <Link className="link" to="/store">Products</Link>
         </div>
       </footer>
-    </div>
+    
   );
 };

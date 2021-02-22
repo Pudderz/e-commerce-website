@@ -17,8 +17,11 @@ export const ItemImage = ({ firstImage, secondImage, name, id }) => {
         src={firstImage}
         alt={name}
         style={{
-          maxWidth: "100%",
+          maxWidth: "200px",
           maxHeight: "300px",
+  width:'100%',
+          height:'20vh',
+          objectFit:'cover',
           zIndex: hover ? "0" : "1",
           position: "relative",
         }}
@@ -26,11 +29,14 @@ export const ItemImage = ({ firstImage, secondImage, name, id }) => {
       <img
         src={secondImage}
         alt={name}
-        style={{ maxWidth: "100%", maxHeight: "300px" }}
         style={{
           position: "absolute",
           maxWidth: "100%",
+          maxHeight: "300px",
           left: "0",
+  width:'100%',
+          height:'20vh',
+          objectFit:'cover',
           zIndex: hover ? "1" : "0",
         }}
       />
