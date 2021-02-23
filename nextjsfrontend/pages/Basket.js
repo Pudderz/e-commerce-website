@@ -18,7 +18,6 @@ export const Basket = () => {
       setIsSmallDisplay(false);
     }
     window.addEventListener("resize", (e) => {
-      console.log(window.innerWidth);
       if (window.innerWidth < 700 && isSmallDisplay === false) {
         setIsSmallDisplay(true);
       } else if (window.innerWidth >= 1000 && isSmallDisplay === true) {
@@ -27,7 +26,6 @@ export const Basket = () => {
     });
     return () => {
       window.removeEventListener("resize", (e) => {
-        console.log(window.innerWidth);
         if (window.innerWidth < 700 && isSmallDisplay === false) {
           setIsSmallDisplay(true);
         } else if (window.innerWidth >= 700 && isSmallDisplay === true) {
@@ -301,7 +299,7 @@ export const Basket = () => {
           Subtotal({cart?.total_items || 0} items):{" "}
           {cart?.subtotal?.formatted_with_symbol}
         </p>
-        <Link to="checkout">Proceed to checkout</Link>
+        <Link href="/checkout">Proceed to checkout</Link>
       </div>
     </div>
   );
