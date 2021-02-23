@@ -31,9 +31,7 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
-# currently storing .env info in
-next.config.js
-.next.config.js
+
 # vercel
 .vercel
 
