@@ -23,7 +23,7 @@ export const Auth0 = (props) => {
       <Auth0Provider
         domain={domain}
         clientId={clientId}
-        redirectUri={'http://localhost:3000/'}
+        redirectUri={process.env.WEBSITE_URL}
         onRedirectCallback={onRedirectCallback}
         scope={requestedScopes.join(' ')}
         audience={process.env.REACT_APP_AUTH0_AUDIENCE}

@@ -22,7 +22,7 @@ const errorLink = onError(({graphqlErrors,networkError}) =>{
 
 const link = from([
   errorLink,
-  new HttpLink({uri:'http://localhost:6969/graphql'}),
+  new HttpLink({uri:`${process.env.BACKEND_SERVER}/graphql`}),
 ])
 
 const authMiddleware = new ApolloLink((operation, forward) => {
@@ -42,14 +42,13 @@ const client = new ApolloClient({
 })
 
 
-const promise = loadStripe("pk_test_51ICSvvEduQoHI0PkPXFpVekvFm9fDb84KUYGy9CGtFlm1b6ZzjZ1Z9mVWaBEPIFvo3uQInuowX2KcEAbBANuqzeV00N77MhPiW");
-
-
 function MyApp({ Component, pageProps }) {
   const notistackRef = useRef();
+
   const onClickDismiss = (key) => () => {
     notistackRef.current.closeSnackbar(key);
   };
+
   return (
     <div className="App">
       <Auth0>

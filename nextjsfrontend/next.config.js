@@ -15,5 +15,7 @@ module.exports = withPlugins([
         APOLLO_GRAPH_VARIANT : process.env.APOLLO_GRAPH_VARIANT,
         APOLLO_SCHEMA_REPORTING : process.env.APOLLO_SCHEMA_REPORTING,
         REACT_APP_AUTH0_AUDIENCE: process.env.REACT_APP_AUTH0_AUDIENCE,
+        WEBSITE_URL: process.env.WEBSITE_URL,
+        BACKEND_SERVER: process.env.BACKEND_SERVER,
     },
   });
