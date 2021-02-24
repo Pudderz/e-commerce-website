@@ -3,6 +3,8 @@ import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import React, { useContext, useState, useEffect } from "react";
 import ShippingForm from "./ShippingForm";
 import { CartContext } from "../../context/CartContext";
+import { commerce } from "../../lib/commerce";
+
 
 const CARD_OPTIONS = {
   iconStyle: "solid",
@@ -29,6 +31,7 @@ const CARD_OPTIONS = {
 
 
 export const Payment = () => {
+  const [checkoutTokenId, setCheckoutToken] = useState();
   const [succeeded, setSucceeded] = useState(false);
   const [error, setError] = useState(null);
   const [processing, setProcessing] = useState('');
@@ -39,7 +42,6 @@ export const Payment = () => {
   const elements = useElements();
   const [shippingInfo, setShippingInfo] = useState({});
 
-
   const changeShippingInfo = (target, value) => {
     setShippingInfo({
       ...shippingInfo,
@@ -48,22 +50,68 @@ export const Payment = () => {
   };
 
 
-  useEffect(() => {
-    // Create PaymentIntent as soon as the page loads
-    fetch("http://localhost:4242/create-payment-intent", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
+  async function handleSubmit(ev) {
+    ev.preventDefault();
+    setProcessing(true);
+    // This process includes a few API calls, so now is a good time to show a loading indicator
+  
+    // Create a payment method using the card element on the page
+    const cardElement = elements.getElement(CardElement);
+    const paymentMethodResponse = await stripe.createPaymentMethod({ type: 'card', card: cardElement});
+  
+    if (paymentMethodResponse.error) {
+      // There was some issue with the information that the customer entered into the payment details form.
+      alert(paymentMethodResponse.error.message);
+      setError(`Payment failed 1 ${paymentMethodResponse.error.message}`);
+      setProcessing(false);
+      return;
+    }
+  
+    try {
+      // TODO: Import name from shipping form
+
+      const order = await commerce.checkout.capture(checkoutTokenId, {
+        customer: {
+          firstname: 'John',
+          lastname: 'Doe',
+          email: 'mpudney2@gmail.com',
         },
-        body: JSON.stringify({items: [{ id: "xl-tshirt" }]})
+        shipping: {
+          name: 'John Doe',
+          street: '123 Fake St',
+          town_city: 'San Francisco',
+          county_state: 'CA',
+          postal_zip_code: '94103',
+          country: 'US',
+        },
+        // Include Stripe payment method ID:
+        payment: {
+          gateway: 'stripe',
+          stripe: {
+            payment_method_id: paymentMethodResponse.paymentMethod.id,
+          },
+        },
       })
-      .then(res => {
-        return res.json();
-      })
-      .then(data => {
-        console.log('received')
-        setClientSecret(data.clientSecret);
-      });
+  console.log(order);
+      // If we get here, the order has been successfully captured and the order detail is part of the `order` variable
+      setError(null);
+      setProcessing(false);
+      setSucceeded(true);
+      return;
+    } catch (response) {
+      // There was an issue with capturing the order with Commerce.js
+      console.log(response);
+      alert(response.message);
+      setError(`Payment failed 2 ${response.message}`);
+      setProcessing(false);
+      return;
+    }
+  }
+
+
+  useEffect(() => {
+    commerce.checkout.generateTokenFrom('cart', commerce.cart.id())
+    .then(response => setCheckoutToken(response.id));
   }, []);
 
 
@@ -73,6 +121,7 @@ export const Payment = () => {
     setDisabled(event.empty);
     setError(event.error ? event.error.message : "");
   };
+
 
 
 
@@ -94,9 +143,11 @@ export const Payment = () => {
     }
   };
 
+
+
   return (
     <div style={{ width: "50%", minWidth: "min(400px,100%)" }}>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleOrder}>
         <div style={{ maxWidth: "700px", margin: "auto", padding: "0 20px" }}>
           <ShippingForm
             shippingInfo={shippingInfo}
