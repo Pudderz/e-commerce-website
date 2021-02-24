@@ -8,7 +8,7 @@ import runningBackground from "../../images/runningBackground.jpg";
 import hikingBackground from "../../images/hikingBackground2.jpg";
 import casualBackground from "../../images/casualBackground2.jpg";
 import { ItemImage } from "../../components/Common/ItemImage";
-
+import PropTypes from "prop-types";
 export const CategoryPage = ({category, description, numOfProducts, slug}) => {
   const [categoryInfo, setCategoryInfo] = useState({});
 
@@ -64,7 +64,7 @@ export const CategoryPage = ({category, description, numOfProducts, slug}) => {
           <Link href="/">Home</Link>
           <Link href="/store">Store</Link>
           <Typography>
-            {category.charAt(0).toUpperCase() + category.slice(1)}
+            {category}
           </Typography>
         </Breadcrumbs>
 
@@ -154,6 +154,21 @@ export const CategoryPage = ({category, description, numOfProducts, slug}) => {
 export default  CategoryPage;
 
 
+CategoryPage.propTypes = {
+  category: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  numOfProducts: PropTypes.number.isRequired,
+  slug:PropTypes.string.isRequired,
+};
+
+CategoryPage.defaultProps = {
+  category: 'Running',
+  description: '',
+  numOfProducts: 0,
+  slug:'running',
+};
+
+
 
 export async function getStaticProps({ params }) {
     console.log(`params`)
@@ -173,7 +188,7 @@ export async function getStaticProps({ params }) {
       props: {
         category: categoryData?.name || '',
         description: categoryData?.description || '',
-        numOfProducts: categoryData?.products || '',
+        numOfProducts: categoryData?.products || 0,
         slug: categoryData?.slug || '',
       },
     };
