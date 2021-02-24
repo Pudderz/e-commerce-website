@@ -125,29 +125,29 @@ export const Payment = () => {
 
 
 
-  const handleSubmit = async ev => {
-    ev.preventDefault();
-    setProcessing(true);
-    const payload = await stripe.confirmCardPayment(clientSecret, {
-      payment_method: {
-        card: elements.getElement(CardElement)
-      }
-    });
-    if (payload.error) {
-      setError(`Payment failed ${payload.error.message}`);
-      setProcessing(false);
-    } else {
-      setError(null);
-      setProcessing(false);
-      setSucceeded(true);
-    }
-  };
+  // const handleSubmit = async ev => {
+  //   ev.preventDefault();
+  //   setProcessing(true);
+  //   const payload = await stripe.confirmCardPayment(clientSecret, {
+  //     payment_method: {
+  //       card: elements.getElement(CardElement)
+  //     }
+  //   });
+  //   if (payload.error) {
+  //     setError(`Payment failed ${payload.error.message}`);
+  //     setProcessing(false);
+  //   } else {
+  //     setError(null);
+  //     setProcessing(false);
+  //     setSucceeded(true);
+  //   }
+  // };
 
 
 
   return (
     <div style={{ width: "50%", minWidth: "min(400px,100%)" }}>
-      <form onSubmit={handleOrder}>
+      <form onSubmit={handleSubmit}>
         <div style={{ maxWidth: "700px", margin: "auto", padding: "0 20px" }}>
           <ShippingForm
             shippingInfo={shippingInfo}

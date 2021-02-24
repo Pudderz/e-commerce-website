@@ -14,7 +14,7 @@ import {
   import { CartContext } from "../../context/CartContext";
   import { SelectSize } from "../../components/ProductPages/SelectSize";
   import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
-  import { initGA, logPageView } from '../utils/analytics'
+  import { initGA, logPageView } from '../../utils/analytics'
   
   export const ProductPage = (props) => {
       console.log(props);
