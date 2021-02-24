@@ -30,7 +30,7 @@ export const CategoryPage = ({category, description, numOfProducts, slug}) => {
   };
 
   useEffect(() => {
-    fetchProducts(props.slug);
+    fetchProducts(slug);
   }, []);
 
   return (
@@ -58,7 +58,7 @@ export const CategoryPage = ({category, description, numOfProducts, slug}) => {
             }}
           />
       </div>
-      
+
       <div style={{ padding: "20px 20px 0" }}>
         <Breadcrumbs aria-label="breadcrumb">
           <Link href="/">Home</Link>

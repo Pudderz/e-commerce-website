@@ -14,7 +14,7 @@ import {
   import { CartContext } from "../../context/CartContext";
   import { SelectSize } from "../../components/ProductPages/SelectSize";
   import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
-  
+  import { initGA, logPageView } from '../utils/analytics'
   
   export const ProductPage = (props) => {
       console.log(props);
@@ -41,6 +41,11 @@ import {
     useEffect(() => {
       fetchItem(props.id);
       window.scrollTo(0, 0);
+      if (!window.GA_INITIALIZED) {
+        initGA()
+        window.GA_INITIALIZED = true
+      }
+      logPageView();
     }, []);
   
   
@@ -158,18 +163,6 @@ import {
   
         <div
         className="itemNav"
-          // style={{
-          //   top: "4px",
-          //   position: "sticky",
-          //   height: "fit-content",
-          //   display: "flex",
-          //   justifyContent: "space-between",
-          //   backgroundColor: "white",
-          //   zIndex: "2",
-          //   margin: "0 -20px",
-          //   padding: " 0",
-          //   width: "81%",
-          // }}
         >
           <Breadcrumbs aria-label="breadcrumb" style={{ margin: "1em" }}>
             <Link href="/">Home</Link>
