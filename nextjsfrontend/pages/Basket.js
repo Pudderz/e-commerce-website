@@ -7,7 +7,7 @@ import Link from "next/link";
 
 //shows total price
 export const Basket = () => {
-  const { cart, changeCart, removeFromCart, updateQty } = useContext(CartContext);
+  const { cart, removeFromCart, updateQty } = useContext(CartContext);
 
 
   const [isSmallDisplay, setIsSmallDisplay] = useState(false);

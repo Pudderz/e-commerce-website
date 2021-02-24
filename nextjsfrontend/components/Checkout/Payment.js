@@ -1,6 +1,6 @@
-import { Button } from "@material-ui/core";
+import { Button, CircularProgress } from "@material-ui/core";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import ShippingForm from "./ShippingForm";
 import { CartContext } from "../../context/CartContext";
 
@@ -26,17 +26,19 @@ const CARD_OPTIONS = {
   },
 };
 
+
+
 export const Payment = () => {
+  const [succeeded, setSucceeded] = useState(false);
+  const [error, setError] = useState(null);
+  const [processing, setProcessing] = useState('');
+  const [disabled, setDisabled] = useState(true);
+  const [clientSecret, setClientSecret] = useState('');
   const { cart } = useContext(CartContext);
   const stripe = useStripe();
   const elements = useElements();
-
   const [shippingInfo, setShippingInfo] = useState({});
-  // const [userInfo, , setUserInfo] = useState({
-  //   firstname: "",
-  //   lastname: "",
-  //   customerEmail: "",
-  // });
+
 
   const changeShippingInfo = (target, value) => {
     setShippingInfo({
@@ -45,37 +47,56 @@ export const Payment = () => {
     });
   };
 
-  const handleSubmit = async (event) => {
-    // Block native form submission.
-    event.preventDefault();
 
-    if (!stripe || !elements) {
-      // Stripe.js has not loaded yet. Make sure to disable
-      // form submission until Stripe.js has loaded.
-      return;
-    }
+  useEffect(() => {
+    // Create PaymentIntent as soon as the page loads
+    fetch("http://localhost:4242/create-payment-intent", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({items: [{ id: "xl-tshirt" }]})
+      })
+      .then(res => {
+        return res.json();
+      })
+      .then(data => {
+        console.log('received')
+        setClientSecret(data.clientSecret);
+      });
+  }, []);
 
-    // Get a reference to a mounted CardElement. Elements knows how
-    // to find your CardElement because there can only ever be one of
-    // each type of element.
-    const cardElement = elements.getElement(CardElement);
 
-    // Use your card Element with other Stripe.js APIs
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: "card",
-      card: cardElement,
+  const handleChange = async (event) => {
+    // Listen for changes in the CardElement
+    // and display any errors as the customer types their card details
+    setDisabled(event.empty);
+    setError(event.error ? event.error.message : "");
+  };
+
+
+
+  const handleSubmit = async ev => {
+    ev.preventDefault();
+    setProcessing(true);
+    const payload = await stripe.confirmCardPayment(clientSecret, {
+      payment_method: {
+        card: elements.getElement(CardElement)
+      }
     });
-
-    if (error) {
-      console.log("[error]", error);
+    if (payload.error) {
+      setError(`Payment failed ${payload.error.message}`);
+      setProcessing(false);
     } else {
-      console.log("[PaymentMethod]", paymentMethod);
+      setError(null);
+      setProcessing(false);
+      setSucceeded(true);
     }
   };
 
   return (
     <div style={{ width: "50%", minWidth: "min(400px,100%)" }}>
-      <form onClick={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <div style={{ maxWidth: "700px", margin: "auto", padding: "0 20px" }}>
           <ShippingForm
             shippingInfo={shippingInfo}
@@ -86,14 +107,14 @@ export const Payment = () => {
             <label style={{ textAlign: "start" }}>
               <p style={{ margin: "2px 0 10px" }}>Credit/Debit card</p>
               <hr />
-              <CardElement options={CARD_OPTIONS} />
+              <CardElement options={CARD_OPTIONS} onChange={handleChange} />
             </label>
 
             <Button
               variant="contained"
               color="secondary"
               type="submit"
-              disabled={!stripe}
+              disabled={processing || disabled || succeeded}
               style={{
                 backgroundColor: "#111",
                 color: "#fff",
@@ -104,8 +125,32 @@ export const Payment = () => {
                 fontSize: "18px",
               }}
             >
-              Pay {cart?.subtotal?.formatted_with_symbol}
+              
+              <span id="button-text">
+          {processing ? (
+            <CircularProgress size={24}/>
+            
+          ) : (
+            `Pay ${cart?.subtotal?.formatted_with_symbol}`
+          )}
+        </span>
             </Button>
+
+            {error && (
+        <div className="card-error" role="alert">
+          {error}
+        </div>
+      )}
+
+<p className={succeeded ? "result-message" : "result-message hidden"}>
+        Payment succeeded, see the result in your
+        <a
+          href={`https://dashboard.stripe.com/test/payments`}
+        >
+          {" "}
+          Stripe dashboard.
+        </a> Refresh the page to pay again.
+      </p>
           </div>
         </div>
       </form>
