@@ -1,5 +1,5 @@
 import '../styles/globals.css'
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import "../App.scss";
 import { Header } from "../components/Common/Header";
 import { Footer } from "../components/Common/Footer";
