@@ -9,18 +9,8 @@ import hikingBackground from "../../images/hikingBackground2.jpg";
 import casualBackground from "../../images/casualBackground2.jpg";
 import { ItemImage } from "../../components/Common/ItemImage";
 
-export const CategoryPage = (props) => {
+export const CategoryPage = ({category, description, numOfProducts, slug}) => {
   const [categoryInfo, setCategoryInfo] = useState({});
-  const [category, setCategory] = useState("");
-
-  const getCategoryInfo = (category) => {
-    commerce.categories
-      .retrieve(category, { type: "slug" })
-      .then((category) => {
-        console.log(category);
-        setCategoryInfo(category);
-      });
-  };
 
   const [products, setProducts] = useState(
     Array.from({ length: 12 }, (v, i) => i)
@@ -40,16 +30,8 @@ export const CategoryPage = (props) => {
   };
 
   useEffect(() => {
-    setCategory(props.slug);
     fetchProducts(props.slug);
-    getCategoryInfo(props.slug);
-    return () => {};
   }, []);
-
-  useEffect(() => {
-    console.log(products);
-    return () => {};
-  }, [products]);
 
   return (
     <div>
@@ -58,13 +40,11 @@ export const CategoryPage = (props) => {
           backgroundColor: "grey",
           height: "300px",
           width: "100%",
-          // backgroundColor: "#CE1121",
           position: "relative",
         }}
       >
-        {category === "running" && (
-          <img
-            src={runningBackground}
+        <img
+            src={category==="running"? runningBackground : (category==="hiking")? hikingBackground: casualBackground}
             alt=""
             height="100%"
             style={{
@@ -74,41 +54,11 @@ export const CategoryPage = (props) => {
               width: "100%",
               objectFit: "cover",
               left: "0",
+              objectPosition: category==="casual"? "75% 65%" : "50% 50%",
             }}
           />
-        )}
-        {category === "hiking" && (
-          <img
-            src={hikingBackground}
-            alt=""
-            height="100%"
-            style={{
-              position: "absolute",
-              top: "0",
-              bottom: "0",
-              width: "100%",
-              objectFit: "cover",
-              left: "0",
-            }}
-          />
-        )}
-        {category === "casual" && (
-          <img
-            src={casualBackground}
-            alt=""
-            height="100%"
-            style={{
-              position: "absolute",
-              top: "0",
-              bottom: "0",
-              width: "100%",
-              objectFit: "cover",
-              left: "0",
-              objectPosition: "75% 65%",
-            }}
-          />
-        )}
       </div>
+      
       <div style={{ padding: "20px 20px 0" }}>
         <Breadcrumbs aria-label="breadcrumb">
           <Link href="/">Home</Link>
@@ -120,10 +70,10 @@ export const CategoryPage = (props) => {
 
         <div>
           <h2>
-            {categoryInfo?.name}({categoryInfo?.products})
+            {category}({numOfProducts})
           </h2>
           <p style={{ maxWidth: "600px", margin: " 0 auto 20px" }}>
-            {categoryInfo?.description}
+            {description}
           </p>
           <hr />
         </div>
@@ -185,31 +135,6 @@ export const CategoryPage = (props) => {
                     secondImage={item.assets[1].url}
                     link={item.permalink}
                   />
-                  {/* <Link
-                    to={{
-                      pathname: "/product",
-                      search: `?id=${item.id}`,
-                    }}
-                    style={{ position: "relative" }}
-                  >
-                    <img
-                      src={item.media.source}
-                      alt={item.name}
-                      style={{ maxWidth: "100%", maxHeight: "300px", zIndex:'1', position:'relative' }}
-                    />
-                    <img
-                   
-                      src={item.assets[1].url}
-                      alt={item.name}
-                      style={{ maxWidth: "100%", maxHeight: "300px" }}
-                      style={{
-                        position: "absolute",
-                        maxWidth: "100%",
-                        left: "0",
-                        zIndex:(hover)?'2':'0'
-                      }}
-                    />
-                  </Link> */}
                   <h4 style={{ margin: "10px auto 0" }}>{item.name}</h4>
                   <p style={{ margin: "auto" }}>
                     {item.price.formatted_with_symbol}
@@ -248,7 +173,7 @@ export async function getStaticProps({ params }) {
       props: {
         category: categoryData?.name || '',
         description: categoryData?.description || '',
-        numOfProduct: categoryData?.products || '',
+        numOfProducts: categoryData?.products || '',
         slug: categoryData?.slug || '',
       },
     };
