@@ -10,7 +10,8 @@ import { CartContextProvider } from "../context/CartContext";
 import { loadStripe } from "@stripe/stripe-js";
 import {ApolloClient, InMemoryCache, ApolloProvider, HttpLink, ApolloLink,concat, from} from "@apollo/client"; 
 import {onError} from '@apollo/client/link/error'
-
+import { useRouter } from 'next/router'
+import * as gtag from '../utils/analytics';
 
 const errorLink = onError(({graphqlErrors,networkError}) =>{
   if(graphqlErrors){
@@ -48,6 +49,18 @@ function MyApp({ Component, pageProps }) {
   const onClickDismiss = (key) => () => {
     notistackRef.current.closeSnackbar(key);
   };
+
+  const router = useRouter()
+  useEffect(() => {
+    const handleRouteChange = (url) => {
+      gtag.pageview(url)
+    }
+    router.events.on('routeChangeComplete', handleRouteChange)
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange)
+    }
+  }, [router.events])
+
 
   return (
     <div className="App">
