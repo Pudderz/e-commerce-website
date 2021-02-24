@@ -15,7 +15,7 @@ export const Auth0 = (props) => {
 
   const router = useRouter()
   const onRedirectCallback = (appState) => {
-    router.push(appState?.returnTo );
+    router.push(appState?.returnTo ||  process.env.WEBSITE_URL);
   };
 
   return (
