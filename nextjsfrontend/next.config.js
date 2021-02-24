@@ -17,5 +17,6 @@ module.exports = withPlugins([
         REACT_APP_AUTH0_AUDIENCE: process.env.REACT_APP_AUTH0_AUDIENCE,
         WEBSITE_URL: process.env.WEBSITE_URL,
         BACKEND_SERVER: process.env.BACKEND_SERVER,
+        GOOGLE_ANALYTICS_UA_ID: process.env.GOOGLE_ANALYTICS_UA_ID,
     },
   });
