@@ -4,11 +4,6 @@ export const GA_TRACKING_ID = process.env.GOOGLE_ANALYTICS_ID
 
 // https://developers.google.com/analytics/devguides/collection/gtagjs/pages
 export const pageview = (url) => {
-  console.log(GA_TRACKING_ID);
-  console.log(process.env.GOOGLE_ANALYTICS_ID);
-  console.log(process.env.REACT_APP_AUTH0_DOMAIN);
-  console.log(process.env.REACT_APP_AUTH0_CLIENT_ID );
-  console.log(process.env.APOLLO_KEY);
   window.gtag('config', GA_TRACKING_ID, {
     page_path: url,
   })
