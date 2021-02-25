@@ -1,5 +1,6 @@
 import ReactGA from 'react-ga'
-export const GA_TRACKING_ID = process.env.GOOGLE_ANALTICS_UA_ID
+
+export const GA_TRACKING_ID = process.env.GOOGLE_ANALYTICS_ID
 
 // https://developers.google.com/analytics/devguides/collection/gtagjs/pages
 export const pageview = (url) => {
@@ -17,23 +18,23 @@ export const event = ({ action, category, label, value }) => {
   })
 }
 
-export const initGA = () => {
-    console.log('GA init')
-    ReactGA.initialize(process.env.GOOGLE_ANALTICS_UA_ID)
-  }
+// export const initGA = () => {
+//     console.log('GA init')
+//     ReactGA.initialize(process.env.GOOGLE_ANALYTICS_ID)
+//   }
 
-export const logPageView = () => {
-    console.log(`Logging pageview for ${window.location.pathname}`)
-    ReactGA.set({ page: window.location.pathname })
-    ReactGA.pageview(window.location.pathname)
-  }
-  export const logEvent = (category = '', action = '') => {
-    if (category && action) {
-      ReactGA.event({ category, action })
-    }
-  }
-  export const logException = (description = '', fatal = false) => {
-    if (description) {
-      ReactGA.exception({ description, fatal })
-    }
-  }
+// export const logPageView = () => {
+//     console.log(`Logging pageview for ${window.location.pathname}`)
+//     ReactGA.set({ page: window.location.pathname })
+//     ReactGA.pageview(window.location.pathname)
+//   }
+//   export const logEvent = (category = '', action = '') => {
+//     if (category && action) {
+//       ReactGA.event({ category, action })
+//     }
+//   }
+//   export const logException = (description = '', fatal = false) => {
+//     if (description) {
+//       ReactGA.exception({ description, fatal })
+//     }
+//   }

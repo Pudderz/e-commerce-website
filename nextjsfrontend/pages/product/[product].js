@@ -14,7 +14,7 @@ import {
   import { CartContext } from "../../context/CartContext";
   import { SelectSize } from "../../components/ProductPages/SelectSize";
   import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
-  import { initGA, logPageView } from '../../utils/analytics'
+  // import { initGA, logPageView } from '../../utils/analytics'
   
   export const ProductPage = (props) => {
       console.log(props);
@@ -40,12 +40,12 @@ import {
   
     useEffect(() => {
       fetchItem(props.id);
-      window.scrollTo(0, 0);
-      if (!window.GA_INITIALIZED) {
-        initGA()
-        window.GA_INITIALIZED = true
-      }
-      logPageView();
+      // window.scrollTo(0, 0);
+      // if (!window.GA_INITIALIZED) {
+      //   initGA()
+      //   window.GA_INITIALIZED = true
+      // }
+      // logPageView();
     }, []);
   
   
