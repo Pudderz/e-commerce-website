@@ -19,4 +19,7 @@ module.exports = withPlugins([
         BACKEND_SERVER: process.env.BACKEND_SERVER,
         GOOGLE_ANALYTICS_ID: process.env.GOOGLE_ANALYTICS_ID,
     },
+    images: {
+        domains:['cdn.chec.io']
+    }
   });

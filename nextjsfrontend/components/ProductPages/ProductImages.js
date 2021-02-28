@@ -3,7 +3,7 @@ import Skeleton from "@material-ui/lab/Skeleton";
 import React, { useState } from "react";
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
-
+import Image from 'next/image';
 
 export const ProductImages = ({ images }) => {
 
@@ -26,7 +26,7 @@ export const ProductImages = ({ images }) => {
   return (
     <div className="productImages" >
       <div >
-        <ul style={{ listStyle: "none", maxWidth:'100%', overflow:'auto' }}>
+        <ul className="productList" style={{ listStyle: "none", maxWidth:'100%', overflow:'auto' }}>
           {loaded === false ? (
             <>
               {placeholder?.map((e, index) => (
@@ -42,9 +42,9 @@ export const ProductImages = ({ images }) => {
           ) : (
             <>
               {images?.map((image, index) => (
-                <li key={index}>
-                  <Button onClick={() => changeMain(index)}>
-                    <img src={image.url} height="50" />
+                <li key={index} >
+                  <Button onClick={() => changeMain(index)} >
+                    <Image src={image.url} height={50} width={50} />
                   </Button>
                 </li>
               ))}
@@ -86,7 +86,8 @@ export const ProductImages = ({ images }) => {
               height={500}
               style={{ margin: "20px" }}
             >
-              <img
+               
+              <Image
                 src={images?.[main]?.url}
                 alt=""
                 height="500"
@@ -97,13 +98,17 @@ export const ProductImages = ({ images }) => {
           </>
         ) : (
           <>
-            <img
+            {/* <Image
               src={images?.[main]?.url}
               alt=""
-              height="500"
+              // layout="fill"
+              width={800}
+              height={500}
+              quality={90}
               onLoad={() => setLoading(true)}
             
-            />
+            /> */}
+            <img src={images?.[main]?.url} height="500" alt="" />
           </>
         )}
 
