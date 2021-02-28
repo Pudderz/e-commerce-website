@@ -1,7 +1,6 @@
 import Document, { Html, Head, Main, NextScript } from 'next/document'
-
 import { GA_TRACKING_ID } from '../utils/analytics'
-console.log(process.env.GOOGLE_ANALTICS_ID);
+
 export default class MyDocument extends Document {
   
   render() {

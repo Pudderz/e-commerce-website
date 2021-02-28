@@ -14,10 +14,27 @@ import {
   import { CartContext } from "../../context/CartContext";
   import { SelectSize } from "../../components/ProductPages/SelectSize";
   import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
+  import { useRouter } from 'next/router';
+  import DefaultErrorPage from 'next/error'
   // import { initGA, logPageView } from '../../utils/analytics'
-  
+  import Image from 'next/image';
+
+
   export const ProductPage = (props) => {
+
       console.log(props);
+      const router = useRouter();
+
+// Fallback
+if (router.isFallback) {
+  return <div>Loading...</div>
+}
+if(props?.name === "" || typeof props?.name==="undefined") {
+  return <DefaultErrorPage statusCode={404} />
+
+}
+
+
     const [product, setProduct] = useState({});
     const [size, setSize] = useState('')
     const { changeCart } = useContext(CartContext);
@@ -39,20 +56,14 @@ import {
   
   
     useEffect(() => {
-      fetchItem(props.id);
-      // window.scrollTo(0, 0);
-      // if (!window.GA_INITIALIZED) {
-      //   initGA()
-      //   window.GA_INITIALIZED = true
-      // }
-      // logPageView();
+      fetchItem(props?.id);
     }, []);
   
   
   
     useEffect(() => {
       if(typeof product?.variants !== "undefined" && product?.variants?.length !==0){
-  let sizeObject = {};
+      let sizeObject = {};
         product.variants.forEach((variant)=>{
   
           if(variant.name==="size"){
@@ -102,7 +113,8 @@ import {
     const changeSize = (size)=>{
       setSize(size)
     }
-  
+
+    
   
     return (
       <div style={{ padding: "0 20px" }}>
@@ -119,7 +131,7 @@ import {
         >
           
             {/* Product Images */}
-            <ProductImages images={product.assets} />
+            <ProductImages images={props.assets} />
           
       
             <div className="itemDescription">
@@ -171,7 +183,7 @@ import {
           </Breadcrumbs>
   
           <div style={{ display: "flex" }}>
-            <img src={product?.assets?.[0]?.url} height="60px" alt="" />
+            <img src={props.assets?.[0].url} height="60px" alt={product?.name} />
             <h4 style={{ margin: "1em" }}>{product.name}</h4>
             <p>{product?.price?.formatted_with_symbol}</p>
           </div>
@@ -240,8 +252,6 @@ import {
         </div>
         <hr />
         <ProductTabs product={product} />
-        
-        {/* <ReviewProduct /> */}
         <RecentlyViewed />
       </div>
     );
@@ -256,7 +266,6 @@ export default  ProductPage;
 export async function getStaticProps({ params }) {
     console.log(`params`)
 
-    console.log(params)
     let productData = {};
    await commerce.products
       .retrieve(params.product, { type:'permalink'})
@@ -264,9 +273,6 @@ export async function getStaticProps({ params }) {
         console.log(product);
         productData = product;
       });
-    // const data = await getPost(params.slug);
-    // const mdxSource = await renderToString(data?.post?.markdownDescription);
-    // const aboutProjectMdx = await renderToString(data?.post?.aboutProject);
   
     return {
       props: {
@@ -274,8 +280,12 @@ export async function getStaticProps({ params }) {
         id: productData?.id || '',
         price: productData?.price?.formatted_with_symbol,
         description: productData?.description || '',
-        variants: productData?.variants || '',
+        variants: productData?.variants || [],
+        assets: productData?.assets || [],
+
+
       },
+      revalidate: 120 
     };
   }
   
