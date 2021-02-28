@@ -1,68 +1,24 @@
 import React, { useState, useEffect } from "react";
-import { commerce } from "../../lib/commerce";
+
 import Skeleton from "@material-ui/lab/Skeleton";
 import { Button, Typography } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import { ItemImage } from "../Common/ItemImage";
-const axios = require("axios").default;
 
-export const MostPopular = (props) => {
+
+export const MostPopular = ({popularProducts}) => {
   const [products, setProducts] = useState(Array.from({ length: 4 }, () => 0));
   const [shouldShrink, setShouldShrink] = useState(false);
   // Currently fetches 4 most recent products
   // ToDO:
   // implement google analytics to work out the most popular product pages for this component
 
-  const fetchProducts = () => {
-    commerce.products
-      .list({limit: 4})
-      .then((item) => {
-        setProducts(() => item.data);
-      })
-      .catch((error) => {
-        console.log("There was an error fetching the products", error);
-      });
-  };
 
-  const fetchPopular = async () => {
-    const popProducts = [];
-    let data = [];
-
-    await axios.get(`${process.env.BACKEND_SERVER}/trending`).then((res) => {
-      data = res.data;
-    });
-
-    let j = 0;
-
-    if (data.length === 0) {
-      fetchProducts();
-    } else {
-      for (let i = 0; j <= 4 && i < data.length; i++) {
-        console.log(`i is ${i}`);
-        // Have to call them separately as commerce library has no option to find a group of products
-
-        await commerce.products
-          .retrieve(data?.[i].slug, { type: "permalink" })
-          .then((item) => {
-            if (!!item) {
-              popProducts.push(item);
-              j++;
-            }
-          })
-          .catch((error) => {
-            console.log("There was an error fetching the products", error);
-           
-          });
-        
-      }
-      
-      setProducts(popProducts);
-    }
-  };
-  useEffect(() => {
-    fetchPopular();
-  }, []);
+useEffect(() => {
+  setProducts(popularProducts)
+}, [popularProducts])
+ 
 
   const handleMinimize = () => {
     setShouldShrink(!shouldShrink);

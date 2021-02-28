@@ -10,82 +10,11 @@ import { FollowInstagram } from "../components/FrontPage/FollowInstagram";
 import LocalShippingIcon from "@material-ui/icons/LocalShipping";
 import PaymentIcon from "@material-ui/icons/Payment";
 import { Categories } from "../components/FrontPage/Categories";
-// export default function Home() {
-//   return (
-//     <div className={styles.container}>
-//       <Head>
-//         <title>Create Next App</title>
-//         <link rel="icon" href="/favicon.ico" />
-//       </Head>
+import { commerce } from "../lib/commerce";
+const axios = require("axios").default;
 
-//       <main className={styles.main}>
-//         <h1 className={styles.title}>
-//           Welcome to <a href="https://nextjs.org">Next.js!</a>
-//         </h1>
-
-//         <p className={styles.description}>
-//           Get started by editing{' '}
-//           <code className={styles.code}>pages/index.js</code>
-//         </p>
-
-//         <div className={styles.grid}>
-//           <a href="https://nextjs.org/docs" className={styles.card}>
-//             <h3>Documentation &rarr;</h3>
-//             <p>Find in-depth information about Next.js features and API.</p>
-//           </a>
-
-//           <a href="https://nextjs.org/learn" className={styles.card}>
-//             <h3>Learn &rarr;</h3>
-//             <p>Learn about Next.js in an interactive course with quizzes!</p>
-//           </a>
-
-//           <a
-//             href="https://github.com/vercel/next.js/tree/master/examples"
-//             className={styles.card}
-//           >
-//             <h3>Examples &rarr;</h3>
-//             <p>Discover and deploy boilerplate example Next.js projects.</p>
-//           </a>
-
-//           <a
-//             href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-//             className={styles.card}
-//           >
-//             <h3>Deploy &rarr;</h3>
-//             <p>
-//               Instantly deploy your Next.js site to a public URL with Vercel.
-//             </p>
-//           </a>
-//         </div>
-//       </main>
-
-//       <footer className={styles.footer}>
-//         <a
-//           href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           Powered by{' '}
-//           <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-//         </a>
-//       </footer>
-//     </div>
-//   )
-// }
-
-
-
-//Home Page
-
-//Featured Section/Banner section
-
-// Top Products
-
-// Instagram Section
-
-// categories section
-
-export const FrontPage = () => {
+export const FrontPage = ({products}) => {
+  console.log(products);
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -117,7 +46,7 @@ export const FrontPage = () => {
         />
         Banner
       </div>
-      <MostPopular />
+      <MostPopular popularProducts={products} />
 
       {/* Category Selection */}
       <Categories />
@@ -166,6 +95,66 @@ export const FrontPage = () => {
     </div>
   );
 };
+export async function getStaticProps({ params }) {
+
+
+
+let  popularProducts = [];
+    const fetchProducts = () => {
+      commerce.products
+        .list({limit: 4})
+        .then((item) => {
+          popularProducts = item.data;
+        })
+        .catch((error) => {
+          console.log("There was an error fetching the products", error);
+        });
+    };
+
+      let data = [];
+    
+      await axios.get(`${process.env.BACKEND_SERVER}/trending`).then((res) => {
+        data = res.data;
+      });
+    
+      let j = 0;
+    
+      if (data.length === 0) {
+        fetchProducts();
+      } else {
+        for (let i = 0; j <= 4 && i < data.length; i++) {
+          // Have to call them separately as the commerce library has no option to find a group of products.
+          
+          // In the Future I hope to have the commerce db in mongoDB allowing this process to effiecient 
+    
+          await commerce.products
+            .retrieve(data?.[i].slug, { type: "permalink" })
+            .then((item) => {
+              if (!!item) {
+                popularProducts.push(item);
+                j++;
+              }
+            })
+            .catch((error) => {
+              console.log("There was an error fetching the products", error);
+              fetchProducts();
+            });
+          
+        }
+        
+        
+      }
+
+  return {
+    props: {
+      products: popularProducts,
+    },
+    revalidate: 300
+  };
+}
+
+
+
 
 
 export default FrontPage;
