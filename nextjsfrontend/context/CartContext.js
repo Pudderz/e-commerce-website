@@ -7,25 +7,16 @@ import {
   updateCartQty,
 } from "../lib/commerce";
 
-import { useAuth0 } from "@auth0/auth0-react";
 export const CartContext = React.createContext();
 
 export const CartContextProvider = (props) => {
-  const { getAccessTokenSilently } = useAuth0();
+  
 
   const [cart, setCart] = useState({});
   useEffect(()=>{
     (async () => {
     fetchCart(setCart);
-    try {
-      const token = await getAccessTokenSilently();
-      console.log(token, getAccessTokenSilently());
-      if (token) {
-        localStorage.setItem("token", token);
-      }
-    } catch (err) {
-      console.log(err);
-    }
+    
   })();
   }, []);
 

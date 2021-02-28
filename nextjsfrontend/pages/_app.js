@@ -7,11 +7,11 @@ import { Auth0 } from "../components/Authentication/Auth0";
 import { SnackbarProvider } from "notistack";
 import { Button } from "@material-ui/core";
 import { CartContextProvider } from "../context/CartContext";
-import { loadStripe } from "@stripe/stripe-js";
 import {ApolloClient, InMemoryCache, ApolloProvider, HttpLink, ApolloLink,concat, from} from "@apollo/client"; 
 import {onError} from '@apollo/client/link/error'
 import { useRouter } from 'next/router'
 import * as gtag from '../utils/analytics';
+import { AuthContextProvider } from '../context/AuthContext';
 
 const errorLink = onError(({graphqlErrors,networkError}) =>{
   if(graphqlErrors){
@@ -44,13 +44,18 @@ const client = new ApolloClient({
 
 
 function MyApp({ Component, pageProps }) {
+
+  // SnackBar Setup
   const notistackRef = useRef();
 
   const onClickDismiss = (key) => () => {
     notistackRef.current.closeSnackbar(key);
   };
 
-  const router = useRouter()
+
+  // Google analytics
+  const router = useRouter();
+
   useEffect(() => {
     const handleRouteChange = (url) => {
       gtag.pageview(url)
@@ -68,6 +73,7 @@ function MyApp({ Component, pageProps }) {
         <ApolloProvider
           client={client}
         >
+        <AuthContextProvider>
         <SnackbarProvider
           maxSnack={3}
           ref={notistackRef}
@@ -84,6 +90,7 @@ function MyApp({ Component, pageProps }) {
             </div>
           </CartContextProvider>
         </SnackbarProvider>
+        </AuthContextProvider>  
         </ApolloProvider>
       </Auth0>
 
