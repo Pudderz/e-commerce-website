@@ -3,10 +3,10 @@
 Demo - https://e-commerce-website-j8wvkus9z-pudderz.vercel.app/
 
 ## features
-* login Authenication
+* login Authentication
 * google analytics to create a most popular section
 * Stripe.js for payments
-* Grahql mutations with autherization using JWT access tokens to let users review products
+* MongDB GraphQL backend with queries and mutations with authentication using JWT access tokens
 ## To Do
 * Add error handler for when payment isnt received
 * verify contents of cart can be purchased(in stock)
