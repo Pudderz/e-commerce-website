@@ -49,6 +49,43 @@ const RootQuery = new GraphQLObjectType({
         console.log('finding');
         return Product.find({ productName: args.productName });
       },
+    },
+      getUserReviews: {
+      type: new GraphQLList(ProductReviews),
+      args: { sub: { type: GraphQLString }},
+      resolve: async (parent, args, context)=> {
+        console.log('getting user reviews');
+        console.log(args.sub)
+
+        const { db, token, subId } = await context();
+        // //Test if JWT is valid
+        
+        const { error } = await isTokenValid(token);
+        if (error) return null;
+
+        if(!subId) return null;
+        //get sub id from accessToken
+        // return Review.find({});
+        return Review.find({ subId: subId});
+      },
+    },
+
+    getUserOrders:{
+      type: new GraphQLList(ProductReviews),
+      args: { id: { type: GraphQLID }, name: { type: GraphQLString } },
+      resolve: async (parent, args, context)=> {
+        const { db, token, subId } = await context();
+        //Test if JWT is valid
+        const { error } = await isTokenValid(token);
+        if (error) return null;
+
+        if(!subId) return null;
+
+        //get sub id from accessToken
+      
+
+        return Order.find({ subId: subId });
+      },
     }
   },
 });
