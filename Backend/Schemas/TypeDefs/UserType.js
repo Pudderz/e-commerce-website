@@ -4,15 +4,17 @@ const {
   GraphQLObjectType,
   GraphQLInt,
   GraphQLString,
-  GraphQLList
+  GraphQLList,
+  GraphQLID
 } = graphql;
 
 
 const ProductReviews = new GraphQLObjectType({
   name: "Review",
   fields:()=>({
-    id: { type: GraphQLInt },
+    _id: { type: GraphQLID },
     productId:{ type: GraphQLString },
+    productName: { type: GraphQLString},
     name: { type: GraphQLString },
     profileImage: { type: GraphQLString},
     rating: { type: GraphQLString },
@@ -25,7 +27,7 @@ const ProductReviews = new GraphQLObjectType({
 const ProductType = new GraphQLObjectType({
   name: "Product",
   fields: () => ({
-    id: { type: GraphQLInt },
+    _id: { type: GraphQLID },
     productId: { type: GraphQLString },
     productName: { type: GraphQLString },
     numOfReviews: { type: GraphQLInt },
