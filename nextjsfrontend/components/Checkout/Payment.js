@@ -4,7 +4,7 @@ import React, { useContext, useState, useEffect } from "react";
 import ShippingForm from "./ShippingForm";
 import { CartContext } from "../../context/CartContext";
 import { commerce } from "../../lib/commerce";
-
+import { AvailableCountries } from "./AvailableCountries";
 
 const CARD_OPTIONS = {
   iconStyle: "solid",
@@ -28,19 +28,62 @@ const CARD_OPTIONS = {
   },
 };
 
-
+const EXAMPLE_INFO = {
+  customer: {
+    firstname: "John",
+    lastname: "Doe",
+    email: "mpudney2@gmail.com",
+  },
+  shipping: {
+    name: "John Doe",
+    street: "123 Fake St",
+    town_city: "San Francisco",
+    county_state: "CA",
+    postal_zip_code: "94103",
+    country: "US",
+  },
+};
 
 export const Payment = () => {
+  
   const [checkoutTokenId, setCheckoutToken] = useState();
   const [succeeded, setSucceeded] = useState(false);
   const [error, setError] = useState(null);
-  const [processing, setProcessing] = useState('');
+  const [processing, setProcessing] = useState("");
   const [disabled, setDisabled] = useState(true);
-  const [clientSecret, setClientSecret] = useState('');
-  const { cart } = useContext(CartContext);
+  const { cart,changeCart } = useContext(CartContext);
   const stripe = useStripe();
   const elements = useElements();
-  const [shippingInfo, setShippingInfo] = useState({});
+
+  const [shippingInfo, setShippingInfo] = useState({
+    firstName: "",
+    lastName: "",
+    deliveryCountry: "",
+    town_city: "",
+    street: "",
+    street2: "",
+    deliveryRegion: "",
+    postal_zip_code: "",
+    phoneNumber: "",
+    email: "",
+    orderNotes: "",
+  });
+
+  const importDemoShippingInfo = () => {
+    setShippingInfo({
+      ...shippingInfo,
+      firstName: EXAMPLE_INFO.customer.firstname,
+      lastName: EXAMPLE_INFO.customer.lastname,
+      email: EXAMPLE_INFO.customer.email,
+      town_city: EXAMPLE_INFO.shipping.town_city,
+      street: EXAMPLE_INFO.shipping.street,
+      street2: "",
+      deliveryRegion: EXAMPLE_INFO.shipping.county_state,
+      postal_zip_code: EXAMPLE_INFO.shipping.postal_zip_code,
+      phoneNumber: "",
+      deliveryCountry: EXAMPLE_INFO.shipping.country,
+    });
+  };
 
   const changeShippingInfo = (target, value) => {
     setShippingInfo({
@@ -48,17 +91,25 @@ export const Payment = () => {
       [target]: value,
     });
   };
-
+  useEffect(() => {
+    console.log(shippingInfo);
+  }, [shippingInfo]);
+  useEffect(() => {
+    console.log(checkoutTokenId);
+  }, [checkoutTokenId]);
 
   async function handleSubmit(ev) {
     ev.preventDefault();
     setProcessing(true);
     // This process includes a few API calls, so now is a good time to show a loading indicator
-  
+
     // Create a payment method using the card element on the page
     const cardElement = elements.getElement(CardElement);
-    const paymentMethodResponse = await stripe.createPaymentMethod({ type: 'card', card: cardElement});
-  
+    const paymentMethodResponse = await stripe.createPaymentMethod({
+      type: "card",
+      card: cardElement,
+    });
+
     if (paymentMethodResponse.error) {
       // There was some issue with the information that the customer entered into the payment details form.
       alert(paymentMethodResponse.error.message);
@@ -66,37 +117,74 @@ export const Payment = () => {
       setProcessing(false);
       return;
     }
-  
+
     try {
       // TODO: Import name from shipping form
-
-      const order = await commerce.checkout.capture(checkoutTokenId, {
+      console.log({
         customer: {
-          firstname: 'John',
-          lastname: 'Doe',
-          email: 'mpudney2@gmail.com',
+          firstname: shippingInfo.firstName,
+          lastname: shippingInfo.lastName,
+          email: shippingInfo.email,
         },
         shipping: {
-          name: 'John Doe',
-          street: '123 Fake St',
-          town_city: 'San Francisco',
-          county_state: 'CA',
-          postal_zip_code: '94103',
-          country: 'US',
+          name: `${shippingInfo.firstName} ${shippingInfo.lastName}`,
+          street: shippingInfo.street,
+          town_city: shippingInfo.town_city,
+          county_state: shippingInfo.deliveryRegion,
+          postal_zip_code: shippingInfo.postal_zip_code,
+          country: shippingInfo.deliveryCountry,
         },
-        // Include Stripe payment method ID:
         payment: {
-          gateway: 'stripe',
+          gateway: "stripe",
           stripe: {
             payment_method_id: paymentMethodResponse.paymentMethod.id,
           },
         },
-      })
-  console.log(order);
+      });
+      const order = await commerce.checkout.capture(checkoutTokenId, {
+        customer: {
+          firstname: shippingInfo.firstName,
+          lastname: shippingInfo.lastName,
+          email: shippingInfo.email,
+        },
+        shipping: {
+          name: `${shippingInfo.firstName} ${shippingInfo.lastName}`,
+          street: shippingInfo.street,
+          town_city: shippingInfo.town_city,
+          county_state: shippingInfo.deliveryRegion,
+          postal_zip_code: shippingInfo.postal_zip_code,
+          country: shippingInfo.deliveryCountry,
+        },
+        // customer: {
+        //   firstname: "John",
+        //   lastname: "Doe",
+        //   email: "mpudney2@gmail.com",
+        // },
+        // shipping: {
+        //   name: "John Doe",
+        //   street: "123 Fake St",
+        //   town_city: "San Francisco",
+        //   county_state: "CA",
+        //   postal_zip_code: "94103",
+        //   country: "US",
+        // },
+        // Include Stripe payment method ID:
+        payment: {
+          gateway: "stripe",
+          stripe: {
+            payment_method_id: paymentMethodResponse.paymentMethod.id,
+          },
+        },
+      });
+      console.log(order);
       // If we get here, the order has been successfully captured and the order detail is part of the `order` variable
       setError(null);
       setProcessing(false);
       setSucceeded(true);
+      commerce.cart.empty().then(json => {
+        changeCart(json.cart)
+      });
+
       return;
     } catch (response) {
       // There was an issue with capturing the order with Commerce.js
@@ -108,12 +196,13 @@ export const Payment = () => {
     }
   }
 
-
   useEffect(() => {
-    commerce.checkout.generateTokenFrom('cart', commerce.cart.id())
-    .then(response => setCheckoutToken(response.id));
-  }, []);
+    commerce.checkout
+      .generateTokenFrom("cart", commerce.cart.id())
+      .then((response) => setCheckoutToken(response.id))
 
+
+  }, []);
 
   const handleChange = async (event) => {
     // Listen for changes in the CardElement
@@ -122,8 +211,11 @@ export const Payment = () => {
     setError(event.error ? event.error.message : "");
   };
 
+  const changeValue = (target, value) => {
+    setShippingInfo({ ...shippingInfo, [target]: value });
+  };
 
-
+  // code for not using commerce.js
 
   // const handleSubmit = async ev => {
   //   ev.preventDefault();
@@ -143,15 +235,15 @@ export const Payment = () => {
   //   }
   // };
 
-
-
   return (
     <div style={{ width: "50%", minWidth: "min(400px,100%)" }}>
       <form onSubmit={handleSubmit}>
+        <Button onClick={importDemoShippingInfo}>Import Demo</Button>
         <div style={{ maxWidth: "700px", margin: "auto", padding: "0 20px" }}>
           <ShippingForm
             shippingInfo={shippingInfo}
             changeShippingInfo={changeShippingInfo}
+            changeValue={changeValue}
           />
           <h3>Payment Detail</h3>
           <div style={{ border: "1px solid gray", padding: "10px" }}>
@@ -176,32 +268,30 @@ export const Payment = () => {
                 fontSize: "18px",
               }}
             >
-              
               <span id="button-text">
-          {processing ? (
-            <CircularProgress size={24}/>
-            
-          ) : (
-            `Pay ${cart?.subtotal?.formatted_with_symbol}`
-          )}
-        </span>
+                {processing ? (
+                  <CircularProgress size={24} />
+                ) : (
+                  `Pay ${cart?.subtotal?.formatted_with_symbol}`
+                )}
+              </span>
             </Button>
 
             {error && (
-        <div className="card-error" role="alert">
-          {error}
-        </div>
-      )}
+              <div className="card-error" role="alert">
+                {error}
+              </div>
+            )}
 
-<p className={succeeded ? "result-message" : "result-message hidden"}>
-        Payment succeeded, see the result in your
-        <a
-          href={`https://dashboard.stripe.com/test/payments`}
-        >
-          {" "}
-          Stripe dashboard.
-        </a> Refresh the page to pay again.
-      </p>
+            <p
+              className={succeeded ? "result-message" : "result-message hidden"}
+            >
+              Payment succeeded, see the result in your
+              <a href={`https://dashboard.stripe.com/test/payments`}>
+                Stripe dashboard.
+              </a>
+              Refresh the page to pay again.
+            </p>
           </div>
         </div>
       </form>
