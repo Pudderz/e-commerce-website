@@ -245,6 +245,7 @@ export const Payment = () => {
             changeShippingInfo={changeShippingInfo}
             changeValue={changeValue}
           />
+          <AvailableCountries changeValue={changeValue}/>
           <h3>Payment Detail</h3>
           <div style={{ border: "1px solid gray", padding: "10px" }}>
             <label style={{ textAlign: "start" }}>
