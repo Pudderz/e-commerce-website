@@ -18,6 +18,7 @@ import {
   import DefaultErrorPage from 'next/error'
   // import { initGA, logPageView } from '../../utils/analytics'
   import Image from 'next/image';
+import SelectSmallSize from "../../components/ProductPages/SelectSizeSmall";
 
 
   export const ProductPage = (props) => {
@@ -199,7 +200,7 @@ if(props?.name === "" || typeof props?.name==="undefined") {
           >
   
   
-            <select
+            {/* <select
               name="sizes"
               id="sizes"
               style={{ margin: "1em", height: "30px" }}
@@ -211,8 +212,8 @@ if(props?.name === "" || typeof props?.name==="undefined") {
                 <option value={num} key={i}>UK {num}</option>
               ))}
   
-            </select>
-  
+            </select> */}
+  <SelectSmallSize availableSizes={sizeInfo} productVariants={product.variants} changeSize={changeSize} size={size}/>
             <div
               style={{
                 justifyContent: "space-between",
