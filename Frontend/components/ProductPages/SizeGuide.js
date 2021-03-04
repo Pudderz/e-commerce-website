@@ -2,12 +2,12 @@ import React from "react";
 import measureFoot from "../../images/how-to-measure-shoes.png";
 export const SizeGuide = () => {
   return (
-    <div>
+    <div style={{position:'relative'}}>
       <h3>Size Guide</h3>
-
-      <table style={{ width: "100%" }}>
+<div style={{ maxWidth: "100%",overflow:'auto' }}>
+<table className="sizeGuideTable" style={{width:'100%'}}>
         <tbody>
-          <tr>
+          <tr >
             <th>UK</th>
             <td>6</td>
             <td>6.5</td>
@@ -63,6 +63,8 @@ export const SizeGuide = () => {
           </tr>
         </tbody>
       </table>
+</div>
+     
       <h3>HOW TO MEASURE</h3>
 
       <p>Follow these steps to get the right size.</p>
@@ -72,9 +74,10 @@ export const SizeGuide = () => {
           display: "flex",
           padding: "20px",
           backgroundColor: "#ebedee",
+          flexWrap:'wrap-reverse'
         }}
       >
-        <div style={{ width: "50%", margin: "20px" }}>
+        <div style={{ margin: "20px", flexGrow:'1', width:'351px' }}>
           <ol style={{ padding: "0" }}>
             <li>
               <p>
@@ -96,7 +99,7 @@ export const SizeGuide = () => {
             </li>
           </ol>
         </div>
-        <div style={{ width: "50%", height: "fit-content" }}>
+        <div style={{ width: "50%", height: "fit-content",minWidth:'300px',margin:'auto' }}>
           <img src={measureFoot} alt="" width="100%" />
         </div>
       </div>
