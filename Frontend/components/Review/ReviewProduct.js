@@ -18,7 +18,9 @@ export const ReviewProduct = ({ productId, productName }) => {
   const handleWriteReview = () => {
     setShowForm(true);
   };
-
+ const handleClose = ()=>{
+  setShowForm(false);
+ }
   return (
     <div style={{ textAlign: "start", margin: "auto" }}>
       <h2>Customer Reviews</h2>
@@ -39,6 +41,7 @@ export const ReviewProduct = ({ productId, productName }) => {
           productId={productId}
           productName={productName}
           showForm={showForm}
+          close={handleClose}
         />
       
       </div>

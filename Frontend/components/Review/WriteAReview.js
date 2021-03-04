@@ -1,10 +1,11 @@
-import { Button, TextField } from "@material-ui/core";
+import { Button, IconButton, TextField } from "@material-ui/core";
 import React, { useState, useEffect } from "react";
 import Rating from "@material-ui/lab/Rating";
 import { useAuth0 } from "@auth0/auth0-react";
 import { LoginButton } from "../Authentication/LoginButton";
 import { addReview } from "../../GraphQL/Mutations";
 import {  useMutation } from "@apollo/client";
+import CloseIcon from "@material-ui/icons/Close";
 /*
 check if authenicated before hand
 
@@ -18,6 +19,7 @@ export const WriteAReview = ({
   handleRefetch,
   productName,
   showForm,
+  close
 }) => {
   const { user, isAuthenticated } = useAuth0();
   const [value, setValue] = useState(2);
@@ -74,6 +76,8 @@ export const WriteAReview = ({
 
   if (sent) return <h3>Thank you for reviewing the product</h3>;
 
+
+  const handleClose = ()=> close();
   return (
     <div>
       {isAuthenticated ? (
@@ -87,8 +91,14 @@ export const WriteAReview = ({
               gap: "20px",
             }}
           >
-            <h3 style={{margin:'10px 0 0'}}>Write a review</h3>
-
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <h3 style={{ margin: "10px 0 0", width: "fit-content" }}>
+                  Edit a review
+                </h3>
+                <IconButton onClick={handleClose}>
+                  <CloseIcon />
+                </IconButton>
+              </div>
             <div style={{display:'grid'}}>
               <label>Rating</label>
             <Rating
