@@ -16,7 +16,7 @@ import { AuthContextProvider } from '../context/AuthContext';
 const errorLink = onError(({graphqlErrors,networkError}) =>{
   if(graphqlErrors){
     graphqlErrors.map(({message, location, path})=>{
-      alert(`Graphlql Error ${message}`);
+      console.log(`Graphlql Error ${message}`);
     })
   }
 })
