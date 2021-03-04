@@ -23,3 +23,37 @@ export const addReview = gql`
     }
   }
 `;
+
+export const CREATE_USER_ORDER = gql`
+  mutation(
+    $price: String!
+  ) {
+    createOrder(price: $price){
+      price
+      date
+      subId
+    }
+  }
+`
+
+
+export const DELETE_USER_REVIEW = gql`
+  mutation(
+    $id: String!
+    $sub: String!
+  ) {
+    deleteReview(id: $id, sub:$sub){
+      productName
+    }
+  }
+`
+
+export const EDIT_USER_REVIEW = gql`
+  mutation(
+    $id: String!
+  ) {
+    deleteReview(id: $id){
+      productName
+    }
+  }
+`

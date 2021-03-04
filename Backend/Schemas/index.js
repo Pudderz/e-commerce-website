@@ -1,5 +1,5 @@
 const graphql = require("graphql");
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 const {
   GraphQLObjectType,
   GraphQLSchema,
@@ -33,54 +33,53 @@ const RootQuery = new GraphQLObjectType({
         return Review.find({});
       },
     },
-    getProduct:{
+    getProduct: {
       type: new GraphQLList(ProductType),
       args: {
         productId: { type: GraphQLString },
         productName: { type: new GraphQLNonNull(GraphQLString) },
       },
       resolve(parent, args) {
-        console.log('finding');
+        console.log("finding");
         return Product.find({ productName: args.productName });
       },
     },
-      getUserReviews: {
+    getUserReviews: {
       type: new GraphQLList(ProductReviews),
-      args: { sub: { type: GraphQLString }},
-      resolve: async (parent, args, context)=> {
-        console.log('getting user reviews');
-        console.log(args.sub)
+      args: { sub: { type: GraphQLString } },
+      resolve: async (parent, args, context) => {
+        console.log("getting user reviews");
+        console.log(args.sub);
 
         const { db, token, subId } = await context();
         // //Test if JWT is valid
-        
+
         const { error } = await isTokenValid(token);
         if (error) return null;
 
-        if(!subId) return null;
+        if (!subId) return null;
         //get sub id from accessToken
         // return Review.find({});
-        return Review.find({ subId: subId});
+        return Review.find({ subId: subId });
       },
     },
 
-    getUserOrders:{
+    getUserOrders: {
       type: new GraphQLList(ProductReviews),
       args: { id: { type: GraphQLID }, name: { type: GraphQLString } },
-      resolve: async (parent, args, context)=> {
+      resolve: async (parent, args, context) => {
         const { db, token, subId } = await context();
         //Test if JWT is valid
         const { error } = await isTokenValid(token);
         if (error) return null;
 
-        if(!subId) return null;
+        if (!subId) return null;
 
         //get sub id from accessToken
-      
 
         return Order.find({ subId: subId });
       },
-    }
+    },
   },
 });
 
@@ -145,66 +144,88 @@ const Mutation = new GraphQLObjectType({
           descriptionTitle: args.descriptionTitle,
           description: args.description,
         });
-        
 
         let product;
-        await Product.findOne({ productId: args.productId }, function (err, obj) {
-          product = obj;
-        });
-        
+        await Product.findOne(
+          { productId: args.productId },
+          function (err, obj) {
+            product = obj;
+          }
+        );
 
-
-        if((typeof product === 'undefined' || !product ) && mongoose.connection.readyState=== 1){
-          console.log(`${ args.productId} not found`)
+        if (
+          (typeof product === "undefined" || !product) &&
+          mongoose.connection.readyState === 1
+        ) {
+          console.log(`${args.productId} not found`);
 
           product = new Product({
-            productId:args.productId,
-            productName:args.productName,
+            productId: args.productId,
+            productName: args.productName,
             numOfReviews: 1,
             averageRating: args.rating,
-
-          })
+          });
 
           product.save();
-
-        }else{
-          
-          console.log(!(typeof product === 'undefined'))
-          if(!(typeof product === 'undefined')){
-          console.log(`${ args.productId} found`)  
-const rating = (1 * product.averageRating * product.numOfReviews +
-            1 * args.rating) /
-          (product.numOfReviews + 1);
-          console.log(rating);
-          console.log(product.numOfReviews + 1);
-          const numOfReviews = product.numOfReviews + 1;
-          await Product.updateOne({productId:args.productId},
-            {"$set":
-            {
-            numOfReviews:  numOfReviews,
-            averageRating: `${rating}`
-            },
-
+        } else {
+          console.log(!(typeof product === "undefined"));
+          if (!(typeof product === "undefined")) {
+            console.log(`${args.productId} found`);
+            const rating =
+              (1 * product.averageRating * product.numOfReviews +
+                1 * args.rating) /
+              (product.numOfReviews + 1);
+            console.log(rating);
+            console.log(product.numOfReviews + 1);
+            const numOfReviews = product.numOfReviews + 1;
+            await Product.updateOne(
+              { productId: args.productId },
+              {
+                $set: {
+                  numOfReviews: numOfReviews,
+                  averageRating: `${rating}`,
+                },
+              }
+            );
           }
-
-          )
-          }
-          
         }
 
         return !error ? review.save() : null;
-     
       },
     },
     deleteReview: {
       type: ProductType,
       args: {
-        id: { type: new GraphQLNonNull(GraphQLID) },
+        id: { type: GraphQLString },
+        sub: { type: GraphQLString },
       },
       resolve: async (parent, args, context) => {
+        console.log("deleting Review");
+        console.log(args.id);
+        const id = ObjectId(args.id);
 
-        return Review.findOneAndDelete(ObjectId(args.id))
-      }
+        const { db, token, subId } = await context();
+        //Test if JWT is valid
+        const { error } = await isTokenValid(token);
+        if (error) return null;
+
+        if (!subId) return null;
+
+        try {
+          const review = await Review.findById({ _id: id, subId: subId  }, (err, doc) => {
+            // if(err){
+            //   return null;
+            // }else{
+            //   console.log(doc.name, doc.productName)
+            // }
+          });
+          // console.log(review);
+          return Review.findOneAndDelete({ _id: id, subId: subId });
+        } catch (err) {
+          console.log("error" + err);
+          return null;
+        }
+      },
     },
     editReview: {
       type: ProductType,
@@ -212,15 +233,19 @@ const rating = (1 * product.averageRating * product.numOfReviews +
         id: { type: new GraphQLNonNull(GraphQLID) },
       },
       resolve: async (parent, args, context) => {
-        
-        return Review.findOneAndUpdate(ObjectId(args.id), {$set:{}}, {new: true}, (err,doc)=>{
-          if(err){
-            console.log("Something wrong when updating data!");
+        return Review.findOneAndUpdate(
+          ObjectId(args.id),
+          { $set: {} },
+          { new: true },
+          (err, doc) => {
+            if (err) {
+              console.log("Something wrong when updating data!");
+            }
+            console.log(doc);
           }
-          console.log(doc)
-        })
-      }
-    }
+        );
+      },
+    },
   },
 });
 

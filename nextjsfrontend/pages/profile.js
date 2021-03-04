@@ -11,18 +11,42 @@ import { DELETE_USER_REVIEW, EDIT_USER_REVIEW } from "../GraphQL/Mutations";
 export const Profile = () => {
   const { user, isAuthenticated, isLoading } = useAuth0();
 
-  const [getReviews, { data}] = useLazyQuery(LOAD_USER_REVIEWS);
+  const [getReviews, { data, refetch, called}] = useLazyQuery(LOAD_USER_REVIEWS);
 
-  useEffect(() => {
-    getReviews();
-  }, []);
+
+  const [deleteReviews, { data: deleteData }] = useMutation(DELETE_USER_REVIEW);
+  // const [editReviews, { data: editData}] = useMutation(EDIT_USER_REVIEW);
+
 
   useEffect(() => {
     console.log(user);
     console.log(data);
     console.log(data?.getUserReviews);
   }, [data]);
-}
+  useEffect(() => {
+    console.log(user);
+    console.log(deleteData);
+    console.log(data?.getUserReviews);
+    if(called){
+      refetch();
+    }else{
+      getReviews();
+    }
+      
+  }, [deleteData]);
+  const handleDelete= async (id)=>{
+    if(id){
+     console.log(await deleteReviews({variables: {id: id, sub: "auth0|601004a08e5f53006a834978"}}));
+
+    }
+  }
+
+//   const handleEdit = (id)=>{
+// if(id){
+//   editReviews
+// }
+//   }
+
   return (
     <div style={{ maxWidth: "100%" }}>
       {isAuthenticated ? (
@@ -93,6 +117,8 @@ export const Profile = () => {
                     <p>{review?.description}</p>
                   </div>
                   <div>
+                    <Button variant="contained" onClick={()=>handleDelete(review._id)}>Delete Review</Button>
+                    {/* <Button variant="contained"  onClick={()=>editReview(review._id)}>Edit Review</Button> */}
                   </div>
                 </li>
               ))}
