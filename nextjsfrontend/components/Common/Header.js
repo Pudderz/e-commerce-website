@@ -215,7 +215,7 @@ export const Header = () => {
                           <h3>Your Basket is empty</h3>
                           <p>
                             Continue shopping on the{" "}
-                            <Link to="/">homepage</Link>, browse our discounts,
+                            <Link href="/">homepage</Link>, browse our discounts,
                             or visit your Wish List
                           </p>
                         </div>

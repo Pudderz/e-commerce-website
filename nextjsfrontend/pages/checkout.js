@@ -1,8 +1,4 @@
-import {
-  Breadcrumbs,
-  Button,
-  Typography,
-} from "@material-ui/core";
+import { Breadcrumbs, Button, Typography } from "@material-ui/core";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import React, { useContext, useState } from "react";
 import ShippingForm from "../components/Checkout/ShippingForm";
@@ -12,8 +8,9 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { Payment } from "../components/Checkout/Payment";
 
-const promise = loadStripe("pk_test_51ICSvvEduQoHI0PkPXFpVekvFm9fDb84KUYGy9CGtFlm1b6ZzjZ1Z9mVWaBEPIFvo3uQInuowX2KcEAbBANuqzeV00N77MhPiW");
-
+const promise = loadStripe(
+  "pk_test_51ICSvvEduQoHI0PkPXFpVekvFm9fDb84KUYGy9CGtFlm1b6ZzjZ1Z9mVWaBEPIFvo3uQInuowX2KcEAbBANuqzeV00N77MhPiW"
+);
 
 export const Checkout = () => {
   const { cart } = useContext(CartContext);
@@ -31,9 +28,6 @@ export const Checkout = () => {
       [target]: value,
     });
   };
-
-
-
 
   return (
     <>
@@ -55,12 +49,9 @@ export const Checkout = () => {
           flexFlow: "wrap",
         }}
       >
-         <Elements stripe={promise}>
-                     <Payment/>
-
-
+        <Elements stripe={promise}>
+          <Payment />
         </Elements>
-        
 
         <div
           style={{
@@ -112,9 +103,7 @@ export const Checkout = () => {
                           overflow: "hidden",
                         }}
                       >
-                        <Link
-                        href={`/product/${item.permalink}`}
-                        >
+                        <Link href={`/product/${item.permalink}`}>
                           <img
                             src={item?.media?.source}
                             width="100"
@@ -179,9 +168,8 @@ export const Checkout = () => {
             style={{ display: "flex", width: "100%", gap: "20px" }}
           >
             <label style={{ width: "80%" }}>
-              
               <input
-              placeholder="Discount Code"
+                placeholder="Discount Code"
                 style={{
                   boxSizing: "border-box",
                   fontSize: "20px",

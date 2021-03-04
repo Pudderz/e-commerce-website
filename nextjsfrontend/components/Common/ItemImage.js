@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React, { useState } from "react";
-
+import Image from 'next/image';
 export const ItemImage = ({ firstImage, secondImage, name, id, link }) => {
   const [hover, setHover] = useState(false);
   return (
@@ -23,10 +23,11 @@ export const ItemImage = ({ firstImage, secondImage, name, id, link }) => {
             zIndex: hover ? "0" : "1",
           }}
         />
-        <img
+        <Image
           src={secondImage}
           alt={name}
           className="secondaryImage"
+          layout="fill"
           style={{
             zIndex: hover ? "1" : "0",
           }}
