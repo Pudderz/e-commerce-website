@@ -11,6 +11,8 @@ import { DELETE_USER_REVIEW, EDIT_USER_REVIEW } from "../GraphQL/Mutations";
 export const Profile = () => {
   const { user, isAuthenticated, isLoading } = useAuth0();
 
+
+  // useLazyQuery so query can be sent with jwt token
   const [getReviews, { data, refetch, called}] = useLazyQuery(LOAD_USER_REVIEWS);
 
 
@@ -23,10 +25,14 @@ export const Profile = () => {
     console.log(data);
     console.log(data?.getUserReviews);
   }, [data]);
+
+
   useEffect(() => {
     console.log(user);
     console.log(deleteData);
     console.log(data?.getUserReviews);
+
+    
     if(called){
       refetch();
     }else{
@@ -34,6 +40,8 @@ export const Profile = () => {
     }
       
   }, [deleteData]);
+
+
   const handleDelete= async (id)=>{
     if(id){
      console.log(await deleteReviews({variables: {id: id, sub: "auth0|601004a08e5f53006a834978"}}));
