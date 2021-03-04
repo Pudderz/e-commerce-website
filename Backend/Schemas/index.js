@@ -223,7 +223,13 @@ const Mutation = new GraphQLObjectType({
             // }
           });
           // console.log(review);
-          return Review.findOneAndDelete({ _id: id, subId: subId });
+          return await Review.findOneAndDelete({ _id: id, subId: subId },(err, doc) => {
+            // if(err){
+            //   return null;
+            // }else{
+            //   console.log(doc.name, doc.productName)
+            // }
+          });
         } catch (err) {
           console.log("error" + err);
           return null;

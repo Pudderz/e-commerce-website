@@ -1,11 +1,11 @@
-import { Button, CircularProgress } from "@material-ui/core";
+import { Button, CircularProgress, Modal } from "@material-ui/core";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import React, { useContext, useState, useEffect } from "react";
 import ShippingForm from "./ShippingForm";
 import { CartContext } from "../../context/CartContext";
 import { commerce } from "../../lib/commerce";
 import { AvailableCountries } from "./AvailableCountries";
-
+import { useRouter } from 'next/router'
 const CARD_OPTIONS = {
   iconStyle: "solid",
   style: {
@@ -45,7 +45,7 @@ const EXAMPLE_INFO = {
 };
 
 export const Payment = () => {
-  
+  const router = useRouter();
   const [checkoutTokenId, setCheckoutToken] = useState();
   const [succeeded, setSucceeded] = useState(false);
   const [error, setError] = useState(null);
@@ -112,7 +112,8 @@ export const Payment = () => {
 
     if (paymentMethodResponse.error) {
       // There was some issue with the information that the customer entered into the payment details form.
-      alert(paymentMethodResponse.error.message);
+      console.error(paymentMethodResponse.error.message);
+      console.log(paymentMethodResponse.error);
       setError(`Payment failed 1 ${paymentMethodResponse.error.message}`);
       setProcessing(false);
       return;
@@ -189,8 +190,8 @@ export const Payment = () => {
     } catch (response) {
       // There was an issue with capturing the order with Commerce.js
       console.log(response);
-      alert(response.message);
-      setError(`Payment failed 2 ${response.message}`);
+      console.log(response.message);
+      setError(`Payment failed ${response.message}`);
       setProcessing(false);
       return;
     }
@@ -201,7 +202,7 @@ export const Payment = () => {
       .generateTokenFrom("cart", commerce.cart.id())
       .then((response) => setCheckoutToken(response.id))
 
-
+     
   }, []);
 
   const handleChange = async (event) => {
@@ -234,9 +235,13 @@ export const Payment = () => {
   //     setSucceeded(true);
   //   }
   // };
-
+const handleClose = () =>{
+  setSucceeded(false);
+  router.push("/");
+  
+}
   return (
-    <div style={{ width: "50%", minWidth: "min(400px,100%)" }}>
+    <div style={{ minWidth: "min(400px,100%)" }}>
       <form onSubmit={handleSubmit}>
         <Button onClick={importDemoShippingInfo}>Import Demo</Button>
         <div style={{ maxWidth: "700px", margin: "auto", padding: "0 20px" }}>
@@ -244,8 +249,8 @@ export const Payment = () => {
             shippingInfo={shippingInfo}
             changeShippingInfo={changeShippingInfo}
             changeValue={changeValue}
+            checkoutToken={checkoutTokenId}
           />
-          <AvailableCountries changeValue={changeValue}/>
           <h3>Payment Detail</h3>
           <div style={{ border: "1px solid gray", padding: "10px" }}>
             <label style={{ textAlign: "start" }}>
@@ -293,9 +298,27 @@ export const Payment = () => {
               </a>
               Refresh the page to pay again.
             </p>
+            
           </div>
         </div>
       </form>
+      <Modal
+      open={succeeded}
+      onClose={handleClose}
+      aria-labelledby="edit-review-modal"
+      aria-describedby="edits a chosen users review on submit"
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+      >
+       <div style={{backgroundColor:'white', padding:'20px'}}>
+        <h3>Order Successfull!!!</h3>
+        <p>We will send you a order confirmation via email</p>
+        <Button color="primary" variant="contained" onClick={handleClose}>Go Home</Button>
+      </div>       
+      </Modal>
     </div>
   );
 };
