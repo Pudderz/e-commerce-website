@@ -52,14 +52,14 @@ const RootQuery = new GraphQLObjectType({
         console.log(args.sub);
 
         const { db, token, subId } = await context();
-        // //Test if JWT is valid
+        //Test if JWT is valid
 
         const { error } = await isTokenValid(token);
         if (error) return null;
-
         if (!subId) return null;
+
         //get sub id from accessToken
-        // return Review.find({});
+        //return all reviews with that subId
         return Review.find({ subId: subId });
       },
     },
@@ -76,7 +76,7 @@ const RootQuery = new GraphQLObjectType({
         if (!subId) return null;
 
         //get sub id from accessToken
-
+        //returns all orders with that subId
         return Order.find({ subId: subId });
       },
     },
@@ -193,6 +193,9 @@ const Mutation = new GraphQLObjectType({
         return !error ? review.save() : null;
       },
     },
+
+  // TODO: edits number of reviews and updates overall rating for that product  
+  // for deleteReview and edit Review
     deleteReview: {
       type: ProductType,
       args: {
@@ -230,20 +233,46 @@ const Mutation = new GraphQLObjectType({
     editReview: {
       type: ProductType,
       args: {
-        id: { type: new GraphQLNonNull(GraphQLID) },
+        id: { type:  new GraphQLNonNull(GraphQLString) },
+        title: {type:   new GraphQLNonNull(GraphQLString)},
+        description: {type:   new GraphQLNonNull(GraphQLString)},
+        rating: {type:   new GraphQLNonNull(GraphQLString)},
       },
       resolve: async (parent, args, context) => {
-        return Review.findOneAndUpdate(
-          ObjectId(args.id),
-          { $set: {} },
-          { new: true },
-          (err, doc) => {
-            if (err) {
-              console.log("Something wrong when updating data!");
-            }
-            console.log(doc);
-          }
-        );
+        console.log('editing a review');
+        console.log(args);
+        const { db, token, subId } = await context();
+        //Test if JWT is valid
+        const { error } = await isTokenValid(token);
+        if (error) return null;
+        if (!subId) return null;
+
+
+        try {
+          return await Review.findOneAndUpdate(
+            {_id: ObjectId(args.id), subId: subId},
+             {
+               descriptionTitle: args.title,
+               description: args.description,
+               rating: args.rating,
+               edited: true,
+             },
+             { new: true, useFindAndModify:true },
+             (err, doc) => {
+               if (err) {
+                 console.log("Something wrong when updating data!");
+                 return null;
+               }
+               console.log(doc);
+             }
+           );
+        } catch (err) {
+          console.log("error" + err);
+          return null;
+        }
+
+
+        
       },
     },
   },

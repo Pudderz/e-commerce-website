@@ -51,8 +51,11 @@ export const DELETE_USER_REVIEW = gql`
 export const EDIT_USER_REVIEW = gql`
   mutation(
     $id: String!
+    $title: String!
+    $description:String!
+    $rating: String!
   ) {
-    deleteReview(id: $id){
+    editReview(id: $id, title: $title, description: $description, rating: $rating){
       productName
     }
   }
