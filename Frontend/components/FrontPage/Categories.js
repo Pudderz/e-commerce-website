@@ -7,29 +7,27 @@ import hikingImage from "../../images/hikingShoes.jpg";
 // ToDo: change this in to media quieries and classnames
 export const Categories = () => {
   const [isSmallDisplay, setIsSmallDisplay] = useState(false);
+
+  const windowResize = (e) =>{
+    if (window.innerWidth < 1000 && isSmallDisplay === false) {
+      setIsSmallDisplay(true);
+    } else if (window.innerWidth >= 1000 && isSmallDisplay === true) {
+      setIsSmallDisplay(false);
+    }
+  }
+
+
   useEffect(() => {
     if (window.innerWidth < 1000) {
       setIsSmallDisplay(true);
     } else {
       setIsSmallDisplay(false);
     }
-    window.addEventListener("resize", (e) => {
-      console.log(window.innerWidth);
-      if (window.innerWidth < 1000 && isSmallDisplay === false) {
-        setIsSmallDisplay(true);
-      } else if (window.innerWidth >= 1000 && isSmallDisplay === true) {
-        setIsSmallDisplay(false);
-      }
-    });
+    
+    window.addEventListener("resize", (e) => windowResize(e));
+
     return () => {
-      window.removeEventListener("resize", (e) => {
-        console.log(window.innerWidth);
-        if (window.innerWidth < 1000 && isSmallDisplay === false) {
-          setIsSmallDisplay(true);
-        } else if (window.innerWidth >= 1000 && isSmallDisplay === true) {
-          setIsSmallDisplay(false);
-        }
-      });
+      window.removeEventListener("resize", (e) => (e) => windowResize(e));
     };
   }, []);
   return (
