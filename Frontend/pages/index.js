@@ -112,10 +112,14 @@ let  popularProducts = [];
     };
 
       let data = [];
-    
+    try{
       await axios.get(`${process.env.BACKEND_SERVER}/trending`).then((res) => {
         data = res.data;
       });
+    }catch(err){
+console.log(err)
+    }
+      
     
       let j = 0;
     

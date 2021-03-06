@@ -108,7 +108,7 @@ export const Header = () => {
                 padding: "0",
               }}
             >
-              <li>
+              <li style={{alignSelf:'center'}}>
                 <Tooltip title="Dark Mode On/Off">
                   <Switch
                     checked={false}
