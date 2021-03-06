@@ -9,6 +9,7 @@ const mongoose = require("mongoose");
 const { SimpleGA, Request } = require("node-simple-ga");
 const isTokenValid = require("./Authenication/validate");
 const jwt_decode = require("jwt-decode");
+var fs = require("fs");
 
 let database = null;
 
@@ -60,6 +61,26 @@ app.use(
 );
 
 app.use("/trending", (req, res) => {
+  if (!fs.existsSync("./key.json")) {
+    //create json file for analytics
+
+    let data = {
+    
+    "type": "service_account",
+    "project_id": "e-commerce-web-project",
+    "private_key_id": process.env.GA_PRIVATE_KEY_ID ,
+    "private_key": process.env.GA_PRIVATE_KEY,
+    "client_email": process.env.GA_CLIENT_EMAIL,
+    "client_id": process.env.GA_CLIENT_ID ,
+    "auth_uri": process.env.GA_AUTH_URI ,
+    "token_uri": process.env.GA_TOKEN_URI ,
+    "auth_provider_x509_cert_url": process.env.GA_PROVIDER_CERT,
+    "client_x509_cert_url": process.env.GA_CLIENT_CERT_URL,
+  }
+    data = JSON.stringify(data);
+
+    fs.writeFileSync("key.json", data);
+  }
   (async function () {
     var analytics = new SimpleGA(path.join(__dirname, "./key.json"));
 
@@ -95,6 +116,6 @@ app.use("/trending", (req, res) => {
   })();
 });
 
-app.listen(PORT, () => {
+app.listen(process.env.PORT || PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
