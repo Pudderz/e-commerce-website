@@ -6,6 +6,7 @@ import { LoginButton } from "../Authentication/LoginButton";
 import { addReview } from "../../GraphQL/Mutations";
 import {  useMutation } from "@apollo/client";
 import CloseIcon from "@material-ui/icons/Close";
+import { useSnackbar } from "notistack";
 /*
 check if authenicated before hand
 
@@ -21,6 +22,7 @@ export const WriteAReview = ({
   showForm,
   close
 }) => {
+  const { enqueueSnackbar } = useSnackbar();
   const { user, isAuthenticated } = useAuth0();
   const [value, setValue] = useState(2);
   const [hover, setHover] = useState(-1);
@@ -38,18 +40,10 @@ export const WriteAReview = ({
     console.log(data);
   }, [data]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    console.log(
-      productId,
-      user?.nickname,
-      user?.picture,
-      description,
-      title,
-      Date()
-    );
-    createReview({
+try{
+await createReview({
       variables: {
         productId: productId,
         productName: productName,
@@ -63,12 +57,27 @@ export const WriteAReview = ({
     e.target.reset();
     setTitle("");
     setDescription("");
+}catch{
+  console.log('failed to connect with server');
+  enqueueSnackbar("Failed to connect with backend server, please try again later", {
+    variant: "error",
+  });
+}
+    
   };
+
+
+  useEffect(() => {
+    
+    if(mutationError){
+      console.error(mutationError);
+    }
+  }, [mutationError])
 
   useEffect(() => {
     if (mutationLoading === true) {
       setReviewSending(true);
-    } else if (mutationLoading === false && reviewSending === true) {
+    } else if (mutationLoading === false && reviewSending === true && !!mutationError === false) {
       setSent(true);
       handleRefetch();
     }

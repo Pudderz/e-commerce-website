@@ -1,18 +1,18 @@
 import { Button } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { GetReviews } from "./GetReviews";
 import { WriteAReview } from "./WriteAReview";
-import { useQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import { LOAD_REVIEWS } from "../../GraphQL/Queries";
-export const ReviewProduct = ({ productId, productName }) => {
+export const ReviewProduct = ({ productId, productName, product }) => {
   const [showForm, setShowForm] = useState(false);
 
-  const { data, refetch } = useQuery(LOAD_REVIEWS, {
-    variables: { productId, productName },
-  });
+  const [getReviews, { data}] = useLazyQuery(LOAD_REVIEWS, );
 
   const handleRefetch = () => {
-    refetch();
+    getReviews({
+      variables: { productId, productName },
+    });
   };
 
   const handleWriteReview = () => {
@@ -21,6 +21,20 @@ export const ReviewProduct = ({ productId, productName }) => {
  const handleClose = ()=>{
   setShowForm(false);
  }
+ useEffect(() => {
+   console.log(productId, productName);
+  getReviews({
+    variables: { productId, productName },
+  })
+ }, [productId, productName ]);
+
+useEffect(() => {
+  console.log(product);
+}, [product])
+
+// useEffect(() => {
+//   // 
+// }, [props])
   return (
     <div style={{ textAlign: "start", margin: "auto" }}>
       <h2>Customer Reviews</h2>
