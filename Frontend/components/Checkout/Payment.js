@@ -156,20 +156,6 @@ export const Payment = () => {
           postal_zip_code: shippingInfo.postal_zip_code,
           country: shippingInfo.deliveryCountry,
         },
-        // customer: {
-        //   firstname: "John",
-        //   lastname: "Doe",
-        //   email: "mpudney2@gmail.com",
-        // },
-        // shipping: {
-        //   name: "John Doe",
-        //   street: "123 Fake St",
-        //   town_city: "San Francisco",
-        //   county_state: "CA",
-        //   postal_zip_code: "94103",
-        //   country: "US",
-        // },
-        // Include Stripe payment method ID:
         payment: {
           gateway: "stripe",
           stripe: {
@@ -179,6 +165,8 @@ export const Payment = () => {
       });
       console.log(order);
       // If we get here, the order has been successfully captured and the order detail is part of the `order` variable
+      const receipt = await commerce.checkout.receipt(checkoutTokenId);
+      console.log(receipt)
       setError(null);
       setProcessing(false);
       setSucceeded(true);
