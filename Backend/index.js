@@ -7,13 +7,11 @@ const { graphqlHTTP } = require("express-graphql");
 const schema = require("./Schemas");
 const mongoose = require("mongoose");
 const { SimpleGA, Request } = require("node-simple-ga");
-const isTokenValid = require("./Authenication/validate");
 const jwt_decode = require("jwt-decode");
 var fs = require("fs");
 
 let database = null;
 
-let GOOGLE_PAGEPATHS = {};
 
 require("dotenv").config();
 const uri = `mongodb+srv://dbAdmin:${process.env.MONGODB_PASSWORD}@cluster0.s5qsx.mongodb.net/${process.env.MONGODB_NAME}?retryWrites=true&w=majority`;
@@ -40,13 +38,13 @@ const startDatabase = () => {
 const context = async (req) => {
   const db = await startDatabase();
   const token = req.headers.authorization;
-  let decoded = { sub: null };
+  let decoded = { sub: null, permissions: [] };
   if (token) {
     decoded = jwt_decode(token);
     console.log(decoded);
   }
 
-  return { db, token, subId: decoded.sub };
+  return { db, token, subId: decoded.sub, permissions: decoded.permissions };
 };
 
 app.use(cors());
