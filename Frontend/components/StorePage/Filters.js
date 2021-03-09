@@ -26,14 +26,16 @@ export const Filters = () => {
   return (
     <div>
 
-        <h4 style={{textAlign:'start'}}>All Categories</h4>
-        <ul>
+        {/* <h4 style={{textAlign:'start'}}>All Categories</h4> */}
+        <hr/>
+        <ul style={{listStyle:'none', display:'flex', gap:'10px', padding:'0px'}}>
           {categories?.map((el, index) => (
-            <li key={index} style={{textAlign:'start'}}>
-              <Link href={`./category/${el.slug}`}>{el.name}</Link>
+            <li key={index} style={{textAlign:'start',backgroundColor:'#eee', padding:'5px', width:'fit-content', borderRadius:'5px' }}>
+              <Link href={`/category/${el.slug}`}>{el.name}</Link>
             </li>
           ))}
         </ul>
+        <hr/>
  
     </div>
   );

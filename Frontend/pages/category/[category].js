@@ -9,6 +9,7 @@ import hikingBackground from "../../images/hikingBackground2.jpg";
 import casualBackground from "../../images/casualBackground2.jpg";
 import { ItemImage } from "../../components/Common/ItemImage";
 import PropTypes from "prop-types";
+import { Filters } from "../../components/StorePage/Filters";
 export const CategoryPage = ({category, description, numOfProducts, slug}) => {
   const [categoryInfo, setCategoryInfo] = useState({});
 
@@ -31,7 +32,7 @@ export const CategoryPage = ({category, description, numOfProducts, slug}) => {
 
   useEffect(() => {
     fetchProducts(slug);
-  }, []);
+  }, [category]);
 
   return (
     <div>
@@ -75,7 +76,7 @@ export const CategoryPage = ({category, description, numOfProducts, slug}) => {
           <p style={{ maxWidth: "600px", margin: " 0 auto 20px" }}>
             {description}
           </p>
-          <hr />
+          <Filters/>
         </div>
 
         <ul
