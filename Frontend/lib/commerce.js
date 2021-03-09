@@ -7,6 +7,19 @@ export const commerce = new Commerce(
   true
 );
 
+export const fetchItem = (id, setProduct)=>{
+  commerce.products
+      .retrieve(id)
+      .then((product) => {
+        console.log(product);
+        setProduct(product);
+      })
+      .catch((error) => {
+        console.error("There was an error fetching the cart", error);
+      });
+}
+
+
 export const fetchCart = (setCart) => {
   commerce.cart
     .retrieve()
@@ -28,6 +41,34 @@ export const handleAddToCart = (item, quantity = 1, setCart) => {
       console.error("There was an error adding the item to the cart", error);
     });
 };
+
+export const handleAddVariantToCart = (item, quantity = 1, sizeIdValue, variantId, enqueueSnackbar ,setCart)=>{
+    if(typeof variantId !=="undefined"){
+      commerce.cart
+      .add(item.id, quantity,{[sizeIdValue]: variantId})
+      .then((item) => {
+        setCart(item.cart);
+        enqueueSnackbar("Item added to the basket", { variant: "success" });
+      })
+      .catch((error) => {
+        console.error("There was an error adding the item to the cart", error);
+        enqueueSnackbar("Item could not be added to the basket", {
+          variant: "error",
+        });
+      });
+    }else{
+      
+        enqueueSnackbar("An error occured, please try again later.", {
+          variant: "error",
+        });
+      
+      
+    }
+    
+
+
+}
+
 export const clearCart = (setCart) => {
   commerce.cart
     .empty()
@@ -53,10 +94,10 @@ export const removeItemFromCart = (id, setCart) => {
     });
 };
 
-export const updateCartQty = (id, newQuantity, setCart) => {
+export const updateCartQty = (id, newQuantity, setCart, variantId, optionId) => {
   console.log(`updating ${id} to ${newQuantity}`);
   commerce.cart
-    .update(id, { quantity: newQuantity })
+    .update(id, { quantity: newQuantity, [variantId]: optionId })
     .then((resp) => {
       setCart(resp.cart);
     })

@@ -3,6 +3,7 @@ import {
   clearCart,
   fetchCart,
   handleAddToCart,
+  handleAddVariantToCart,
   removeItemFromCart,
   updateCartQty,
 } from "../lib/commerce";
@@ -21,16 +22,23 @@ export const CartContextProvider = (props) => {
   }, []);
 
   const addToCart = (item, quantity) => {
+    
     handleAddToCart(item, quantity, setCart);
   };
-
+const addVariantItemToCart = (item, quantity, sizeIdValue, optionId, enqueueSnackbar) =>{
+  handleAddVariantToCart(item, quantity, sizeIdValue, optionId,enqueueSnackbar, setCart );
+}
   const removeItem = (itemId) => {
     removeItemFromCart(itemId, setCart);
   };
 
-  const handleNewItemQuantity = (id, newQty) => {
-    updateCartQty(id, newQty, setCart);
+  const handleNewItemQuantity = (id, newQty, variantId, optionId) => {
+    updateCartQty(id, newQty, setCart, variantId, optionId);
   };
+
+  useEffect(() => {
+    console.log(cart);
+  }, [cart])
   return (
     <CartContext.Provider
       value={{
@@ -39,7 +47,8 @@ export const CartContextProvider = (props) => {
         addToCart: (item, quantity) => addToCart(item, quantity),
         removeFromCart: (itemId) => removeItem(itemId),
         clearCart: () => clearCart(setCart),
-        updateQty: (itemId, newQty) => handleNewItemQuantity(itemId, newQty),
+        updateQty: (itemId, newQty, variantId, optionId) => handleNewItemQuantity(itemId, newQty, variantId, optionId),
+        addVariantItemToCart,
       }}
     >
       {props.children}

@@ -53,15 +53,19 @@ export const Header = () => {
 
   useEffect(() => {
     fetchCart(changeCart);
+    
   }, []);
 
-  const updateItemQty = (id, newQuantity) => {
-    updateQty(id, newQuantity);
+  
+  const updateItemQty = (id, newQuantity, variantId, optionId) => {
+    updateQty(id, newQuantity, variantId, optionId);
   };
 
   const removeItem = (id)=> removeFromCart(id);
 
   const handledarkmodeChange = () => {};
+
+
   return (
     <div
       style={{
@@ -161,7 +165,7 @@ export const Header = () => {
                   </Popover>
                 </li>
               ) : (
-                <li>
+                <li style={{alignSelf:'center', height:'fit-content'}}>
                   <LoginButton />
                 </li>
               )}
@@ -288,7 +292,7 @@ export const Header = () => {
                                     <Tooltip title="Add 1">
                                       <Button
                                         onClick={() =>
-                                          updateItemQty(item.id, item.quantity + 1)
+                                          updateItemQty(item.id, item.quantity + 1, item?.variants?.[0]?.variant_id, item?.variants?.[0]?.option_id)
                                         }
                                       >
                                         +
@@ -297,7 +301,7 @@ export const Header = () => {
                                     <Tooltip title="Remove 1">
                                       <Button
                                         onClick={() =>
-                                          updateItemQty(item.id, item.quantity - 1)
+                                          updateItemQty(item.id, item.quantity - 1, item?.variants?.[0]?.variant_id, item?.variants?.[0]?.option_id)
                                         }
                                       >
                                         -
@@ -341,8 +345,8 @@ export const Header = () => {
                           {cart?.total_items > 1 && "s"}):{" "}
                           {cart?.subtotal?.formatted_with_symbol}
                         </p>
-
-                        <Link
+<div style={{display:"flex", justifyContent:'space-around', gap:'20px'}}>
+  <Link
                           href="/basket"
                           onClick={handleBasketClose}
                           style={{ padding: "0 20px 0 0" }}
@@ -353,6 +357,8 @@ export const Header = () => {
                         <Link href="/checkout" onClick={handleBasketClose}>
                           Go To Checkout
                         </Link>
+</div>
+                        
                       </div>
                     </div>
                   </div>
