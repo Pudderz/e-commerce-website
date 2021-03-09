@@ -103,29 +103,24 @@ export const CategoryPage = ({category, description, numOfProducts, slug}) => {
             >
               {typeof item !== "object" ? (
                 <>
-                  <Typography variant="h4">
-                    <Skeleton style={{ margin: "11px auto" }} />
-                  </Typography>
                   <Skeleton
                     variant="rect"
-                    height={300}
-                    width={225}
+                    height={200}
+                    width={200}
                     style={{
                       margin: "0px auto",
                       maxWidth: "100%",
                       maxHeight: "20vh",
                     }}
                   ></Skeleton>
-                  <div></div>
+           
 
                   <Skeleton
-                    height={25}
-                    style={{ margin: "20px auto 0" }}
+                    height={50}
+                    width={150}
+                    style={{ margin: "0px auto 0" }}
                   ></Skeleton>
-                  <Skeleton
-                    height={25}
-                    style={{ margin: "10px auto 0" }}
-                  ></Skeleton>
+              
                 </>
               ) : (
                 <>

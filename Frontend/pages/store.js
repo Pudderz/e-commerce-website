@@ -76,26 +76,25 @@ export const StorePage = () => {
             <li key={index} style={{ width: "24%",minWidth:'150px', flexGrow:'1', maxWidth:'300px', boxSizing: "border-box" }}>
               {typeof item !== "object" ? (
                 <>
-                  <Typography variant="h4">
-                    <Skeleton style={{ margin: "11px auto" }} />
-                  </Typography>
-                  <Skeleton
-                    variant="rect"
-                    height={300}
-                    width={225}
-                    style={{ margin: "0px auto" }}
-                  ></Skeleton>
-                  <div></div>
+                <Skeleton
+                  variant="rect"
+                  height={200}
+                  width={200}
+                  style={{
+                    margin: "0px auto",
+                    maxWidth: "100%",
+                    maxHeight: "20vh",
+                  }}
+                ></Skeleton>
+         
 
-                  <Skeleton
-                    height={25}
-                    style={{ margin: "20px auto 0" }}
-                  ></Skeleton>
-                  <Skeleton
-                    height={25}
-                    style={{ margin: "10px auto 0" }}
-                  ></Skeleton>
-                </>
+                <Skeleton
+                  height={50}
+                  width={150}
+                  style={{ margin: "0px auto 0" }}
+                ></Skeleton>
+            
+              </>
               ) : (
                 <>
                   <ItemImage
