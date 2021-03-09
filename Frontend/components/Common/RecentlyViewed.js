@@ -35,7 +35,8 @@ export const RecentlyViewed = () => {
               width: "fit-content",
             }}
           >
-            <Link href={`/product/${item?.permalink}`}><img
+            <Link href={`/product/${item?.permalink}`}>
+              <img
                 src={item?.media?.source}
                 alt={item?.name}
                 style={{
@@ -44,6 +45,7 @@ export const RecentlyViewed = () => {
                   maxHeight: "200px",
                   objectFit: "cover",
                   minWidth: "160px",
+                  cursor:'pointer'
                 }}
               /></Link>
           </li>

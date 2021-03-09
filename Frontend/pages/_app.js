@@ -12,6 +12,9 @@ import {onError} from '@apollo/client/link/error'
 import { useRouter } from 'next/router'
 import * as gtag from '../utils/analytics';
 import { AuthContextProvider } from '../context/AuthContext';
+import '../styles/productPages.scss';
+
+
 
 const errorLink = onError(({graphqlErrors,networkError}) =>{
   if(graphqlErrors){

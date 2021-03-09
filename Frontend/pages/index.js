@@ -1,6 +1,6 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
-import Link from 'next/link'
+import Head from "next/head";
+import styles from "../styles/Home.module.css";
+import Link from "next/link";
 import React, { useEffect } from "react";
 import { RecentlyViewed } from "../components/Common/RecentlyViewed";
 import hikingBackground from "../images/hikingBackground.jpg";
@@ -13,7 +13,7 @@ import { Categories } from "../components/FrontPage/Categories";
 import { commerce } from "../lib/commerce";
 const axios = require("axios").default;
 
-export const FrontPage = ({products}) => {
+export const FrontPage = ({ products }) => {
   console.log(products);
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -50,10 +50,7 @@ export const FrontPage = ({products}) => {
 
       {/* Category Selection */}
       <Categories />
-      <div
-      className="highlights"
-    
-      >
+      <div className="highlights">
         <div
           style={{ display: "grid", height: "fit-content", maxWidth: "300px" }}
         >
@@ -96,69 +93,60 @@ export const FrontPage = ({products}) => {
   );
 };
 export async function getStaticProps({ params }) {
-
-
-
-let  popularProducts = [];
-    const fetchProducts = () => {
-      commerce.products
-        .list({limit: 4})
-        .then((item) => {
-          popularProducts = item.data;
-        })
-        .catch((error) => {
-          console.log("There was an error fetching the products", error);
-        });
-    };
-
-      let data = [];
-    try{
-      await axios.get(`${process.env.BACKEND_SERVER}/trending`).then((res) => {
-        data = res.data;
+  let popularProducts = [];
+  const fetchProducts = async () => {
+    await commerce.products
+      .list({ limit: 4 })
+      .then((item) => {
+        popularProducts = item.data;
+      })
+      .catch((error) => {
+        console.log("There was an error fetching the products", error);
       });
-    }catch(err){
-console.log(err)
-    }
-      
-    
-      let j = 0;
-    
-      if (data.length === 0) {
-        fetchProducts();
-      } else {
-        for (let i = 0; j <= 4 && i < data.length; i++) {
-          // Have to call them separately as the commerce library has no option to find a group of products.
-          
-          // In the Future I hope to have the commerce db in mongoDB allowing this process to effiecient 
-    
-          await commerce.products
-            .retrieve(data?.[i].slug, { type: "permalink" })
-            .then((item) => {
-              if (!!item) {
-                popularProducts.push(item);
-                j++;
-              }
-            })
-            .catch((error) => {
-              console.log("There was an error fetching the products", error);
-              fetchProducts();
-            });
-          
-        }
-        
-        
-      }
-
-  return {
-    props: {
-      products: popularProducts,
-    },
-    revalidate: 300
   };
+
+  let data = [];
+
+  try {
+    await axios.get(`${process.env.BACKEND_SERVER}/trending`).then((res) => {
+      data = res.data;
+    });
+  } catch (err) {
+    console.log(err);
+  } finally {
+    let j = 0;
+
+    if (data.length === 0 || typeof data === "undefined") {
+     await fetchProducts();
+    } else {
+      for (let i = 0; j <= 4 && i < data.length; i++) {
+        // Have to call them separately as the commerce library has no option to find a group of products.
+
+        // In the Future I hope to have the commerce db in mongoDB allowing this process to effiecient
+
+        await commerce.products
+          .retrieve(data?.[i].slug, { type: "permalink" })
+          .then((item) => {
+            if (!!item) {
+              popularProducts.push(item);
+              j++;
+            }
+          })
+          .catch((error) => {
+            console.log("There was an error fetching the products", error);
+            fetchProducts();
+          });
+      }
+    }
+console.log('products');
+    console.log(popularProducts);
+    return {
+      props: {
+        products: popularProducts,
+      },
+      revalidate: 300,
+    };
+  }
 }
-
-
-
-
 
 export default FrontPage;

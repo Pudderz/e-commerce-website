@@ -1,0 +1,21 @@
+// Product page styles
+
+
+.productPagecontainer{
+    display: flex;
+    margin: auto;
+    width: fit-content;
+    text-align: start;
+    margin-top: 50px;
+    flex-flow: wrap;
+    max-width: 100%;
+}
+
+
+.redButton{
+    background-color: #bc2334;
+    color: white;
+    width: 60%;
+    height: fit-content;
+    margin: 1em 1em 0 ;
+}
