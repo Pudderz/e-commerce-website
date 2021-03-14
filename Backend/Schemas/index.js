@@ -9,12 +9,35 @@ const {
   GraphQLID,
   GraphQLNonNull,
 } = graphql;
-const { ProductType, ProductReviews } = require("./TypeDefs/UserType");
+const { ProductType, ProductReviews,FileType, UserOrders } = require("./TypeDefs/UserType");
 const isTokenValid = require("../Authenication/validate");
 const Review = require("../models/review");
 const Product = require("../models/products");
 const Order = require("../models/order");
 const { ObjectId } = require("mongodb");
+const { TypeComposer, schemaComposer } = require('graphql-compose');
+// const { GraphQLUpload } = require('apollo-upload-server');
+const { GraphQLUpload } =require('graphql-upload');
+const { Storage } = require("@google-cloud/storage");
+const path = require("path");
+
+const files = [];
+
+const gc = new Storage({
+  keyFilename: path.join(__dirname, '../key.json'),
+  projectId:"e-commerce-web-project"
+})
+
+// gc.getBuckets().then(x=>console.log(x));
+const projectImages = gc.bucket("e-commerce-image-storage-202")
+console.log(projectImages);
+
+
+
+
+
+
+// schemaComposer.set('Upload', GraphQLUpload);
 
 const RootQuery = new GraphQLObjectType({
   name: "RootQueryType",
@@ -33,6 +56,13 @@ const RootQuery = new GraphQLObjectType({
         return Review.find({});
       },
     },
+    files: {
+      type: new GraphQLList(GraphQLString),
+      resolve(){
+        return files;
+      }
+    },
+
     getProduct: {
       type: new GraphQLList(ProductType),
       args: {
@@ -65,7 +95,7 @@ const RootQuery = new GraphQLObjectType({
     },
 
     getUserOrders: {
-      type: new GraphQLList(ProductReviews),
+      type: new GraphQLList(UserOrders),
       args: { id: { type: GraphQLID }, name: { type: GraphQLString } },
       resolve: async (parent, args, context) => {
         const { db, token, subId } = await context();
@@ -78,6 +108,22 @@ const RootQuery = new GraphQLObjectType({
         //get sub id from accessToken
         //returns all orders with that subId
         return Order.find({ subId: subId });
+      },
+    },
+    getAllOrders: {
+      type: new GraphQLList(UserOrders),
+      args: { id: { type: GraphQLID }, name: { type: GraphQLString } },
+      resolve: async (parent, args, context) => {
+        const { db, token, subId, permissions } = await context();
+        //Test if JWT is valid
+        const { error } = await isTokenValid(token);
+        if (error) return null;
+
+        if (!subId) return null;
+        if(!permissions.includes("read:allOrders")) return;
+        //get sub id from accessToken
+        //returns all orders with that subId
+        return Order.find({});
       },
     },
   },
@@ -281,7 +327,33 @@ const Mutation = new GraphQLObjectType({
         
       },
     },
-  },
+    uploadFile:{
+      type: ProductType,
+      args: {
+        file: {type: GraphQLUpload},
+      },  
+    resolve:async (parent, args, context) => {
+      console.log('upload')
+      const {file} = args;
+      const { createReadStream, filename } = await file;
+
+      await new Promise(res =>
+        createReadStream()
+          .pipe(
+            projectImages.file(filename).createWriteStream({
+              resumable: false,
+              gzip: true
+            })
+          )
+          .on("finish", res)
+      );
+
+      files.push(filename);
+
+      return null;
+    }
+  }
+},
 });
 
 module.exports = new GraphQLSchema({ query: RootQuery, mutation: Mutation });

@@ -41,4 +41,23 @@ const ProductType = new GraphQLObjectType({
   }),
 });
 
-module.exports = {ProductType, ProductReviews};
+const FileType = new GraphQLObjectType({
+  name: "File",
+  fields: () => ({
+    _id: { type: GraphQLID },
+    name: { type: GraphQLString },
+  }),
+});
+
+const UserOrders = new GraphQLObjectType({
+  name: "Order",
+  fields: () => ({
+    _id: { type: GraphQLID },
+    name: { type: GraphQLString },
+    date: {type: GraphQLString },
+    price: { type: GraphQLString }
+  }),
+});
+
+
+module.exports = {ProductType, ProductReviews, FileType, UserOrders};

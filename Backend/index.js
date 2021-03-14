@@ -9,11 +9,13 @@ const mongoose = require("mongoose");
 const { SimpleGA, Request } = require("node-simple-ga");
 const jwt_decode = require("jwt-decode");
 var fs = require("fs");
+const {Storage} = require("@google-cloud/storage");
+const bodyParser = require("body-parser");
+const {apolloUploadExpress}= require("apollo-upload-server");
+const { graphqlUploadExpress } = require('graphql-upload');
+require("dotenv").config();
 
 let database = null;
-
-
-require("dotenv").config();
 const uri = `mongodb+srv://dbAdmin:${process.env.MONGODB_PASSWORD}@cluster0.s5qsx.mongodb.net/${process.env.MONGODB_NAME}?retryWrites=true&w=majority`;
 console.log(uri);
 
@@ -47,10 +49,17 @@ const context = async (req) => {
   return { db, token, subId: decoded.sub, permissions: decoded.permissions };
 };
 
+
+
+
+
 app.use(cors());
+
+
 app.use(express.json());
 app.use(
   "/graphql",
+  graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }),
   graphqlHTTP(async (req) => ({
     schema,
     graphiql: true,
@@ -61,9 +70,7 @@ app.use(
 app.use("/trending", (req, res) => {
   if (!fs.existsSync("./key.json")) {
     //create json file for analytics
-
     let data = {
-    
     "type": "service_account",
     "project_id": "e-commerce-web-project",
     "private_key_id": process.env.GA_PRIVATE_KEY_ID ,
@@ -113,6 +120,9 @@ app.use("/trending", (req, res) => {
     }
   })();
 });
+
+
+
 
 app.listen(process.env.PORT || PORT, () => {
   console.log(`Server running on port ${PORT}`);

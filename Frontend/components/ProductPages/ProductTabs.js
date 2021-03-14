@@ -37,7 +37,8 @@ const [product, setProduct] = useState({});
 useEffect(() => {
   setProduct(props.product);
   console.log(props.product);
-}, [props])
+}, [props]);
+
   return (
     <div
       style={{

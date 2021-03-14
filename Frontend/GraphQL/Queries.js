@@ -41,3 +41,13 @@ export const LOAD_USER_ORDERS = gql`
     }
   }
 `;
+
+
+export const LOAD_ALL_PRODUCTS = gql`
+  query {
+    getAllProducts{
+      productId
+      productName
+    }
+  }
+`
