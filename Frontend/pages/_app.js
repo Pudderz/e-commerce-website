@@ -13,7 +13,7 @@ import { useRouter } from 'next/router'
 import * as gtag from '../utils/analytics';
 import { AuthContextProvider } from '../context/AuthContext';
 import '../styles/productPages.scss';
-
+import {createUploadLink} from 'apollo-upload-client';
 
 
 const errorLink = onError(({graphqlErrors,networkError}) =>{
@@ -24,10 +24,13 @@ const errorLink = onError(({graphqlErrors,networkError}) =>{
   }
 })
 
-const link = from([
-  errorLink,
-  new HttpLink({uri:`${process.env.BACKEND_SERVER}/graphql`}),
-])
+
+// const link = from([
+//   errorLink,
+//   new HttpLink({uri:`${process.env.BACKEND_SERVER}/graphql`}),
+// ])
+
+const link = createUploadLink({uri: `${process.env.BACKEND_SERVER}/graphql`})
 
 const authMiddleware = new ApolloLink((operation, forward) => {
   // add the authorization to the headers

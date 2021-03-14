@@ -11,7 +11,7 @@ import { ItemImage } from "../../components/Common/ItemImage";
 import PropTypes from "prop-types";
 import { Filters } from "../../components/StorePage/Filters";
 export const CategoryPage = ({category, description, numOfProducts, slug}) => {
-  const [categoryInfo, setCategoryInfo] = useState({});
+
 
   const [products, setProducts] = useState(
     Array.from({ length: 12 }, (v, i) => i)
