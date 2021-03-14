@@ -3,10 +3,13 @@ import React from 'react'
 // lists all the products
 
 
-export const stock = () => {
+export const Stock = () => {
     return (
         <div>
             <h2>Stock Page</h2>
         </div>
     )
 }
+
+
+export default Stock;
