@@ -20,6 +20,6 @@ module.exports = withPlugins([
         GOOGLE_ANALYTICS_ID: process.env.GOOGLE_ANALYTICS_ID,
     },
     images: {
-        domains:['cdn.chec.io']
+        domains:['cdn.chec.io', 'storage.googleapis.com']
     }
   });
