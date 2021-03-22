@@ -46,8 +46,31 @@ export const LOAD_USER_ORDERS = gql`
 export const LOAD_ALL_PRODUCTS = gql`
   query {
     getAllProducts{
-      productId
+      images
       productName
+      _id
+      slug
+      price
+      numOfReviews
+      averageRating
+    }
+  }
+`
+
+export const LOAD_PRODUCT_BY_SLUG = gql`
+  query(
+    $slug: String!
+  ) {
+    getProductBySlug(slug: $slug){
+      images
+      productName
+      _id
+      slug
+      stock
+      price
+      numOfReviews
+      averageRating
+      description
     }
   }
 `
