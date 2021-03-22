@@ -51,18 +51,13 @@ export const ChangeStock = ({ changeStock,stockArray, size }) => {
       </div>
       <hr style={{margin:'0'}} />
       <div style={{ height: "400px", overflow: "auto" }}>
-        
-        {ALL_SIZES.map((number, index) => {
-          // Tests if that size is in the availableSizes object
-          // If not sets avaliable size button to disabled
-
-          return (
-            <div
+        <ul style={{listStyle:'none', padding:'0'}}>
+           {ALL_SIZES.map((number, index) => (
+            <li
             key={index}
               style={{
                 border: "1px solid #ebedee",
                 borderRadius: "0",
-                //  width: "50%",
                 borderLeft: "none",
                 borderTop: "none",
                 display: "flex",
@@ -73,17 +68,18 @@ export const ChangeStock = ({ changeStock,stockArray, size }) => {
               <p>UK {number}</p>
 
               <div style={{ display: "flex" }}>
-                <Button key={index} onClick={()=>handleStockChange(index, +1)}>
+                <Button  onClick={()=>handleStockChange(index, +1)}>
                   +
                 </Button>
                 <p>{stockArray?.[index]}</p>
-                <Button key={index} onClick={()=>handleStockChange(index, -1)}>
+                <Button  onClick={()=>handleStockChange(index, -1)}>
                   -
                 </Button>
               </div>
-            </div>
-          );
-        })}
+            </li>
+          ))}
+        </ul>
+       
       </div>
     </div>
   );
