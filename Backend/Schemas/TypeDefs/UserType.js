@@ -5,24 +5,22 @@ const {
   GraphQLInt,
   GraphQLString,
   GraphQLList,
-  GraphQLID
+  GraphQLID,
 } = graphql;
-
 
 const ProductReviews = new GraphQLObjectType({
   name: "Review",
-  fields:()=>({
+  fields: () => ({
     _id: { type: GraphQLID },
-    productId:{ type: GraphQLString },
-    productName: { type: GraphQLString},
+    productId: { type: GraphQLString },
+    productName: { type: GraphQLString },
     name: { type: GraphQLString },
-    profileImage: { type: GraphQLString},
+    profileImage: { type: GraphQLString },
     rating: { type: GraphQLString },
-    descriptionTitle:{type: GraphQLString},
-    description:{type: GraphQLString}
-  })
-})
-
+    descriptionTitle: { type: GraphQLString },
+    description: { type: GraphQLString },
+  }),
+});
 
 const ProductType = new GraphQLObjectType({
   name: "Product",
@@ -30,13 +28,18 @@ const ProductType = new GraphQLObjectType({
     _id: { type: GraphQLID },
     productId: { type: GraphQLString },
     productName: { type: GraphQLString },
+    price: { type: GraphQLString },
     numOfReviews: { type: GraphQLInt },
     averageRating: { type: GraphQLString },
-    allProductReviews: { 
+    description: { type: GraphQLString },
+    stock: { type: new GraphQLList(GraphQLString) },
+    images: { type: new GraphQLList(GraphQLString) },
+    slug: { type: GraphQLString },
+    allProductReviews: {
       type: new GraphQLList(ProductReviews),
-      resolve(parent, args){
-        return Review.find({productId: parent.productId})
-      }
+      resolve(parent, args) {
+        return Review.find({ productId: parent.productId });
+      },
     },
   }),
 });
@@ -54,10 +57,9 @@ const UserOrders = new GraphQLObjectType({
   fields: () => ({
     _id: { type: GraphQLID },
     name: { type: GraphQLString },
-    date: {type: GraphQLString },
-    price: { type: GraphQLString }
+    date: { type: GraphQLString },
+    price: { type: GraphQLString },
   }),
 });
 
-
-module.exports = {ProductType, ProductReviews, FileType, UserOrders};
+module.exports = { ProductType, ProductReviews, FileType, UserOrders };

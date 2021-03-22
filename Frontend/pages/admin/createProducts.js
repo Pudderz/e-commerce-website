@@ -24,6 +24,9 @@ import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 import FilepondPluginDragReorder from "filepond-plugin-drag-reorder";
 import { ChangeStock } from "../../components/Admin/ChangeStock";
+import {useForm} from "react-hook-form";
+
+
 
 registerPlugin(
   FilePondPluginImageExifOrientation,
@@ -57,18 +60,20 @@ const uploadFileMutation = gql`
   }
 `;
 const createProductMutation = gql`
-  mutation UploadFile(
-    $file: [Upload!]
-    $name: String!
+  mutation UploadProduct(
+    $files: [Upload!]
+    $productname: String!
     $price: String!
-    $stock: [Integer!]
+    $stock: [Int!]
+    $slug: String!
     $description: String!
   ) {
     createProduct(
-      file: $file
-      name: $name
+      files: $files
+      productname: $productname
       price: $price
       stock: $stock
+      slug: $slug
       description: $description
     ) {
       productName
@@ -78,58 +83,56 @@ const createProductMutation = gql`
     }
   }
 `;
-export const filesQuery = gql`
-  {
-    files
-  }
-`;
-
-const Files = () => {
-  const { data, loading } = useLazyQuery(filesQuery);
-
-  if (loading) {
-    return <div>loading...</div>;
-  }
-
-  return (
-    <div>
-      {data?.files?.map((x) => (
-        <img
-          style={{ width: 200 }}
-          key={x}
-          src={`https://storage.cloud.google.com/e-commerce-image-storage-202/${x}`}
-          alt={x}
-        />
-      ))}
-    </div>
-  );
-};
 
 export const CreateProducts = () => {
   const [stockTotal, setTotalStock] = useState(0);
   const [stockArray, setStockArray] = useState(Array.from({length: ALL_SIZES.length}, ()=> 0))
   const [files, setFiles] = useState([]);
-  const [info, setInfo] = useState({
-    name: "",
-  });
+
+  createProductMutation
+
+  const [createProduct, {data, error}] = useMutation(createProductMutation);
+
+  console.log(data, error)
+  const {register, handleSubmit} = useForm();
+
+
   const filePond = useRef(null);
-  const [uploadFile] = useMutation(uploadFileMutation, {
-    refetchQueries: [{ query: filesQuery }],
-  });
-  const onDrop = useCallback(
-    ([file]) => {
-      uploadFile({ variables: { file } });
-    },
-    [uploadFile]
-  );
+  // const [uploadFile] = useMutation(uploadFileMutation, {
+  //   refetchQueries: [{ query: filesQuery }],
+  // });
+  // const onDrop = useCallback(
+  //   ([file]) => {
+  //     uploadFile({ variables: { file } });
+  //   },
+  //   [uploadFile]
+  // );
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  // const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleFormSubmit = (data) => {
+    const fileArray = [];
+
+    files.forEach(file=>{
+      fileArray.push(file.file);
+    })
+    console.log({
+      productname: data.productName,
+      slug: data.slug,
+      price: data.productPrice,
+      description: data.description,
+      files: fileArray,
+      stock: stockArray,
+    });
+    createProduct({variables: {
+      productname: data.productName,
+      slug: data.slug,
+      price: String(data.productPrice),
+      description: data.description,
+      files: fileArray,
+      stock: stockArray,
+    }})
   };
-
-  const handleChange = (target, value) => {};
 
   useEffect(() => {
     console.log(files);
@@ -150,7 +153,7 @@ export const CreateProducts = () => {
   return (
     <div style={{ backgroundColor: "#efefef" }}>
       <h3>Create a Product</h3>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit(handleFormSubmit)}>
         <div
           style={{
             backgroundColor: "#fff",
@@ -166,6 +169,8 @@ export const CreateProducts = () => {
           <div>
             <TextField
               required
+              inputRef={register}
+              name="productName"
               label="Product Name"
               fullWidth
               variant="outlined"
@@ -175,6 +180,8 @@ export const CreateProducts = () => {
           <div>
             <TextField
               required
+              name="slug"
+              inputRef={register}
               label="Slug"
               fullWidth
               variant="outlined"
@@ -190,6 +197,8 @@ export const CreateProducts = () => {
             <InputLabel htmlFor="outlined-adornment-amount">Price</InputLabel>
             <OutlinedInput
               id="outlined-adornment-amount"
+              inputRef={register}
+              name="productPrice"
               // value={values.amount}
               // onChange={handleChange('amount')}
               type="number"
@@ -203,6 +212,8 @@ export const CreateProducts = () => {
 
           <TextField
             required
+            inputRef={register}
+            name="description"
             label="Description"
             multiline
             fullWidth
@@ -228,13 +239,15 @@ export const CreateProducts = () => {
               labelId="demo-mutiple-name-label"
               id="demo-mutiple-name"
               multiple
+              inputRef={register}
+              name="categories"
               value={["", "test"]}
               // onChange={handleChange}
               fullWidth
               // input={<Input />}
               // MenuProps={MenuProps}
             >
-              <MenuItem value={"test"}>
+              <MenuItem value={"test"} key ={"test"}>
                 <Checkbox checked={["", "test"].indexOf("") > -1} />
                 <ListItemText primary={"test"} />
               </MenuItem>
@@ -251,12 +264,8 @@ export const CreateProducts = () => {
             margin: "20px auto",
           }}
         >
-      
-          
 
-          {/* <SelectSize availableSizes={[4]} /> */}
           <ChangeStock availableSizes={[4]} stockArray={stockArray} changeStock={handleStockChange}/>
-
 
 
         </div>

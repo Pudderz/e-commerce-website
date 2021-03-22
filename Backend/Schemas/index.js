@@ -9,33 +9,33 @@ const {
   GraphQLID,
   GraphQLNonNull,
 } = graphql;
-const { ProductType, ProductReviews,FileType, UserOrders } = require("./TypeDefs/UserType");
+const {
+  ProductType,
+  ProductReviews,
+  FileType,
+  UserOrders,
+} = require("./TypeDefs/UserType");
 const isTokenValid = require("../Authenication/validate");
 const Review = require("../models/review");
 const Product = require("../models/products");
 const Order = require("../models/order");
 const { ObjectId } = require("mongodb");
-const { TypeComposer, schemaComposer } = require('graphql-compose');
+const { TypeComposer, schemaComposer } = require("graphql-compose");
 // const { GraphQLUpload } = require('apollo-upload-server');
-const { GraphQLUpload } =require('graphql-upload');
+const { GraphQLUpload } = require("graphql-upload");
 const { Storage } = require("@google-cloud/storage");
 const path = require("path");
 
 const files = [];
 
 const gc = new Storage({
-  keyFilename: path.join(__dirname, '../key.json'),
-  projectId:"e-commerce-web-project"
-})
+  keyFilename: path.join(__dirname, "../key.json"),
+  projectId: "e-commerce-web-project",
+});
 
 // gc.getBuckets().then(x=>console.log(x));
-const projectImages = gc.bucket("e-commerce-image-storage-202")
+const projectImages = gc.bucket("e-commerce-image-storage-202");
 console.log(projectImages);
-
-
-
-
-
 
 // schemaComposer.set('Upload', GraphQLUpload);
 
@@ -45,22 +45,23 @@ const RootQuery = new GraphQLObjectType({
     getAllProducts: {
       type: new GraphQLList(ProductType),
       args: { id: { type: GraphQLInt } },
-      resolve(parent, args) {
+      resolve: async (parent, args, context) => {
+        await context();
         return Product.find({});
       },
     },
     getAllReviews: {
       type: new GraphQLList(ProductReviews),
       args: { id: { type: GraphQLID } },
-      resolve(parent, args) {
+      resolve(parent, args, context) {
         return Review.find({});
       },
     },
     files: {
       type: new GraphQLList(GraphQLString),
-      resolve(){
+      resolve() {
         return files;
-      }
+      },
     },
 
     getProduct: {
@@ -69,7 +70,8 @@ const RootQuery = new GraphQLObjectType({
         productId: { type: GraphQLString },
         productName: { type: new GraphQLNonNull(GraphQLString) },
       },
-      resolve(parent, args) {
+      resolve: async (parent, args, context) => {
+        await context();
         console.log("finding");
         return Product.find({ productName: args.productName });
       },
@@ -120,12 +122,22 @@ const RootQuery = new GraphQLObjectType({
         if (error) return null;
 
         if (!subId) return null;
-        if(!permissions.includes("read:allOrders")) return;
+        if (!permissions.includes("read:allOrders")) return;
         //get sub id from accessToken
         //returns all orders with that subId
         return Order.find({});
       },
     },
+    getProductBySlug: {
+      type: ProductType,
+      args: {slug: {type: GraphQLString}},
+      resolve: async (parent, args, context) => {
+        const { db, token } = await context();
+        console.log('getProductBySlug');
+        console.log(args.slug)
+        return Product.findOne({slug: args.slug });
+      },
+    }
   },
 });
 
@@ -135,26 +147,55 @@ const Mutation = new GraphQLObjectType({
     createProduct: {
       type: ProductType,
       args: {
-        productId: { type: new GraphQLNonNull(GraphQLString) },
-        productName: { type: new GraphQLNonNull(GraphQLString) },
+        productname: {type: GraphQLString},
+        slug: {type: GraphQLString},
+        price: {type: GraphQLString},
+        description: {type: GraphQLString},
+        files: { type: new GraphQLList(GraphQLUpload) },
+        stock: {type: new GraphQLList(GraphQLInt)},
       },
       resolve: async (parent, args, context) => {
         const { db, token } = await context();
         // Tests if user is authenticated to create a review
         const { error } = await isTokenValid(token);
-
         if (error) return null;
-
+        const { files } = args;
+        console.log(args)
+        let fileNameArray = [];
+        for(let img of files){
+           const { createReadStream, filename } = await img;
+            await new Promise((res) =>
+                      createReadStream()
+                        .pipe(
+                          projectImages.file(filename).createWriteStream({
+                            resumable: false,
+                            gzip: true,
+                          })
+                        )
+                        .on("finish", res)
+                    );
+            fileNameArray.push(filename); 
+        }
+       
+        console.log("product uploading");
+        console.log(fileNameArray)
         let product = new Product({
-          productId: args.productId,
-          productName: args.productName,
+          slug: args.slug,
+          productName: args.productname,
+          images: fileNameArray,
+          price: args.price,
+          description: args.description,
+          stock: args.stock,
           numOfReviews: 0,
           averageRating: 0,
         });
-
+        console.log('product')
+        console.log(product);
         return product.save();
       },
     },
+    
+
     createReview: {
       type: ProductType,
       args: {
@@ -240,8 +281,8 @@ const Mutation = new GraphQLObjectType({
       },
     },
 
-  // TODO: edits number of reviews and updates overall rating for that product  
-  // for deleteReview and edit Review
+    // TODO: edits number of reviews and updates overall rating for that product
+    // for deleteReview and edit Review
     deleteReview: {
       type: ProductType,
       args: {
@@ -261,21 +302,27 @@ const Mutation = new GraphQLObjectType({
         if (!subId) return null;
 
         try {
-          const review = await Review.findById({ _id: id, subId: subId  }, (err, doc) => {
-            // if(err){
-            //   return null;
-            // }else{
-            //   console.log(doc.name, doc.productName)
-            // }
-          });
+          const review = await Review.findById(
+            { _id: id, subId: subId },
+            (err, doc) => {
+              // if(err){
+              //   return null;
+              // }else{
+              //   console.log(doc.name, doc.productName)
+              // }
+            }
+          );
           // console.log(review);
-          return await Review.findOneAndDelete({ _id: id, subId: subId },(err, doc) => {
-            // if(err){
-            //   return null;
-            // }else{
-            //   console.log(doc.name, doc.productName)
-            // }
-          });
+          return await Review.findOneAndDelete(
+            { _id: id, subId: subId },
+            (err, doc) => {
+              // if(err){
+              //   return null;
+              // }else{
+              //   console.log(doc.name, doc.productName)
+              // }
+            }
+          );
         } catch (err) {
           console.log("error" + err);
           return null;
@@ -285,13 +332,13 @@ const Mutation = new GraphQLObjectType({
     editReview: {
       type: ProductType,
       args: {
-        id: { type:  new GraphQLNonNull(GraphQLString) },
-        title: {type:   new GraphQLNonNull(GraphQLString)},
-        description: {type:   new GraphQLNonNull(GraphQLString)},
-        rating: {type:   new GraphQLNonNull(GraphQLString)},
+        id: { type: new GraphQLNonNull(GraphQLString) },
+        title: { type: new GraphQLNonNull(GraphQLString) },
+        description: { type: new GraphQLNonNull(GraphQLString) },
+        rating: { type: new GraphQLNonNull(GraphQLString) },
       },
       resolve: async (parent, args, context) => {
-        console.log('editing a review');
+        console.log("editing a review");
         console.log(args);
         const { db, token, subId } = await context();
         //Test if JWT is valid
@@ -299,61 +346,57 @@ const Mutation = new GraphQLObjectType({
         if (error) return null;
         if (!subId) return null;
 
-
         try {
           return await Review.findOneAndUpdate(
-            {_id: ObjectId(args.id), subId: subId},
-             {
-               descriptionTitle: args.title,
-               description: args.description,
-               rating: args.rating,
-               edited: true,
-             },
-             { new: true, useFindAndModify:true },
-             (err, doc) => {
-               if (err) {
-                 console.log("Something wrong when updating data!");
-                 return null;
-               }
-               console.log(doc);
-             }
-           );
+            { _id: ObjectId(args.id), subId: subId },
+            {
+              descriptionTitle: args.title,
+              description: args.description,
+              rating: args.rating,
+              edited: true,
+            },
+            { new: true, useFindAndModify: true },
+            (err, doc) => {
+              if (err) {
+                console.log("Something wrong when updating data!");
+                return null;
+              }
+              console.log(doc);
+            }
+          );
         } catch (err) {
           console.log("error" + err);
           return null;
         }
-
-
-        
       },
     },
-    uploadFile:{
+    uploadFile: {
       type: ProductType,
       args: {
-        file: {type: GraphQLUpload},
-      },  
-    resolve:async (parent, args, context) => {
-      console.log('upload')
-      const {file} = args;
-      const { createReadStream, filename } = await file;
+        file: { type: GraphQLUpload },
+      },
+      resolve: async (parent, args, context) => {
+        console.log("upload");
+        const { file } = args;
+        const { createReadStream, filename } = await file;
 
-      await new Promise(res =>
-        createReadStream()
-          .pipe(
-            projectImages.file(filename).createWriteStream({
-              resumable: false,
-              gzip: true
-            })
-          )
-          .on("finish", res)
-      );
+        await new Promise((res) =>
+          createReadStream()
+            .pipe(
+              projectImages.file(filename).createWriteStream({
+                resumable: false,
+                gzip: true,
+              })
+            )
+            .on("finish", res)
+        );
 
-      files.push(filename);
+        files.push(filename);
 
-      return null;
-    }
-  }
-},
+        return null;
+      },
+    },
+  },
 });
 
 module.exports = new GraphQLSchema({ query: RootQuery, mutation: Mutation });
