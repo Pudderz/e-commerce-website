@@ -20,6 +20,7 @@ const uri = `mongodb+srv://dbAdmin:${process.env.MONGODB_PASSWORD}@cluster0.s5qs
 console.log(uri);
 
 const startDatabase = () => {
+  console.log('connecting to the database')
   mongoose.connect(
     uri,
     { useNewUrlParser: true, useUnifiedTopology: true },
