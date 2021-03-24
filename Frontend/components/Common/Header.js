@@ -1,16 +1,26 @@
 import React, { useContext, useState, useEffect } from "react";
-import Link from 'next/link'
+import Link from "next/link";
 import { CartContext } from "../../context/CartContext";
 import ShoppingBasketIcon from "@material-ui/icons/ShoppingBasket";
-import { Avatar, Badge, Button, IconButton, Tooltip } from "@material-ui/core";
+import {
+  Avatar,
+  Badge,
+  Button,
+  ClickAwayListener,
+  Drawer,
+  IconButton,
+  TextField,
+  Tooltip,
+} from "@material-ui/core";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import { useAuth0 } from "@auth0/auth0-react";
 import { LoginButton } from "../Authentication/LoginButton";
 import { Switch } from "@material-ui/core";
 import Popover from "@material-ui/core/Popover";
 import { LogoutButton } from "../Authentication/LogoutButton";
-import { fetchCart} from "../../lib/commerce";
+import { fetchCart } from "../../lib/commerce";
 import DeleteIcon from "@material-ui/icons/Delete";
+import { Filters } from "..//StorePage/Filters";
 /* 
 HEADER COMPONENT
 
@@ -53,33 +63,45 @@ export const Header = () => {
 
   useEffect(() => {
     fetchCart(changeCart);
-    
   }, []);
 
-  
   const updateItemQty = (id, newQuantity, variantId, optionId) => {
     updateQty(id, newQuantity, variantId, optionId);
   };
 
-  const removeItem = (id)=> removeFromCart(id);
+  const removeItem = (id) => removeFromCart(id);
 
   const handledarkmodeChange = () => {};
 
+  const [state, setState] = useState({
+    top: false,
+  });
+
+  const toggleDrawer = (anchor, open) => (event) => {
+    if (
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    ) {
+      return;
+    }
+    setState({ ...state, [anchor]: !state[anchor] });
+  };
 
   return (
-    <div
-      style={{
-        position: "sticky",
-        top: "0",
-        // backgroundColor: "rgba(0,0,0,0.6)",
-        backgroundColor: "#fff",
-        boxShadow: "rgb(0 0 0) 0px -17px 26px",
-        padding: "10px 0",
-        margin: "0",
-        zIndex: "2",
-      }}
+    <
+   
     >
-      <nav style={{ zIndex: "2" }}>
+      <nav style={{ 
+      
+      position: "sticky",
+      top: "0",
+      // backgroundColor: "rgba(0,0,0,0.6)",
+      backgroundColor: "#fff",
+      boxShadow: "rgb(0 0 0) 0px -17px 26px",
+      padding: "10px 0",
+      margin: "0",
+      zIndex: "4",
+      }}>
         <ul
           style={{
             display: "flex",
@@ -99,10 +121,50 @@ export const Header = () => {
               <Link className="link" href="/store">
                 Store
               </Link>
+             
             </div>
           </li>
-
           <li>
+            <div style={{ display: "flex", gap: "20px", margin: "10px 0" }}>
+            <Button
+                style={{
+                  textTransform: "none",
+                  backgroundColor: "transparent",
+                }}
+                onClick={toggleDrawer("top")}
+              >
+                Men
+              </Button>
+              <Button
+                style={{
+                  textTransform: "none",
+                  backgroundColor: "transparent",
+                }}
+                onClick={toggleDrawer("top")}
+              >
+                Women
+              </Button>
+              <Button
+                style={{
+                  textTransform: "none",
+                  backgroundColor: "transparent",
+                }}
+                onClick={toggleDrawer("top")}
+              >
+                Categories
+              </Button>
+              <Button
+                style={{
+                  textTransform: "none",
+                  backgroundColor: "transparent",
+                }}
+                onClick={toggleDrawer("top")}
+              >
+                Sale
+              </Button>
+            </div>
+          </li>
+          <li style={{height:'fit-content', alignSelf:'center'}}>
             <ul
               style={{
                 display: "flex",
@@ -112,7 +174,7 @@ export const Header = () => {
                 padding: "0",
               }}
             >
-              <li style={{alignSelf:'center'}}>
+              {/* <li style={{ alignSelf: "center" }}>
                 <Tooltip title="Dark Mode On/Off">
                   <Switch
                     checked={false}
@@ -121,8 +183,10 @@ export const Header = () => {
                     color="primary"
                   />
                 </Tooltip>
-              </li>
-
+              </li> */}
+<li style={{height:'fit-content', alignSelf:'center'}}>
+  <TextField id="searchBar" variant="outlined" style={{height:'fit-content', padding:'0'}}></TextField>
+</li>
               {isAuthenticated ? (
                 <li>
                   <Tooltip title="Profile">
@@ -165,7 +229,7 @@ export const Header = () => {
                   </Popover>
                 </li>
               ) : (
-                <li style={{alignSelf:'center', height:'fit-content'}}>
+                <li style={{ alignSelf: "center", height: "fit-content" }}>
                   <LoginButton />
                 </li>
               )}
@@ -219,8 +283,8 @@ export const Header = () => {
                           <h3>Your Basket is empty</h3>
                           <p>
                             Continue shopping on the{" "}
-                            <Link href="/">homepage</Link>, browse our discounts,
-                            or visit your Wish List
+                            <Link href="/">homepage</Link>, browse our
+                            discounts, or visit your Wish List
                           </p>
                         </div>
                       ) : (
@@ -278,7 +342,8 @@ export const Header = () => {
                                       width: "fit-content",
                                     }}
                                   >
-                                     UK {item?.variants?.[0]?.option_name} {item.price?.formatted_with_symbol}
+                                    UK {item?.variants?.[0]?.option_name}{" "}
+                                    {item.price?.formatted_with_symbol}
                                   </p>
                                   <p
                                     style={{
@@ -292,7 +357,12 @@ export const Header = () => {
                                     <Tooltip title="Add 1">
                                       <Button
                                         onClick={() =>
-                                          updateItemQty(item.id, item.quantity + 1, item?.variants?.[0]?.variant_id, item?.variants?.[0]?.option_id)
+                                          updateItemQty(
+                                            item.id,
+                                            item.quantity + 1,
+                                            item?.variants?.[0]?.variant_id,
+                                            item?.variants?.[0]?.option_id
+                                          )
                                         }
                                       >
                                         +
@@ -301,7 +371,12 @@ export const Header = () => {
                                     <Tooltip title="Remove 1">
                                       <Button
                                         onClick={() =>
-                                          updateItemQty(item.id, item.quantity - 1, item?.variants?.[0]?.variant_id, item?.variants?.[0]?.option_id)
+                                          updateItemQty(
+                                            item.id,
+                                            item.quantity - 1,
+                                            item?.variants?.[0]?.variant_id,
+                                            item?.variants?.[0]?.option_id
+                                          )
                                         }
                                       >
                                         -
@@ -345,20 +420,25 @@ export const Header = () => {
                           {cart?.total_items > 1 && "s"}):{" "}
                           {cart?.subtotal?.formatted_with_symbol}
                         </p>
-<div style={{display:"flex", justifyContent:'space-around', gap:'20px'}}>
-  <Link
-                          href="/basket"
-                          onClick={handleBasketClose}
-                          style={{ padding: "0 20px 0 0" }}
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-around",
+                            gap: "20px",
+                          }}
                         >
-                          Go To Basket
-                        </Link>
+                          <Link
+                            href="/basket"
+                            onClick={handleBasketClose}
+                            style={{ padding: "0 20px 0 0" }}
+                          >
+                            Go To Basket
+                          </Link>
 
-                        <Link href="/checkout" onClick={handleBasketClose}>
-                          Go To Checkout
-                        </Link>
-</div>
-                        
+                          <Link href="/checkout" onClick={handleBasketClose}>
+                            Go To Checkout
+                          </Link>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -368,6 +448,46 @@ export const Header = () => {
           </li>
         </ul>
       </nav>
-    </div>
+     
+      <Drawer
+        className={`categoriesSelection ${state["top"]}`}
+        style={{
+          position: "fixed",
+          top: "76px",
+          left: "0",
+          right: "0",
+          // backgroundColor: "#191c1d",
+          // backgroundColor: "#fff",
+          maxHeight: "fit-content",
+          width: "100%",
+          zIndex:'3'
+        }}
+        anchor={"top"}
+        variant="persistent"
+        open={state["top"]}
+        onClose={() => toggleDrawer("top", false)}
+      >
+        
+        
+        <div
+          className="selection"
+          style={{
+            maxWidth: "1300px",
+            margin: " 20px auto",
+            width: "fit-content",
+            maxHeight: "auto",
+            width:'100%'
+            // boxShadow: '0px 0px 5px 0px rgba(112, 154, 168, 0.3)'
+          }}
+        >
+          <h5 style={{ margin: "5px auto", width: "fit-content" }}>
+            Categories
+          </h5>
+          {/* <CategorySelection changeCategory={changeCategory} /> */}
+          <Filters onClick={() => toggleDrawer("top", false)}/>
+        </div>
+        
+      </Drawer>
+    </>
   );
 };
