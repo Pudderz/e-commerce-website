@@ -46,7 +46,9 @@ const RootQuery = new GraphQLObjectType({
       type: new GraphQLList(ProductType),
       args: { id: { type: GraphQLInt } },
       resolve: async (parent, args, context) => {
+
         await context();
+        console.log('finding all products')
         return Product.find({});
       },
     },
@@ -178,7 +180,10 @@ const Mutation = new GraphQLObjectType({
         }
        
         console.log("product uploading");
-        console.log(fileNameArray)
+        console.log(fileNameArray);
+
+        const time = new Date().getTime();
+        
         let product = new Product({
           slug: args.slug,
           productName: args.productname,
@@ -186,6 +191,7 @@ const Mutation = new GraphQLObjectType({
           price: args.price,
           description: args.description,
           stock: args.stock,
+          datePosted: time,
           numOfReviews: 0,
           averageRating: 0,
         });
