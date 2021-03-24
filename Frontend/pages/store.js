@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { commerce } from "../lib/commerce";
 import { RecentlyViewed } from "../components/Common/RecentlyViewed";
 import Skeleton from "@material-ui/lab/Skeleton";
@@ -6,27 +6,36 @@ import { Breadcrumbs, Typography } from "@material-ui/core";
 import hikingBackground from "../images/hikingBackground.jpg";
 import { Filters } from "../components/StorePage/Filters";
 import { ItemImage } from "../components/Common/ItemImage";
-import Link from 'next/link';
+import Link from "next/link";
+import { useLazyQuery, useQuery } from "@apollo/client";
+import { LOAD_ALL_PRODUCTS } from "../GraphQL/Queries";
 
 export const StorePage = () => {
   const [products, setProducts] = useState(Array.from({ length: 12 }, () => 0));
 
-  const fetchProducts = () => {
-    commerce.products
-      .list()
-      .then((item) => {
-        setProducts(() => item.data);
-      })
-      .catch((error) => {
-        console.log("There was an error fetching the products", error);
-      });
-  };
+  // const fetchProducts = () => {
+  //   commerce.products
+  //     .list()
+  //     .then((item) => {
+  //       setProducts(() => item.data);
+  //     })
+  //     .catch((error) => {
+  //       console.log("There was an error fetching the products", error);
+  //     });
+  // };
 
 
+  const [fetchProducts,{data, error, loading}] = useLazyQuery(LOAD_ALL_PRODUCTS)
   useEffect(() => {
     window.scrollTo(0, 0);
     fetchProducts();
+
   }, []);
+
+  useEffect(() => {
+console.log(data)
+
+  }, [data]);
 
   return (
     <div>
@@ -53,7 +62,6 @@ export const StorePage = () => {
             left: "0",
           }}
         />
-        
       </div>
       <div style={{ padding: "20px " }}>
         <Breadcrumbs aria-label="breadcrumb">
@@ -72,41 +80,49 @@ export const StorePage = () => {
             padding: "0",
           }}
         >
-          {products.map((item, index) => (
-            <li key={index} style={{ width: "24%",minWidth:'150px', flexGrow:'1', maxWidth:'300px', boxSizing: "border-box" }}>
+          {data?.getAllProducts?.map((item, index) => (
+            <li
+              key={index}
+              style={{
+                width: "24%",
+                minWidth: "150px",
+                flexGrow: "1",
+                maxWidth: "300px",
+                boxSizing: "border-box",
+              }}
+            >
               {typeof item !== "object" ? (
                 <>
-                <Skeleton
-                  variant="rect"
-                  height={200}
-                  width={200}
-                  style={{
-                    margin: "0px auto",
-                    maxWidth: "100%",
-                    maxHeight: "20vh",
-                  }}
-                ></Skeleton>
-         
+                  <Skeleton
+                    variant="rect"
+                    height={200}
+                    width={200}
+                    style={{
+                      margin: "0px auto",
+                      maxWidth: "100%",
+                      maxHeight: "20vh",
+                    }}
+                  ></Skeleton>
 
-                <Skeleton
-                  height={50}
-                  width={150}
-                  style={{ margin: "0px auto 0" }}
-                ></Skeleton>
-            
-              </>
+                  <Skeleton
+                    height={50}
+                    width={150}
+                    style={{ margin: "0px auto 0" }}
+                  ></Skeleton>
+                </>
               ) : (
                 <>
                   <ItemImage
-                    id={item.id}
-                    name={item.name}
-                    firstImage={item.media.source}
-                    secondImage={item.assets[1].url}
-                    link={item.permalink}
+                    id={item._id}
+                    name={item.productName}
+                    firstImage={`${process.env.GOOGLE_CLOUD_PUBLIC_URL}${item?.images[0]}`}
+                    secondImage={`${process.env.GOOGLE_CLOUD_PUBLIC_URL}${item?.images[1]}`}
+                    link={item.slug}
                   />
-                  <h4 style={{ margin: "10px auto 0" }}>{item.name}</h4>
+                  <h4 style={{ margin: "10px auto 0" }}>{item.productName}</h4>
+                  <p>rating: {item.averageRating}/5</p>
                   <p style={{ margin: "auto" }}>
-                    {item.price.formatted_with_symbol}
+                    {item.price}
                   </p>
                 </>
               )}
@@ -121,6 +137,5 @@ export const StorePage = () => {
     </div>
   );
 };
-
 
 export default StorePage;
