@@ -18,6 +18,7 @@ module.exports = withPlugins([
         WEBSITE_URL: process.env.WEBSITE_URL,
         BACKEND_SERVER: process.env.BACKEND_SERVER,
         GOOGLE_ANALYTICS_ID: process.env.GOOGLE_ANALYTICS_ID,
+        GOOGLE_CLOUD_PUBLIC_URL: process.env.GOOGLE_CLOUD_PUBLIC_URL,
     },
     images: {
         domains:['cdn.chec.io', 'storage.googleapis.com']

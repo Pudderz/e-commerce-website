@@ -14,6 +14,8 @@ import { useRouter } from "next/router";
 import DefaultErrorPage from "next/error";
 import Image from "next/image";
 import SelectSmallSize from "../../components/ProductPages/SelectSizeSmall";
+import { initializeApollo } from "../../lib/apolloClient";
+import { LOAD_ALL_PRODUCTS, LOAD_PRODUCT_BY_SLUG } from "../../GraphQL/Queries";
 
 export const ProductPage = (props) => {
   console.log(props);
@@ -34,7 +36,6 @@ export const ProductPage = (props) => {
   const sizeId = useRef();
   const [sizeInfo, setSizeInfo] = useState({});
 
- 
   useEffect(() => {
     fetchItem(props?.id, setProduct);
   }, [props]);
@@ -65,20 +66,19 @@ export const ProductPage = (props) => {
   }, []);
 
   const handleAddToCart = (item, quantity = 1) => {
-    if(size!==''){
-       addVariantItemToCart(
-      item,
-      quantity,
-      sizeId.current,
-      sizeInfo[`${size}`].id,
-      enqueueSnackbar
-    );
-    }else{
+    if (size !== "") {
+      addVariantItemToCart(
+        item,
+        quantity,
+        sizeId.current,
+        sizeInfo[`${size}`].id,
+        enqueueSnackbar
+      );
+    } else {
       enqueueSnackbar("Please Select a size", {
         variant: "error",
       });
     }
-   
   };
 
   const changeSize = (size) => {
@@ -99,7 +99,7 @@ export const ProductPage = (props) => {
         }}
       >
         {/* Product Images */}
-        <ProductImages images={props.assets} />
+        <ProductImages images={props.assets || props.images} />
 
         <div className="itemDescription">
           <h1>{product.name}</h1>
@@ -168,7 +168,6 @@ export const ProductPage = (props) => {
             justifyContent: "space-between",
           }}
         >
-      
           <SelectSmallSize
             availableSizes={sizeInfo}
             productVariants={product.variants}
@@ -197,7 +196,6 @@ export const ProductPage = (props) => {
             >
               ADD TO BASKET
             </Button>
-         
           </div>
         </div>
       </div>
@@ -212,25 +210,51 @@ export default ProductPage;
 
 export async function getStaticProps({ params }) {
   console.log(`params`);
+  console.log(params)
+  const apolloClient = initializeApollo();
 
-  let productData = {};
-  await commerce.products
-    .retrieve(params.product, { type: "permalink" })
-    .then((product) => {
-      console.log(product);
-      productData = product;
-    });
+  const { data } = await apolloClient.query({
+    query: LOAD_PRODUCT_BY_SLUG,
+    variables: { slug: params.product },
+  });
+
+  console.log("data");
+  console.log(data);
+  if (!data) {
+    let productData = {};
+    await commerce.products
+      .retrieve(params.product, { type: "permalink" })
+      .then((product) => {
+        console.log(product);
+        productData = product;
+      });
+
+    return {
+      props: {
+        name: productData?.name || "",
+        id: productData?.id || "",
+        price: productData?.price?.formatted_with_symbol,
+        description: productData?.description || "",
+        variants: productData?.variants || [],
+        assets: productData?.assets || [],
+      },
+      revalidate: 120,
+    };
+  }
+
+  const result = data?.getProductBySlug;
 
   return {
     props: {
-      name: productData?.name || "",
-      id: productData?.id || "",
-      price: productData?.price?.formatted_with_symbol,
-      description: productData?.description || "",
-      variants: productData?.variants || [],
-      assets: productData?.assets || [],
+      name: result?.productName || "",
+      id: result?._id || "",
+      images: result?.images,
+      price: result?.price,
+      stock: result?.stock,
+      description: result?.description || "",
+      variants: result?.stock || [],
     },
-    revalidate: 120,
+    // revalidate: 120,
   };
 }
 
@@ -239,9 +263,19 @@ export async function getStaticPaths() {
   await commerce.products.list().then(({ data }) => {
     products = data;
   });
+  const apolloClient = initializeApollo();
+
+
+  const { data } = await apolloClient.query({
+    query: LOAD_ALL_PRODUCTS});
+  products = [...data.getAllProducts, ...products];
+
   return {
     paths:
-      products?.map(({ permalink }) => {
+      products?.map(({ permalink, slug }) => {
+        if(!permalink){
+          return `/product/${slug}`;
+        }
         console.log("slug - ", permalink);
         return `/product/${permalink}`;
       }) ?? [],

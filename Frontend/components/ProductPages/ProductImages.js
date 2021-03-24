@@ -44,7 +44,7 @@ export const ProductImages = ({ images }) => {
               {images?.map((image, index) => (
                 <li key={index} >
                   <Button onClick={() => changeMain(index)} >
-                    <Image src={image.url} height={50} width={50} />
+                    <Image src={image.url || `${process.env.GOOGLE_CLOUD_PUBLIC_URL}${image}`} height={50} width={50} />
                   </Button>
                 </li>
               ))}
@@ -88,10 +88,10 @@ export const ProductImages = ({ images }) => {
             >
                
               <Image
-                src={images?.[main]?.url}
+                src={images?.[main]?.url || `${process.env.GOOGLE_CLOUD_PUBLIC_URL}${images?.[main]}` }
                 alt=""
-                height="500"
-                width="700"
+                height={500}
+                width={700}
                 onLoad={() => setLoading(true)}
               />
             </Skeleton>
@@ -108,7 +108,14 @@ export const ProductImages = ({ images }) => {
               onLoad={() => setLoading(true)}
             
             /> */}
-            <img src={images?.[main]?.url} height="500" alt="" />
+            {/* <img src={images?.[main]?.url} height="500" alt="" /> */}
+            <Image
+                src={images?.[main]?.url || `${process.env.GOOGLE_CLOUD_PUBLIC_URL}${images?.[main]}` }
+                alt=""
+                height={500}
+                width={700}
+                onLoad={() => setLoading(true)}
+              />
           </>
         )}
 
