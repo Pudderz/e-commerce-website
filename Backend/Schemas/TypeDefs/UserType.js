@@ -34,6 +34,8 @@ const ProductType = new GraphQLObjectType({
     description: { type: GraphQLString },
     stock: { type: new GraphQLList(GraphQLString) },
     images: { type: new GraphQLList(GraphQLString) },
+    datePosted:{type: GraphQLInt },
+    categories: {type: new GraphQLList(GraphQLString) },
     slug: { type: GraphQLString },
     allProductReviews: {
       type: new GraphQLList(ProductReviews),
