@@ -185,6 +185,30 @@ export const Payment = () => {
     }
   }
 
+
+
+
+  const handleStripeSubmit = async ev => {
+    ev.preventDefault();
+    setProcessing(true);
+    const payload = await stripe.confirmCardPayment(clientSecret, {
+      payment_method: {
+        card: elements.getElement(CardElement)
+      }
+    });
+    if (payload.error) {
+      setError(`Payment failed ${payload.error.message}`);
+      setProcessing(false);
+    } else {
+      console.log("[PaymentMethod]", paymentMethod);
+      setError(null);
+      setProcessing(false);
+      setSucceeded(true);
+    }
+  };
+
+
+
   useEffect(() => {
     commerce.checkout
       .generateTokenFrom("cart", commerce.cart.id())
