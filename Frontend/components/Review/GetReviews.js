@@ -45,10 +45,10 @@ export const GetReviews = ({ data }) => {
             <div>
               <p>{review?.description}</p>
             </div>
-            <div>
+            {/* <div>
               <p>84 people found this helpful</p>
               <button>Helpful</button>
-            </div>
+            </div> */}
           </li>
         ))}
       </ol>

@@ -4,10 +4,13 @@ import { GetReviews } from "./GetReviews";
 import { WriteAReview } from "./WriteAReview";
 import { useLazyQuery } from "@apollo/client";
 import { LOAD_REVIEWS } from "../../GraphQL/Queries";
+
+
+
 export const ReviewProduct = ({ productId, productName, product }) => {
   const [showForm, setShowForm] = useState(false);
 
-  const [getReviews, { data}] = useLazyQuery(LOAD_REVIEWS, );
+  const [getReviews, { data}] = useLazyQuery(LOAD_REVIEWS);
 
   const handleRefetch = () => {
     getReviews({
@@ -32,9 +35,7 @@ useEffect(() => {
   console.log(product);
 }, [product])
 
-// useEffect(() => {
-//   // 
-// }, [props])
+
   return (
     <div style={{ textAlign: "start", margin: "auto" }}>
       <h2>Customer Reviews</h2>
@@ -59,18 +60,6 @@ useEffect(() => {
         />
       
       </div>
-
-      {/* Will Add back when you can sort reviews  */}
-      {/* <div>
-        <select>
-          <option value="top" key="top">
-            Top reviews
-          </option>
-          <option value="recent" key="recent">
-            Most recent
-          </option>
-        </select>
-      </div> */}
 
       <h3>Reviews</h3>
       <GetReviews productId={productId} data={data} />
