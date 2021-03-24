@@ -156,22 +156,8 @@ export const ProductPage = (props) => {
           {/* <a href="#!">Size Guide</a> */}
           <hr />
           <div style={{ justifyContent: "space-between", display: "flex" }}>
-            {/* <Button
-              onClick={() => handleAddToCart(product, 1)}
-              variant="contained"
-              startIcon={<ShoppingCartIcon />}
-              style={{
-                backgroundColor: "#bc2334",
-                color: "white",
-                width: "60%",
-              }}
-            >
-              ADD TO BASKET
-            </Button> */}
-            {/* <Button variant="contained">BUY NOW</Button> */}
           </div>
 
-          {/* tabbed sections with information  */}
         </div>
       </div>
 
@@ -199,12 +185,6 @@ export const ProductPage = (props) => {
             justifyContent: "space-between",
           }}
         >
-          {/* <SelectSmallSize
-            availableSizes={sizeInfo}
-            productVariants={product.variants}
-            changeSize={changeSize}
-            size={size}
-          /> */}
           <div
             style={{
               justifyContent: "space-between",
@@ -213,20 +193,7 @@ export const ProductPage = (props) => {
               maxWidth: "100%",
             }}
           >
-            {/* <Button
-              onClick={() => handleAddToCart(product, 1)}
-              variant="contained"
-              startIcon={<ShoppingCartIcon />}
-              style={{
-                backgroundColor: "#bc2334",
-                color: "white",
-                width: "60%",
-                height: "fit-content",
-                margin: "1em 1em 0",
-              }}
-            >
-              ADD TO BASKET
-            </Button> */}
+
           </div>
         </div>
       </div>
@@ -293,21 +260,6 @@ export function initializeApollo(initialState = null) {
 
   return _apolloClient
 }
-
-// export function addApolloState(client, pageProps) {
-//   if (pageProps?.props) {
-//     pageProps.props[APOLLO_STATE_PROP_NAME] = client.cache.extract()
-//   }
-
-//   return pageProps
-// }
-
-
-
-
-
-
-
 
 
 export async function getStaticProps({ params }) {

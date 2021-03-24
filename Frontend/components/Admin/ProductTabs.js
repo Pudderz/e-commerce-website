@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
-import { ReviewProduct } from "../Review/ReviewProduct";
-import { SizeGuide } from "../ProductPages/SizeGuide";
-import { DeliveryAndReturns } from "../ProductPages/DeliveryAndReturns";
 import {
   Button,
   FormControl,
@@ -78,10 +75,6 @@ export const ProductTabs = (props) => {
     Array.from({ length: ALL_SIZES.length }, () => 0)
   );
 
-  // useEffect(() => {
-  //   fetchItem(props?.id, setProduct);
-  // }, [props]);
-
   const handleStockChange = (index, value) => {
     let newValue = stockArray[index] + value;
     stockArray[index] = newValue >= 0 ? newValue : 0;
@@ -108,7 +101,6 @@ export const ProductTabs = (props) => {
       <Tabs
         value={value}
         onChange={handleChange}
-        // variant="fullWidth"
         aria-label="full width tabs of products information"
         style={{ overflow: "auto" }}
       >
@@ -213,8 +205,6 @@ export const ProductTabs = (props) => {
               id="outlined-adornment-amount"
               name="productPrice"
               label="Discounted price"
-              // value={values.amount}
-              // onChange={handleChange('amount')}
               type="number"
               value={product.price}
               startAdornment={

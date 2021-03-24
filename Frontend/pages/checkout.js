@@ -16,11 +16,7 @@ export const Checkout = () => {
   const { cart } = useContext(CartContext);
 
   const [shippingInfo, setShippingInfo] = useState({});
-  // const [userInfo, , setUserInfo] = useState({
-  //   firstname: "",
-  //   lastname: "",
-  //   customerEmail: "",
-  // });
+
 
   const changeShippingInfo = (target, value) => {
     setShippingInfo({
