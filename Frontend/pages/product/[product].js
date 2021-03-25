@@ -16,8 +16,19 @@ import Image from "next/image";
 import SelectSmallSize from "../../components/ProductPages/SelectSizeSmall";
 import { initializeApollo } from "../../lib/apolloClient";
 import { LOAD_ALL_PRODUCTS, LOAD_PRODUCT_BY_SLUG } from "../../GraphQL/Queries";
+import { useLazyQuery } from "@apollo/client";
+
+// const fetchMongoDBProduct = () =>{
+  
+// }
+
 
 export const ProductPage = (props) => {
+  console.log(props)
+
+
+  const [fetchMongoDBProduct, {data}] = useLazyQuery(LOAD_PRODUCT_BY_SLUG)
+
   console.log(props);
   const router = useRouter();
 
@@ -37,7 +48,16 @@ export const ProductPage = (props) => {
   const [sizeInfo, setSizeInfo] = useState({});
 
   useEffect(() => {
-    fetchItem(props?.id, setProduct);
+
+    // try{
+    //   fetchItem(props?.id, setProduct);
+    // }catch(err){
+    //   console.log(err);
+    //   console.log("fetching off MongoDB");
+    //   fetchMongoDBProduct({variables: {slug: props.slug}})
+    // }
+    
+    setProduct(props);
   }, [props]);
 
   useEffect(() => {
@@ -47,10 +67,10 @@ export const ProductPage = (props) => {
       product?.variants?.length !== 0
     ) {
       let sizeObject = {};
-      product.variants.forEach((variant) => {
+      product?.variants?.forEach((variant) => {
         if (variant.name === "size") {
           sizeId.current = variant.id;
-          variant.options.forEach((sizes, index) => {
+          variant?.options?.forEach((sizes, index) => {
             sizeObject[sizes.name] = { id: sizes.id, quantity: sizes.quantity };
           });
           setSizeInfo(sizeObject);
@@ -105,7 +125,7 @@ export const ProductPage = (props) => {
           <h1>{product.name}</h1>
           {/* +Review bar */}
 
-          <h2>{product?.price?.formatted_with_symbol}</h2>
+          <h2>{props?.price?.formatted_with_symbol || props?.price}</h2>
           <p style={{ color: "green" }}>
             In Stock{" "}
             {size !== ""
@@ -147,7 +167,7 @@ export const ProductPage = (props) => {
       {/* sticky header for when top section is not in view (intersection observer)
        */}
 
-      <div className="itemNav">
+      {/* <div className="itemNav">
         <Breadcrumbs aria-label="breadcrumb" style={{ margin: "1em" }}>
           <Link href="/">Home</Link>
           <Link href="/">Store</Link>
@@ -199,7 +219,7 @@ export const ProductPage = (props) => {
           </div>
         </div>
       </div>
-      <hr />
+      <hr /> */}
       <ProductTabs product={product} />
       <RecentlyViewed />
     </div>
@@ -218,9 +238,7 @@ export async function getStaticProps({ params }) {
     variables: { slug: params.product },
   });
 
-  console.log("data");
-  console.log(data);
-  if (!data) {
+  if (!data.getProductBySlug) {
     let productData = {};
     await commerce.products
       .retrieve(params.product, { type: "permalink" })
@@ -228,7 +246,6 @@ export async function getStaticProps({ params }) {
         console.log(product);
         productData = product;
       });
-
     return {
       props: {
         name: productData?.name || "",
@@ -261,23 +278,45 @@ export async function getStaticProps({ params }) {
 export async function getStaticPaths() {
   let products = [];
   await commerce.products.list().then(({ data }) => {
-    products = data;
+    // if(data){
+    //   // products = data;
+    // }
+    data?.forEach((product)=>{
+      products.push({slug: product.permalink})
+    })
+    
   });
   const apolloClient = initializeApollo();
 
 
   const { data } = await apolloClient.query({
     query: LOAD_ALL_PRODUCTS});
-  products = [...data.getAllProducts, ...products];
-
+    if(data?.getAllProducts){
+      data?.getAllProducts?.forEach((product)=>{
+        products.push({slug: product.slug})
+      })
+      // products = [...data.getAllProducts, ...products];
+    }
+  
+  products = products.filter(product => product.slug !== null)
+  console.log('[product] paths')
+  console.log(products)
   return {
     paths:
-      products?.map(({ permalink, slug }) => {
-        if(!permalink){
-          return `/product/${slug}`;
+      products?.map((product) => {
+        
+        if(product){
+          console.log(product.slug, product.permalink)
+          if(product.slug){
+            console.log("slug - ", product.slug);
+          return `/product/${product.slug}`;
         }
-        console.log("slug - ", permalink);
-        return `/product/${permalink}`;
+        if(product.permalink){
+          console.log("slug - ", product.permalink);
+        return `/product/${product.permalink}`;
+        }
+        }
+        
       }) ?? [],
     fallback: true,
   };
