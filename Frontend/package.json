@@ -45,6 +45,8 @@
     "react-hook-form": "^6.15.5",
     "react-leaflet": "^3.0.5",
     "react-markdown": "^5.0.3",
+    "react-redux": "^7.2.3",
+    "redux": "^4.0.5",
     "sass": "^1.32.8",
     "stripe": "^8.132.0",
     "web-vitals": "^0.2.4"
