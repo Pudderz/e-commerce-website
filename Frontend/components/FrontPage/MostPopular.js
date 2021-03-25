@@ -110,8 +110,13 @@ useEffect(() => {
                     secondImage={item.assets[1].url}
                     link={item.permalink}
                   />
-
-                  <h4
+                  <div style={{ margin: "auto", width: "200px", textAlign:'start' }}>
+                    <h4 style={{ margin: "0px", fontWeight:'500' }}>{item.name}</h4>
+                    <p style={{ margin: "auto" }}>
+                      {item.price.formatted_with_symbol}
+                    </p>
+                  </div>
+                  {/* <h4
                     style={{
                       margin: "5px 0",
                       fontSize: "clamp(14px,2vw,17px)",
@@ -122,13 +127,7 @@ useEffect(() => {
                   <p style={{ margin: "5px auto" }}>
                     {item.price.formatted_with_symbol}
                   </p>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      gap: "20px",
-                    }}
-                  ></div>
+                   */}
                 </>
               )}
             </li>
