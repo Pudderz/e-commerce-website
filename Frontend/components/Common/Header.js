@@ -21,6 +21,8 @@ import { LogoutButton } from "../Authentication/LogoutButton";
 import { fetchCart } from "../../lib/commerce";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { Filters } from "..//StorePage/Filters";
+import InputBase from "@material-ui/core/InputBase";
+import SearchIcon from "@material-ui/icons/Search";
 /* 
 HEADER COMPONENT
 
@@ -40,6 +42,8 @@ export const Header = () => {
   );
   const [anchorBasketEl, setAnchorBasketEl] = useState(null);
   const [anchorProfileEl, setAnchorProfileEl] = useState(null);
+
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const handleProfileClick = (event) => {
     setAnchorProfileEl(event.currentTarget);
@@ -73,35 +77,24 @@ export const Header = () => {
 
   const handledarkmodeChange = () => {};
 
-  const [state, setState] = useState({
-    top: false,
-  });
-
-  const toggleDrawer = (anchor, open) => (event) => {
-    if (
-      event.type === "keydown" &&
-      (event.key === "Tab" || event.key === "Shift")
-    ) {
-      return;
-    }
-    setState({ ...state, [anchor]: !state[anchor] });
+  const handleMenuOpen = () => {
+    setMenuOpen(true);
   };
+  const handleMenuClose = () => setMenuOpen(false);
 
   return (
-    <
-   
-    >
-      <nav style={{ 
-      
-      position: "sticky",
-      top: "0",
-      // backgroundColor: "rgba(0,0,0,0.6)",
-      backgroundColor: "#fff",
-      boxShadow: "rgb(0 0 0) 0px -17px 26px",
-      padding: "10px 0",
-      margin: "0",
-      zIndex: "4",
-      }}>
+    <>
+      <nav
+        style={{
+          position: "sticky",
+          top: "0",
+          backgroundColor: "#fff",
+          boxShadow: "rgb(0 0 0) 0px -17px 26px",
+          // padding: "10px 0",
+          margin: "0",
+          zIndex: "4",
+        }}
+      >
         <ul
           style={{
             display: "flex",
@@ -111,60 +104,175 @@ export const Header = () => {
             maxWidth: "100%",
             boxSizing: "border-box",
             padding: "0 20px",
+            height: "100%",
           }}
         >
           <li>
-            <div style={{ display: "flex", gap: "20px", margin: "10px 0" }}>
+            <div
+              style={{
+                display: "flex",
+                gap: "20px",
+                margin: "10px 0",
+                height: "100%",
+              }}
+            >
               <Link className="link" href="/">
                 Home
               </Link>
               <Link className="link" href="/store">
                 Store
               </Link>
-             
             </div>
           </li>
           <li>
-            <div style={{ display: "flex", gap: "20px", margin: "10px 0" }}>
-            <Button
-                style={{
-                  textTransform: "none",
-                  backgroundColor: "transparent",
-                }}
-                onClick={toggleDrawer("top")}
-              >
-                Men
-              </Button>
-              <Button
-                style={{
-                  textTransform: "none",
-                  backgroundColor: "transparent",
-                }}
-                onClick={toggleDrawer("top")}
-              >
-                Women
-              </Button>
-              <Button
-                style={{
-                  textTransform: "none",
-                  backgroundColor: "transparent",
-                }}
-                onClick={toggleDrawer("top")}
-              >
-                Categories
-              </Button>
-              <Button
-                style={{
-                  textTransform: "none",
-                  backgroundColor: "transparent",
-                }}
-                onClick={toggleDrawer("top")}
-              >
-                Sale
-              </Button>
+            <div
+              onPointerEnter={handleMenuOpen}
+              onPointerLeave={handleMenuClose}
+              style={{
+                display: "flex",
+                height: "100%",
+              }}
+            >
+              <div className="dropdown">
+                <Button
+                  className="headerButton"
+                  style={{
+                    textTransform: "none",
+                    backgroundColor: "transparent",
+                  }}
+                >
+                  Men
+                </Button>
+                <div class="dropdown-content">
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      maxWidth: "900px",
+                      margin: "auto",
+                      padding: "40px 0",
+                    }}
+                  >
+                    <div>
+                      <a href="">Featured</a>
+                      <a href="">New Releases</a>
+                    </div>
+                    <div>
+                      <a href="">All Shoes</a>
+                      <a href="">Running</a>
+                      <a href="">Casual</a>
+                      <a href="">Hiking</a>
+                    </div>
+                    <div>
+                      <a href="">Trending</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="dropdown">
+                <Button
+                  className="headerButton"
+                  style={{
+                    textTransform: "none",
+                    backgroundColor: "transparent",
+                  }}
+                >
+                  Women
+                </Button>
+                <div class="dropdown-content">
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      maxWidth: "900px",
+                      margin: "auto",
+                      padding: "40px 0",
+                    }}
+                  >
+                    <div>
+                      <a href="">Featured</a>
+                      <a href="">New Releases</a>
+                    </div>
+                    <div>
+                      <a href="">All Shoes</a>
+                      <a href="">Running</a>
+                      <a href="">Casual</a>
+                      <a href="">Hiking</a>
+                    </div>
+                    <div>
+                      <a href="">Trending</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="dropdown">
+                <Button
+                  className="headerButton"
+                  style={{
+                    textTransform: "none",
+                    backgroundColor: "transparent",
+                  }}
+                >
+                  Categories
+                </Button>
+                <div class="dropdown-content">
+                  <div
+                    className="selection"
+                    style={{
+                      maxWidth: "1300px",
+                      margin: " 20px auto",
+                      width: "fit-content",
+                      maxHeight: "auto",
+                      width: "100%",
+                    }}
+                  >
+                    <h5 style={{ margin: "5px auto", width: "fit-content" }}>
+                      Categories
+                    </h5>
+
+                    <Filters onClick={() => {}} />
+                  </div>
+                </div>
+              </div>
+              <div className="dropdown">
+                <Button
+                  className="headerButton"
+                  style={{
+                    textTransform: "none",
+                    backgroundColor: "transparent",
+                  }}
+                >
+                  Sales
+                </Button>
+                <div class="dropdown-content">
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      maxWidth: "900px",
+                      margin: "auto",
+                      padding: "40px 0",
+                    }}
+                  >
+                    <div>
+                      <a href="">Featured</a>
+                      <a href="">Shop All Sale</a>
+                    </div>
+                    <div>
+                      <a href="">Shop for Men</a>
+                      <a href="">Shop for Women</a>
+                    </div>
+                    <div>
+                      <a href="">Running</a>
+                      <a href="">Hiking</a>
+                      <a href="">Casual</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </li>
-          <li style={{height:'fit-content', alignSelf:'center'}}>
+          <li style={{ height: "fit-content", alignSelf: "center" }}>
             <ul
               style={{
                 display: "flex",
@@ -184,9 +292,37 @@ export const Header = () => {
                   />
                 </Tooltip>
               </li> */}
-<li style={{height:'fit-content', alignSelf:'center'}}>
-  <TextField id="searchBar" variant="outlined" style={{height:'fit-content', padding:'0'}}></TextField>
-</li>
+              <li style={{ height: "fit-content", alignSelf: "center" }}>
+                {/* <TextField
+                  id="searchBar"
+                  variant="outlined"
+                  style={{ height: "fit-content", padding: "0" }}
+                ></TextField> */}
+                <form onSubmit={(e) => {}}>
+                    <InputBase
+                      autoComplete="off"
+                      // ref={searchBar}
+                      name="search"
+                      // value={searchQuery}
+                      // onChange={changeSearchQuery}
+                      placeholder="Search…"
+                      style={{
+                        margin: "10px auto",
+                        backgroundColor: "#e2e2e2",
+                        padding: "0px 11px",
+                        borderRadius: "20px",
+                      }}
+                      inputProps={{
+                        "aria-label": "search",
+                      }}
+                      endAdornment={
+                        <IconButton size="small" type="submit">
+                          <SearchIcon style={{ fill: "black" }} />
+                        </IconButton>
+                      }
+                    />
+                  </form>
+              </li>
               {isAuthenticated ? (
                 <li>
                   <Tooltip title="Profile">
@@ -448,46 +584,8 @@ export const Header = () => {
           </li>
         </ul>
       </nav>
-     
-      <Drawer
-        className={`categoriesSelection ${state["top"]}`}
-        style={{
-          position: "fixed",
-          top: "76px",
-          left: "0",
-          right: "0",
-          // backgroundColor: "#191c1d",
-          // backgroundColor: "#fff",
-          maxHeight: "fit-content",
-          width: "100%",
-          zIndex:'3'
-        }}
-        anchor={"top"}
-        variant="persistent"
-        open={state["top"]}
-        onClose={() => toggleDrawer("top", false)}
-      >
-        
-        
-        <div
-          className="selection"
-          style={{
-            maxWidth: "1300px",
-            margin: " 20px auto",
-            width: "fit-content",
-            maxHeight: "auto",
-            width:'100%'
-            // boxShadow: '0px 0px 5px 0px rgba(112, 154, 168, 0.3)'
-          }}
-        >
-          <h5 style={{ margin: "5px auto", width: "fit-content" }}>
-            Categories
-          </h5>
-          {/* <CategorySelection changeCategory={changeCategory} /> */}
-          <Filters onClick={() => toggleDrawer("top", false)}/>
-        </div>
-        
-      </Drawer>
+
+      <div className={`backdrop ${menuOpen && "menuOpen"}`}></div>
     </>
   );
 };

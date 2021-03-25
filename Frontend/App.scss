@@ -448,7 +448,8 @@ a.link {
   // }
 }
 
-.buttonOutlined, button.buttonOutlined {
+.buttonOutlined,
+button.buttonOutlined {
   color: #1f2021;
   border: 2px solid #1f2021;
   border-radius: 4px;
@@ -461,17 +462,17 @@ a.link {
   font-size: 20px;
   text-align: center;
   text-transform: none;
-  &.dark{
+  &.dark {
     color: #1f2021;
-  border: 2px solid #1f2021;
+    border: 2px solid #1f2021;
   }
-  &.light{
-    color:#fff;
-    border:2px solid #fff;
+  &.light {
+    color: #fff;
+    border: 2px solid #fff;
   }
 }
 
-#emailSignUpInput{
+#emailSignUpInput {
   background-color: white;
   border-radius: 4px;
   -webkit-border-radius: 4px;
@@ -480,35 +481,120 @@ a.link {
   -o-border-radius: 4px;
   padding: 10px 5px;
   width: 300px;
-
 }
 
-
-#emailSignUpButton{
+#emailSignUpButton {
   background-color: #212224;
   color: white;
-
 }
 
-
-.categoryContainer{
+.categoryContainer {
   display: flex;
   gap: 4px;
   justify-content: space-around;
   margin: 20px 0 50px;
   padding: 10px 20px;
   box-sizing: border-box;
-  @media(max-width:1000px){
-    display:grid;
+  @media (max-width: 1000px) {
+    display: grid;
   }
 }
 
-.underline{
-  &:hover{
+.underline {
+  &:hover {
     text-decoration: underline;
   }
 }
-#searchBar{
+#searchBar {
   padding: 5px;
   align-self: center;
+}
+
+button.headerButton {
+  height: 100%;
+  transition: 0.3s all;
+  -webkit-transition: 0.3s all;
+  -moz-transition: 0.3s all;
+  -ms-transition: 0.3s all;
+  -o-transition: 0.3s all;
+  border-radius: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  -ms-border-radius: 0;
+  -o-border-radius: 0;
+  width: 100px;
+  &:hover{
+    border-bottom: 4px solid black;
+  }
+}
+
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 3;
+  left:0;
+  height: 100%;
+  max-height: 0px;
+  transition: all 4.15s ease-out;
+  -webkit-transition: all 4.15s ease-out;
+  -moz-transition: all 4.15s ease-out;
+  -ms-transition: all 4.15s ease-out;
+  -o-transition: all 4.15s ease-out;
+  opacity: 0;
+  text-align: start;
+  a{
+    display:block
+  }
+}
+
+
+
+.dropdown{
+  &:hover{
+    .headerButton {
+      border-bottom: 4px solid black;
+    }
+    .dropdown-content{
+      display: block;
+      background-color: #fff;
+      width: 100%;
+      max-height: fit-content;
+       opacity: 1;
+       height: auto;
+
+}
+  }
+  
+}
+
+.backdrop{
+  background-color: hsla(0,0,7%, 0.36);
+  opacity: 0;
+  height:100%;
+  position:fixed;
+  z-index: 2;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  //visibility: 0;
+  width: 100%;
+  pointer-events: none;
+  transition: opacity .25s,visibility 0s linear .25s;
+  -webkit-transition: opacity .25s,visibility 0s linear .25s;
+  -moz-transition: opacity .25s,visibility 0s linear .25s;
+  -ms-transition: opacity .25s,visibility 0s linear .25s;
+  -o-transition: opacity .25s,visibility 0s linear .25s;
+
+
+
+    &.menuOpen{
+    // visibility: 1;a
+    opacity: 1;
+    
+    
+  }
+
 }
