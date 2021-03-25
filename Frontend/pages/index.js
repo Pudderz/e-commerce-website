@@ -45,7 +45,7 @@ export const FrontPage = ({ products }) => {
             top: "33%",
             left: "10%",
             fontSize: "40px",
-            zIndex: "2",
+            zIndex: "1",
             textAlign:'start'
           }}
         >

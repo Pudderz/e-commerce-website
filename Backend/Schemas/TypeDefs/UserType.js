@@ -40,7 +40,7 @@ const ProductType = new GraphQLObjectType({
     allProductReviews: {
       type: new GraphQLList(ProductReviews),
       resolve(parent, args) {
-        return Review.find({ productId: parent.productId });
+        return Review.find({ productName: parent.productName });
       },
     },
   }),
