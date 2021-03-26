@@ -2,6 +2,7 @@ import {
   Button,
   Checkbox,
   FormControl,
+  FormControlLabel,
   Input,
   InputAdornment,
   InputLabel,
@@ -67,6 +68,9 @@ const createProductMutation = gql`
     $stock: [Int!]
     $slug: String!
     $description: String!
+    $categories: [String!]
+    $female: Boolean
+    $male: Boolean
   ) {
     createProduct(
       files: $files
@@ -75,6 +79,9 @@ const createProductMutation = gql`
       stock: $stock
       slug: $slug
       description: $description
+      categories: $categories
+      male: $male
+      female: $female
     ) {
       productName
       price
@@ -89,26 +96,18 @@ export const CreateProducts = () => {
   const [stockArray, setStockArray] = useState(Array.from({length: ALL_SIZES.length}, ()=> 0))
   const [files, setFiles] = useState([]);
 
-  createProductMutation
 
   const [createProduct, {data, error}] = useMutation(createProductMutation);
+
+  const [categories, setCategories] = useState([]);
+
+
 
   console.log(data, error)
   const {register, handleSubmit} = useForm();
 
 
   const filePond = useRef(null);
-  // const [uploadFile] = useMutation(uploadFileMutation, {
-  //   refetchQueries: [{ query: filesQuery }],
-  // });
-  // const onDrop = useCallback(
-  //   ([file]) => {
-  //     uploadFile({ variables: { file } });
-  //   },
-  //   [uploadFile]
-  // );
-
-  // const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   const handleFormSubmit = (data) => {
     const fileArray = [];
@@ -116,14 +115,19 @@ export const CreateProducts = () => {
     files.forEach(file=>{
       fileArray.push(file.file);
     })
-    console.log({
-      productname: data.productName,
-      slug: data.slug,
-      price: data.productPrice,
-      description: data.description,
-      files: fileArray,
-      stock: stockArray,
-    });
+    // console.log({
+    //   productname: data.productName,
+    //   slug: data.slug,
+    //   price: data.productPrice,
+    //   description: data.description,
+    //   files: fileArray,
+    //   stock: stockArray,
+    //       categories: categories,
+    //   male:data.male,
+    //   female:data.female,
+    //   males: typeof data.male,
+    //   females: typeof data.female,
+    // });
     createProduct({variables: {
       productname: data.productName,
       slug: data.slug,
@@ -131,6 +135,9 @@ export const CreateProducts = () => {
       description: data.description,
       files: fileArray,
       stock: stockArray,
+      categories: categories,
+      male:data.male,
+      female:data.female
     }})
   };
 
@@ -147,6 +154,12 @@ export const CreateProducts = () => {
     let newValue = stockArray[index] + value
     stockArray[index] = newValue>=0? newValue: 0;
     setStockArray([...stockArray]);
+  }
+
+  const handleCategoryChange=(e)=>{
+
+    console.log(e.target.value)
+    setCategories(e.target.value)
   }
 
 
@@ -241,18 +254,41 @@ export const CreateProducts = () => {
               multiple
               inputRef={register}
               name="categories"
-              value={["", "test"]}
+              value={categories}
+              onChange={handleCategoryChange}
+              defaultValue
               // onChange={handleChange}
               fullWidth
               // input={<Input />}
               // MenuProps={MenuProps}
+              required
+              input={<Input />}
+          renderValue={(selected) => selected.join(', ')}
             >
-              <MenuItem value={"test"} key ={"test"}>
-                <Checkbox checked={["", "test"].indexOf("") > -1} />
-                <ListItemText primary={"test"} />
+              
+              <MenuItem value={"running"} key ={"running"}>
+                <Checkbox checked={categories.indexOf("running") > -1} />
+                <ListItemText primary={"Running"} />
+              </MenuItem>
+              <MenuItem value={"hiking"} key ={"hiking"}>
+                <Checkbox checked={categories.indexOf("hiking") > -1} />
+                <ListItemText primary={"Hiking"} />
+              </MenuItem>
+              <MenuItem value={"casual"} key ={"casual"}>
+                <Checkbox checked={categories.indexOf("casual") > -1} />
+                <ListItemText primary={"casual"} />
               </MenuItem>
             </Select>
           </FormControl>
+
+          <FormControlLabel
+        control={<Checkbox inputRef={register} name="male" />}
+        label="Male"
+      />
+         <FormControlLabel
+        control={<Checkbox inputRef={register} name="female" />}
+        label="Female"
+      />
         </div>
         <div
           style={{

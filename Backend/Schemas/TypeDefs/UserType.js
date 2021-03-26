@@ -27,10 +27,10 @@ const ProductType = new GraphQLObjectType({
   name: "Product",
   fields: () => ({
     _id: { type: GraphQLID },
-    productId: { type: GraphQLString },
+    // productId: { type: GraphQLString },
     productName: { type: GraphQLString },
     price: { type: GraphQLString },
-    numOfReviews: { type: GraphQLInt },
+    
     averageRating: { type: GraphQLString },
     description: { type: GraphQLString },
     stock: { type: new GraphQLList(GraphQLString) },
@@ -40,6 +40,18 @@ const ProductType = new GraphQLObjectType({
     slug: { type: GraphQLString },
     discounted: {type: GraphQLBoolean},
     discountedPrice: {type: GraphQLString},
+    male: {type: GraphQLBoolean},
+    female: {type: GraphQLBoolean},
+    numOfReviews: { 
+      type: GraphQLInt ,
+      resolve(parent, args){
+        Review.find({productName: parent.productId}).exec((err, results)=>{
+          if(err || results ==null) return 0;
+          return results.length
+        })
+      }
+    
+    },
     allProductReviews: {
       type: new GraphQLList(ProductReviews),
       resolve(parent, args) {

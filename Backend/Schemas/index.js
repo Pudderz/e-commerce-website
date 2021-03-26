@@ -156,6 +156,9 @@ const Mutation = new GraphQLObjectType({
         description: {type: GraphQLString},
         files: { type: new GraphQLList(GraphQLUpload) },
         stock: {type: new GraphQLList(GraphQLInt)},
+        categories: {type: new GraphQLList(GraphQLString)},
+        male: {type: GraphQLBoolean},
+        female: {type: GraphQLBoolean}
       },
       resolve: async (parent, args, context) => {
         const { db, token } = await context();
@@ -191,9 +194,11 @@ const Mutation = new GraphQLObjectType({
           images: fileNameArray,
           price: args.price,
           description: args.description,
+          categories: args.categories,
           stock: args.stock,
           datePosted: time,
-          numOfReviews: 0,
+          female: args.female,
+          male: args.male,
           averageRating: 0,
         });
         console.log('product')

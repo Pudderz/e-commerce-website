@@ -14,6 +14,8 @@ const productSchema = new Schema({
     slug: String,
     discounted: Boolean,
     discountedPrice: String,
+    male: Boolean,
+    female: Boolean,
 })
 
 module.exports = mongoose.model('product', productSchema);

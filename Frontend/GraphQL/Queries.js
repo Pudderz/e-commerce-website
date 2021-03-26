@@ -71,6 +71,8 @@ export const LOAD_PRODUCT_BY_SLUG = gql`
       numOfReviews
       averageRating
       description
+      discounted
+      discountedPrice
     }
   }
 `
