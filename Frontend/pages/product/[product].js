@@ -125,12 +125,12 @@ export const ProductPage = (props) => {
           <h1>{product.name}</h1>
           {/* +Review bar */}
 
-          <h2>{props?.price?.formatted_with_symbol || props?.price}</h2>
+          <h2>{props?.price?.formatted_with_symbol || `£${props?.price}.00`}</h2>
           <p style={{ color: "green" }}>
             In Stock{" "}
-            {size !== ""
+            {/* {size !== ""
               ? ` UK ${size} (${sizeInfo[size]?.quantity || 0} left)`
-              : `(${product.quantity} left)`}
+              : `(${product.quantity} left)`} */}
           </p>
 
           <label htmlFor="sizes" style={{ fontWeight: "bold" }}>

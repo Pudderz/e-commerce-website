@@ -45,11 +45,17 @@ const RootQuery = new GraphQLObjectType({
   fields: {
     getAllProducts: {
       type: new GraphQLList(ProductType),
-      args: { id: { type: GraphQLInt } },
+      args: { 
+        id: { type: GraphQLInt },
+        category: {type: GraphQLString}
+    },
       resolve: async (parent, args, context) => {
-
+        
         await context();
         console.log('finding all products')
+        if(typeof args.category !== "undefined"){
+          return Product.find({categories: args.category})
+        }
         return Product.find({});
       },
     },
@@ -74,6 +80,7 @@ const RootQuery = new GraphQLObjectType({
         productName: { type: new GraphQLNonNull(GraphQLString) },
       },
       resolve: async (parent, args, context) => {
+        console.log(args)
         await context();
         console.log("finding");
         return Product.find({ productName: args.productName });
@@ -209,7 +216,7 @@ const Mutation = new GraphQLObjectType({
 
 
     createReview: {
-      type: ProductType,
+      type: ProductReviews,
       args: {
         productId: { type: GraphQLString },
         productName: { type: GraphQLString },
@@ -234,7 +241,7 @@ const Mutation = new GraphQLObjectType({
         if (!subId) return null;
 
         let review = new Review({
-          productId: args.productId,
+          productId: ObjectId(args.productId),
           subId: subId,
           productName: args.productName,
           name: args.name,
@@ -243,51 +250,6 @@ const Mutation = new GraphQLObjectType({
           descriptionTitle: args.descriptionTitle,
           description: args.description,
         });
-
-        let product;
-        await Product.findOne(
-          { productId: args.productId },
-          function (err, obj) {
-            product = obj;
-          }
-        );
-
-        if (
-          (typeof product === "undefined" || !product) &&
-          mongoose.connection.readyState === 1
-        ) {
-          console.log(`${args.productId} not found`);
-
-          product = new Product({
-            productId: args.productId,
-            productName: args.productName,
-            numOfReviews: 1,
-            averageRating: args.rating,
-          });
-
-          product.save();
-        } else {
-          console.log(!(typeof product === "undefined"));
-          if (!(typeof product === "undefined")) {
-            console.log(`${args.productId} found`);
-            const rating =
-              (1 * product.averageRating * product.numOfReviews +
-                1 * args.rating) /
-              (product.numOfReviews + 1);
-            console.log(rating);
-            console.log(product.numOfReviews + 1);
-            const numOfReviews = product.numOfReviews + 1;
-            await Product.updateOne(
-              { productId: args.productId },
-              {
-                $set: {
-                  numOfReviews: numOfReviews,
-                  averageRating: `${rating}`,
-                },
-              }
-            );
-          }
-        }
 
         return !error ? review.save() : null;
       },

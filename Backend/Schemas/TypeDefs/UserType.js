@@ -45,7 +45,7 @@ const ProductType = new GraphQLObjectType({
     numOfReviews: { 
       type: GraphQLInt ,
       resolve(parent, args){
-        Review.find({productName: parent.productId}).exec((err, results)=>{
+        Review.find({productName: parent.productName}).exec((err, results)=>{
           if(err || results ==null) return 0;
           return results.length
         })

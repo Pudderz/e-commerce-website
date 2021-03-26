@@ -3,7 +3,7 @@ import { gql } from "@apollo/client";
 export const LOAD_REVIEWS = gql`
   query($productId: String!, $productName: String!) {
     getProduct(productId: $productId, productName: $productName) {
-      productId
+      productName
       numOfReviews
       averageRating
       allProductReviews {
@@ -56,6 +56,21 @@ export const LOAD_ALL_PRODUCTS = gql`
     }
   }
 `
+
+export const LOAD_ALL_CATEGORY_PRODUCTS = gql`
+  query($category: String) {
+    getAllProducts(category: $category){
+      images
+      productName
+      _id
+      slug
+      price
+      numOfReviews
+      averageRating
+    }
+  }
+`
+
 
 export const LOAD_PRODUCT_BY_SLUG = gql`
   query(

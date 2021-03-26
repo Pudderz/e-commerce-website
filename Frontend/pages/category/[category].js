@@ -10,12 +10,17 @@ import casualBackground from "../../images/casualBackground2.jpg";
 import { ItemImage } from "../../components/Common/ItemImage";
 import PropTypes from "prop-types";
 import { Filters } from "../../components/StorePage/Filters";
+import { useLazyQuery } from "@apollo/client";
+import { LOAD_ALL_CATEGORY_PRODUCTS} from "../../GraphQL/Queries"
+
 export const CategoryPage = ({category, description, numOfProducts, slug}) => {
 
+const [getProducts, {data}] = useLazyQuery(LOAD_ALL_CATEGORY_PRODUCTS);
 
-  const [products, setProducts] = useState(
-    Array.from({ length: 12 }, (v, i) => i)
-  );
+  // const [products, setProducts] = useState(
+  //   Array.from({ length: 12 }, (v, i) => i)
+  // );
+  const [products, setProducts] = useState([]);
 
   const fetchProducts = (category) => {
     commerce.products
@@ -23,7 +28,7 @@ export const CategoryPage = ({category, description, numOfProducts, slug}) => {
         category_slug: category,
       })
       .then((item) => {
-        setProducts((items) => item.data);
+        setProducts((items) => [products, ...item.data]);
       })
       .catch((error) => {
         console.log("There was an error fetching the products", error);
@@ -31,8 +36,25 @@ export const CategoryPage = ({category, description, numOfProducts, slug}) => {
   };
 
   useEffect(() => {
-    fetchProducts(slug);
+    // fetchProducts(slug);
+    getProducts({variables: {category: slug}})
   }, [category]);
+
+  useEffect(() => {
+    console.log(data)
+    if(data?.getAllProducts !== undefined){
+      setProducts([...data.getAllProducts])
+    }
+    return () => {
+    }
+  }, [data])
+
+  useEffect(() => {
+    setProducts([])
+    return () => {
+      setProducts([])
+    }
+  }, [])
 
   return (
     <div>
@@ -126,14 +148,14 @@ export const CategoryPage = ({category, description, numOfProducts, slug}) => {
                 <>
                   <ItemImage
                     id={item.id}
-                    name={item.name}
-                    firstImage={item.media.source}
-                    secondImage={item.assets[1].url}
-                    link={item.permalink}
+                    name={item.name || item.productName}
+                    firstImage={item?.media?.source || `${process.env.GOOGLE_CLOUD_PUBLIC_URL}${item.images?.[0]}`}
+                    secondImage={item?.assets?.[1]?.url ||`${process.env.GOOGLE_CLOUD_PUBLIC_URL}${item.images?.[1]}`}
+                    link={item.permalink || item.slug}
                   />
-                  <h4 style={{ margin: "10px auto 0" }}>{item.name}</h4>
+                  <h4 style={{ margin: "10px auto 0" }}>{item.name || item.productName}</h4>
                   <p style={{ margin: "auto" }}>
-                    {item.price.formatted_with_symbol}
+                    {item.price?.formatted_with_symbol || item.price}
                   </p>
                 </>
               )}
