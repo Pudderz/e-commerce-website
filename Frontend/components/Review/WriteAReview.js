@@ -43,6 +43,15 @@ export const WriteAReview = ({
   const handleSubmit = async (e) => {
     e.preventDefault();
 try{
+  console.log({
+    productId: productId,
+    productName: productName,
+    name: user?.nickname,
+    profileImage: user?.picture,
+    rating: `${value}`,
+    descriptionTitle: title,
+    description: description,
+  })
 await createReview({
       variables: {
         productId: productId,

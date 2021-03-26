@@ -15,13 +15,20 @@ import { commerce, retreiveAllCategories } from "../../lib/commerce";
 
 // Size
 
-export const Filters = () => {
+export const Filters = ({onClick}) => {
   const [categories, setCategories] = useState([]);
 
  
   useEffect(() => {
     retreiveAllCategories(setCategories);
   }, []);
+  const handleClick = ()=>{
+    console.log('linkClicked')
+    if(onClick){
+      onClick();
+    }
+    
+  }
 
   return (
     <div>
@@ -31,7 +38,7 @@ export const Filters = () => {
         <ul style={{listStyle:'none', display:'flex', gap:'10px', padding:'0px'}}>
           {categories?.map((el, index) => (
             <li key={index} style={{textAlign:'start',backgroundColor:'#eee', padding:'5px', width:'fit-content', borderRadius:'5px' }}>
-              <Link href={`/category/${el.slug}`}>{el.name}</Link>
+              <Link href={`/category/${el.slug}`} onClick={handleClick}>{el.name}</Link>
             </li>
           ))}
         </ul>

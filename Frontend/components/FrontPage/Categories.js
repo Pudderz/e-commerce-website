@@ -23,6 +23,7 @@ export const Categories = () => {
           style={{
             height: "33vh",
             position: "relative",
+            minWidth:'33%',
             backgroundColor: "black",
           }}
         >

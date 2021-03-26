@@ -5,6 +5,7 @@ import { ReviewProduct } from "../Review/ReviewProduct";
 import { SizeGuide } from "./SizeGuide";
 import { DeliveryAndReturns } from "./DeliveryAndReturns";
 import { Tab, Tabs } from "@material-ui/core";
+import ReactMarkdown from "react-markdown";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -64,9 +65,9 @@ useEffect(() => {
         <TabPanel value={value} index={0}>
           <div>
             <h2>{product?.name}</h2>
-            <div
-              dangerouslySetInnerHTML={{ __html: product?.description }}
-            ></div>
+
+            <ReactMarkdown children={product?.description} />
+            
           </div>
         </TabPanel>
 

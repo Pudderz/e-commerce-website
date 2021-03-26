@@ -42,8 +42,8 @@ useEffect(() => {
 
       <div>
         <hr />
-        <h3>Review this product</h3>
-        <p>Share your thoughts with other customers</p>
+        <h3  style={{ display: showForm ? "none" : "block" }}>Review this product</h3>
+        <p  style={{ display: showForm ? "none" : "block" }}>Share your thoughts with other customers</p>
         <Button
           variant="contained"
           style={{ display: showForm ? "none" : "block" }}
