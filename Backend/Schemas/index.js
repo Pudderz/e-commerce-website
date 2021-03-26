@@ -8,6 +8,7 @@ const {
   GraphQLList,
   GraphQLID,
   GraphQLNonNull,
+  GraphQLBoolean,
 } = graphql;
 const {
   ProductType,
@@ -200,7 +201,7 @@ const Mutation = new GraphQLObjectType({
         return product.save();
       },
     },
-    
+
 
     createReview: {
       type: ProductType,
@@ -336,7 +337,7 @@ const Mutation = new GraphQLObjectType({
       },
     },
     editReview: {
-      type: ProductType,
+      type: ProductReviews,
       args: {
         id: { type: new GraphQLNonNull(GraphQLString) },
         title: { type: new GraphQLNonNull(GraphQLString) },
@@ -376,32 +377,201 @@ const Mutation = new GraphQLObjectType({
         }
       },
     },
-    uploadFile: {
+    updateProductStock:{
       type: ProductType,
       args: {
-        file: { type: GraphQLUpload },
+        id: { type: new GraphQLNonNull(GraphQLString) },
+        stock: { type: new GraphQLList(GraphQLInt) },
       },
       resolve: async (parent, args, context) => {
-        console.log("upload");
-        const { file } = args;
-        const { createReadStream, filename } = await file;
+        console.log("updating stock");
+        console.log(args);
+        const { db, token, subId } = await context();
+        //Test if JWT is valid
+        const { error } = await isTokenValid(token);
+        if (error) return null;
+        if (!subId) return null;
 
-        await new Promise((res) =>
-          createReadStream()
-            .pipe(
-              projectImages.file(filename).createWriteStream({
-                resumable: false,
-                gzip: true,
-              })
-            )
-            .on("finish", res)
-        );
-
-        files.push(filename);
-
-        return null;
+        try {
+          return await Product.findOneAndUpdate(
+            { _id: ObjectId(args.id)},
+            {
+              stock: args.stock,
+            },
+            { new: true, useFindAndModify: true },
+            (err, doc) => {
+              if (err) {
+                console.log("Something wrong when updating data!");
+                return null;
+              }
+              console.log(doc);
+            }
+          );
+        } catch (err) {
+          console.log("error" + err);
+          return null;
+        }
       },
     },
+    updateProductImageOrder:{
+      type: ProductType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLString) },
+        images: { type: new GraphQLNonNull(GraphQLString)},
+      },
+      resolve: async (parent, args, context) => {
+        console.log("editing a review");
+        console.log(args);
+        const { db, token, subId } = await context();
+        //Test if JWT is valid
+        const { error } = await isTokenValid(token);
+        if (error) return null;
+        if (!subId) return null;
+
+
+        
+        
+
+        try {
+          return await Product.findOneAndUpdate(
+            { _id: ObjectId(args.id), subId: subId },
+            {
+              images: args.images
+            },
+            { new: true, useFindAndModify: true },
+            (err, doc) => {
+              if (err) {
+                console.log("Something wrong when updating data!");
+                return null;
+              }
+              console.log(doc);
+            }
+          );
+        } catch (err) {
+          console.log("error" + err);
+          return null;
+        }
+      },
+    },
+    updateProductImages:{
+      type: ProductType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLString) },
+        images: { type: new GraphQLNonNull(GraphQLString)},
+      },
+      resolve: async (parent, args, context) => {
+        console.log("editing a review");
+        console.log(args);
+        const { db, token, subId } = await context();
+        //Test if JWT is valid
+        const { error } = await isTokenValid(token);
+        if (error) return null;
+        if (!subId) return null;
+
+
+
+
+        try {
+          return await Review.findOneAndUpdate(
+            { _id: ObjectId(args.id)},
+            {
+              images: args.images
+            },
+            { new: true, useFindAndModify: true },
+            (err, doc) => {
+              if (err) {
+                console.log("Something wrong when updating data!");
+                return null;
+              }
+              console.log(doc);
+            }
+          );
+        } catch (err) {
+          console.log("error" + err);
+          return null;
+        }
+      },
+    },
+    updateProductPrice:{
+      type: ProductType,
+    args: {
+      id: { type: new GraphQLNonNull( GraphQLString)},
+      price: { type: new GraphQLNonNull(GraphQLString) },
+      discounted:{type: new GraphQLNonNull(GraphQLBoolean)},
+      discountedPrice:{type: new GraphQLNonNull(GraphQLString)},
+    },
+    resolve: async (parent, args, context) => {
+      console.log("updating product price");
+      console.log(args);
+      const { db, token, subId } = await context();
+      //Test if JWT is valid
+      const { error } = await isTokenValid(token);
+      if (error) return null;
+      if (!subId) return null;
+
+      let id = ObjectId(args.id);
+
+      try {
+        return await Product.findOneAndUpdate(
+          { _id: id},
+          {
+            price: args.price,
+            discounted: args.discounted,
+            discountedPrice: args.discountedPrice,
+          },
+          { new: true, useFindAndModify: false },
+          (err, doc) => {
+            console.log(`doc - ${doc}`);
+            if (err) {
+              console.log("Something wrong when updating data!");
+              return null;
+            }
+            
+          }
+        );
+      } catch (err) {
+        console.log("error" + err);
+        return null;
+      }
+    },
+    },
+    updateProductDescription:{
+      type: ProductType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLString) },
+        description: { type: new GraphQLNonNull(GraphQLString) },
+      },
+      resolve: async (parent, args, context) => {
+        console.log("updating product description");
+        console.log(args);
+        const { db, token, subId } = await context();
+        //Test if JWT is valid
+        const { error } = await isTokenValid(token);
+        if (error) return null;
+        if (!subId) return null;
+
+        try {
+          return await Product.findOneAndUpdate(
+            { _id: ObjectId(args.id)},
+            {
+              description: args.description,
+            },
+            { new: true, useFindAndModify: true },
+            (err, doc) => {
+              if (err) {
+                console.log("Something wrong when updating data!");
+                return null;
+              }
+              console.log(doc);
+            }
+          );
+        } catch (err) {
+          console.log("error" + err);
+          return null;
+        }
+      },
+    },
+
   },
 });
 

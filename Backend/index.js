@@ -21,7 +21,7 @@ console.log(uri);
 
 const startDatabase = () => {
   console.log('connecting to the database')
-  mongoose.connect(
+  return mongoose.connect(
     uri,
     { useNewUrlParser: true, useUnifiedTopology: true },
     (err) => {
@@ -30,9 +30,9 @@ const startDatabase = () => {
       } else {
         console.log("db connection is okay");
 
-        if (!database) {
-          console.log("no database set");
-        }
+        // if (!database) {
+        //   console.log("no database set");
+        // }
       }
     }
   );

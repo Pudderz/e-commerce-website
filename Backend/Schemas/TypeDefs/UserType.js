@@ -6,6 +6,7 @@ const {
   GraphQLString,
   GraphQLList,
   GraphQLID,
+  GraphQLBoolean
 } = graphql;
 
 const ProductReviews = new GraphQLObjectType({
@@ -37,6 +38,8 @@ const ProductType = new GraphQLObjectType({
     datePosted:{type: GraphQLInt },
     categories: {type: new GraphQLList(GraphQLString) },
     slug: { type: GraphQLString },
+    discounted: {type: GraphQLBoolean},
+    discountedPrice: {type: GraphQLString},
     allProductReviews: {
       type: new GraphQLList(ProductReviews),
       resolve(parent, args) {
@@ -46,13 +49,6 @@ const ProductType = new GraphQLObjectType({
   }),
 });
 
-const FileType = new GraphQLObjectType({
-  name: "File",
-  fields: () => ({
-    _id: { type: GraphQLID },
-    name: { type: GraphQLString },
-  }),
-});
 
 const UserOrders = new GraphQLObjectType({
   name: "Order",
@@ -64,4 +60,4 @@ const UserOrders = new GraphQLObjectType({
   }),
 });
 
-module.exports = { ProductType, ProductReviews, FileType, UserOrders };
+module.exports = { ProductType, ProductReviews, UserOrders };

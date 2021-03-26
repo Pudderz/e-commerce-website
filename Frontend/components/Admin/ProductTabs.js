@@ -18,6 +18,8 @@ import { ChangeStock } from "./ChangeStock";
 import ReactMarkdown from "react-markdown";
 import { ProductImages } from "./ProductImages";
 import ViewReviews from "./ViewReviews";
+import { gql, useMutation } from "@apollo/client";
+import { useForm } from "react-hook-form";
 
 const ALL_SIZES = [
   3.5,
@@ -37,9 +39,61 @@ const ALL_SIZES = [
   10.5,
 ];
 
+const EDIT_PRODUCT_STOCK = gql`
+  mutation($stock: [Int!], $id: String!) {
+    updateProductStock(stock: $stock, id: $id) {
+      stock
+    }
+  }
+`;
+
+const EDIT_PRODUCT_IMAGE_ORDER = gql`
+  mutation($images: [String!], $id: String!) {
+    updateProductImageOrder(images: $images, id: $id) {
+      images
+    }
+  }
+`;
+
+const EDIT_PRODUCT_IMAGES = gql`
+  mutation($stock: [Int!], $id: String!) {
+    updateProductStock(stock: $stock, id: $id) {
+      stock
+    }
+  }
+`;
+
+const EDIT_PRODUCT_DESCRIPTION = gql`
+mutation(
+  $description: String!
+  $id: String!
+){
+  updateProductDescription(description: $description, id: $id){
+    stock
+  }
+}
+`;
+
+const EDIT_PRODUCT_PRICE = gql`
+  mutation(
+    $price: String!
+    $discounted: Boolean!
+    $discountedPrice: String!
+    $id: String!
+  ) {
+    updateProductPrice(price: $price, id: $id, discounted: $discounted, discountedPrice: $discountedPrice) {
+      productName
+      price
+      discounted
+      discountedPrice
+    }
+  }
+`;
+
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
+ 
   return (
     <div
       role="tabpanel"
@@ -58,6 +112,16 @@ function TabPanel(props) {
 }
 
 export const ProductTabs = (props) => {
+
+   const [editStock, {data: stockData}] = useMutation(EDIT_PRODUCT_STOCK)
+  // const [editImageOrder, {data: imageOrder}] = useMutation(EDIT_PRODUCT_IMAGE_ORDER)
+  const [editDescription, {data: descriptionData}] = useMutation(EDIT_PRODUCT_DESCRIPTION)
+  const [editPrice, {data: priceData}] = useMutation(EDIT_PRODUCT_PRICE)
+
+
+
+
+
   const [value, setValue] = useState(0);
   const [text, setText] = useState("");
   const [product, setProduct] = useState({});
@@ -65,29 +129,62 @@ export const ProductTabs = (props) => {
     setValue(newValue);
     console.log(newValue);
   };
+ const [stockArray, setStockArray] = useState(
+    Array.from({ length: ALL_SIZES.length }, () => 0)
+  );
+
 
   useEffect(() => {
     setProduct(props.product);
     console.log(props.product);
+    let array = [];
+    props.product.stock.forEach(number=>{
+      array.push(1*number)
+    })
+    setStockArray(array)
   }, [props]);
 
-  const [stockArray, setStockArray] = useState(
-    Array.from({ length: ALL_SIZES.length }, () => 0)
-  );
+ 
 
   const handleStockChange = (index, value) => {
-    let newValue = stockArray[index] + value;
+    let newValue = 1*stockArray[index] + 1*value;
     stockArray[index] = newValue >= 0 ? newValue : 0;
     setStockArray([...stockArray]);
   };
+
+  
+  useEffect(() => {
+    setText(props.product.description);
+  }, []);
+
+
+  //Price
+ const {register: registerPrice, handleSubmit: handleSumbitPrice} = useForm()
+
+ const onPriceSubmit = data =>{
+   console.log(data);
+   console.log
+   editPrice({variables: {id:props.product.id, price: data.productPrice, discounted: data.isDiscounted, discountedPrice: data.discountedPrice}})
+ }
+
+
+
+
+//   //Description
 
   const handleTextChange = (e) => {
     setText(e.target.value);
   };
 
-  useEffect(() => {
-    setText(props.product.description);
-  }, []);
+  const handleTextSubmit = ()=>{
+    console.log('handleTextUpdate')
+    editDescription({variables:{id: props.product.id, description: text }})
+  }
+
+  const handleStockUpdate = ()=>{
+    console.log('handleTextUpdate')
+    editStock({variables:{id: props.product.id, stock: stockArray }})
+  }
 
   return (
     <div
@@ -112,14 +209,17 @@ export const ProductTabs = (props) => {
       </Tabs>
 
       <TabPanel value={value} index={0}>
+        <div style={{ display: "flex", gap: "150px" }}>
+          <p>Order</p>
+          <p>Fullscreen Image</p>
+        </div>
         <ProductImages images={props.product.images} />
         <Button variant="contained" color="secondary">
-            Add Image
-          </Button>
-          <Button variant="contained" color="primary">
-            Change order
-          </Button>
-
+          Add Image
+        </Button>
+        <Button variant="contained" color="primary">
+          Change order
+        </Button>
       </TabPanel>
 
       <TabPanel value={value} index={1}>
@@ -139,7 +239,9 @@ export const ProductTabs = (props) => {
           <Button variant="contained" color="secondary">
             Reset Description
           </Button>
-          <Button variant="contained" color="primary">
+          <Button 
+          onClick={handleTextSubmit}
+          variant="contained" color="primary">
             Update Description
           </Button>
         </div>
@@ -153,13 +255,15 @@ export const ProductTabs = (props) => {
             changeStock={handleStockChange}
           />
           <hr />
-          <Button variant="contained" color="primary">
+          <Button variant="contained" color="primary" onClick={handleStockUpdate}>
             Save Stock
           </Button>
         </form>
       </TabPanel>
       <TabPanel value={value} index={3}>
+        
         <div>
+          <form onSubmit={handleSumbitPrice(onPriceSubmit)}>
           <h3>Pricing</h3>
           <p>Current Price: £{product.price}</p>
           <FormControl
@@ -177,7 +281,8 @@ export const ProductTabs = (props) => {
               // value={values.amount}
               // onChange={handleChange('amount')}
               type="number"
-              value={product.price}
+              inputRef={registerPrice}
+              defaultValue={product.price}
               startAdornment={
                 <InputAdornment position="start">£</InputAdornment>
               }
@@ -185,28 +290,38 @@ export const ProductTabs = (props) => {
               required
             />
           </FormControl>
-          <div style={{display:'flex', justifyContent:'start', alignContent:'center'}}>
-            <label htmlFor="outlined-adornment-amount" style={{alignSelf: 'center'}}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "start",
+              alignContent: "center",
+            }}
+          >
+            <label
+              htmlFor="outlined-adornment-amount"
+              style={{ alignSelf: "center" }}
+            >
               is Discounted:
             </label>
-             <Switch label="is discounted" color="primary"></Switch>
+            <Switch defaultChecked={product.isDiscounted} label="is discounted" color="primary" name="isDiscounted" inputRef={registerPrice}></Switch>
           </div>
-          
-         
+
           <FormControl
             fullWidth
             variant="outlined"
             style={{ margin: "10px 0" }}
+            
           >
             <InputLabel htmlFor="outlined-adornment-amount">
               Discounted price
             </InputLabel>
             <OutlinedInput
               id="outlined-adornment-amount"
-              name="productPrice"
+              name="discountedPrice"
               label="Discounted price"
+              inputRef={registerPrice}
               type="number"
-              value={product.price}
+              defaultValue={product.discountedPrice}
               startAdornment={
                 <InputAdornment position="start">£</InputAdornment>
               }
@@ -216,7 +331,8 @@ export const ProductTabs = (props) => {
           </FormControl>
 
           <Button>Reset Price</Button>
-          <Button>Save new Price</Button>
+          <Button type="submit">Save new Price</Button>
+          </form>
         </div>
       </TabPanel>
       <TabPanel value={value} index={4}>
@@ -225,7 +341,6 @@ export const ProductTabs = (props) => {
           productId={product?.id}
           productName={product?.name}
         />
-        
       </TabPanel>
     </div>
   );

@@ -12,6 +12,8 @@ const productSchema = new Schema({
     categories: [String],
     datePosted: Number,
     slug: String,
+    discounted: Boolean,
+    discountedPrice: String,
 })
 
 module.exports = mongoose.model('product', productSchema);
