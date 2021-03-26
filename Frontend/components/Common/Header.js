@@ -293,11 +293,6 @@ export const Header = () => {
                 </Tooltip>
               </li> */}
               <li style={{ height: "fit-content", alignSelf: "center" }}>
-                {/* <TextField
-                  id="searchBar"
-                  variant="outlined"
-                  style={{ height: "fit-content", padding: "0" }}
-                ></TextField> */}
                 <form onSubmit={(e) => {}}>
                     <InputBase
                       autoComplete="off"

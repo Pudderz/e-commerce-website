@@ -13,19 +13,9 @@ import { LOAD_ALL_PRODUCTS } from "../GraphQL/Queries";
 export const StorePage = () => {
   const [products, setProducts] = useState(Array.from({ length: 12 }, () => 0));
 
-  // const fetchProducts = () => {
-  //   commerce.products
-  //     .list()
-  //     .then((item) => {
-  //       setProducts(() => item.data);
-  //     })
-  //     .catch((error) => {
-  //       console.log("There was an error fetching the products", error);
-  //     });
-  // };
-
-
-  const [fetchProducts,{data, error, loading}] = useLazyQuery(LOAD_ALL_PRODUCTS)
+  const [fetchProducts, { data, error, loading }] = useLazyQuery(
+    LOAD_ALL_PRODUCTS
+  );
   useEffect(() => {
     window.scrollTo(0, 0);
     fetchProducts();

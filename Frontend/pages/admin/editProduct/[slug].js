@@ -14,7 +14,7 @@ import { useRouter } from "next/router";
 import DefaultErrorPage from "next/error";
 import Image from "next/image";
 import SelectSmallSize from "../../../components/ProductPages/SelectSizeSmall";
-import { useLazyQuery } from "@apollo/client";
+import { gql, useLazyQuery } from "@apollo/client";
 import { LOAD_PRODUCT_BY_SLUG } from "../../../GraphQL/Queries";
 import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
 import fetch from "node-fetch";
@@ -41,6 +41,7 @@ const ALL_SIZES = [
   10,
   10.5,
 ];
+
 
 
 
@@ -118,94 +119,6 @@ export const ProductPage = (props) => {
 
   return (
     <div style={{ padding: "0 20px" }}>
-      <div
-        style={{
-          display: "flex",
-          margin: "auto",
-          width: "fit-content",
-          textAlign: "start",
-          marginTop: "50px",
-          flexFlow: "wrap",
-          maxWidth: "100%",
-        }}
-      >
-        {/* Product Images */}
-        <ProductImages images={props.images} />
-
-        <div className="itemDescription">
-          <h1>{props.name}</h1>
-          {/* +Review bar */}
-
-          <h2>£{props?.price}</h2>
-          <p style={{ color: "green" }}>
-            In Stock{" "}
-            {size !== ""
-              ? ` UK ${size} (${sizeInfo[size]?.quantity || 0} left)`
-              : `(${product.quantity} left)`}
-          </p>
-
-          {/* <label htmlFor="sizes" style={{ fontWeight: "bold" }}>
-            Select size
-          </label> */}
-          <SelectSize
-            availableSizes={props.stock}
-            productVariants={product.variants}
-            changeSize={changeSize}
-            size={size}
-          />
-          {/* <a href="#!">Size Guide</a> */}
-          <hr />
-          <div style={{ justifyContent: "space-between", display: "flex" }}>
-          </div>
-
-        </div>
-      </div>
-
-      {/* sticky header for when top section is not in view (intersection observer)
-       */}
-
-      <div className="itemNav">
-        <Breadcrumbs aria-label="breadcrumb" style={{ margin: "1em" }}>
-          <Link href="/">Home</Link>
-          <Link href="/admin/allProducts">all products</Link>
-          <Typography>{product?.name}</Typography>
-        </Breadcrumbs>
-
-        <div style={{ display: "flex" }}>
-          <img src={props.assets?.[0].url} height="60px" alt={product?.name} />
-          <h4 style={{ margin: "1em" }}>{product.name}</h4>
-          <p>{product?.price?.formatted_with_symbol}</p>
-        </div>
-
-        <div
-          style={{
-            display: "flex",
-            minWidth: "30%",
-            width: "fit-content",
-            justifyContent: "space-between",
-          }}
-        >
-          <div
-            style={{
-              justifyContent: "space-between",
-              display: "flex",
-              width: "400px",
-              maxWidth: "100%",
-            }}
-          >
-
-          </div>
-        </div>
-      </div>
-      <hr />
-
-{/* <form>
-    <ChangeStock availableSizes={[4]} stockArray={stockArray} changeStock={handleStockChange}/>
-    <Button variant="contained" color="primary">Save Stock</Button>
-</form>
-     */}
-
-
 
       <ProductTabs product={props} />
       <RecentlyViewed />
@@ -277,7 +190,7 @@ export async function getStaticProps({ params }) {
   console.log(data);
 
   const result = data?.getProductBySlug;
-
+console.log(result);
   return {
     props: {
       name: result?.productName || "",
@@ -287,6 +200,8 @@ export async function getStaticProps({ params }) {
       stock: result?.stock,
       description: result?.description || "",
       variants: result?.stock || [],
+      isDiscounted: result?.discounted || "",
+      discountedPrice: result?.discountedPrice || result?.price || "",
     },
     // revalidate: 120,
   };
