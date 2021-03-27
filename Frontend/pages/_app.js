@@ -23,6 +23,9 @@ import { AuthContextProvider } from "../context/AuthContext";
 import "../styles/productPages.scss";
 import { createUploadLink } from "apollo-upload-client";
 import store from "../Redux/store";
+import { Provider } from "react-redux";
+import { createStore } from "redux";
+import { loadState, saveState } from "../lib/localStorage";
 
 const errorLink = onError(({ graphqlErrors, networkError }) => {
   if (graphqlErrors) {
@@ -65,7 +68,30 @@ function App({ Component, pageProps }) {
     notistackRef.current.closeSnackbar(key);
   };
 
-  store.subscribe(() => {});
+
+
+  
+// Persist redux data in localStorage
+  useEffect(() => {
+    console.log('grabbing state')
+    let state = loadState();
+    console.log(state);
+    if(state !== undefined){
+      store.dispatch({
+        type:"UPDATE_CART",
+        payload: state.cart.cart
+      })
+    }
+
+    store.subscribe(() => {
+      console.log(store.getState());
+      saveState(store.getState())
+    });
+
+    return () => {  
+    }
+
+  }, [])
 
   // Google analytics
   const router = useRouter();
@@ -82,32 +108,33 @@ function App({ Component, pageProps }) {
 
   return (
     <div className="App">
-      <Auth0>
-        <ApolloProvider client={client}>
-          <AuthContextProvider>
-            <SnackbarProvider
-              maxSnack={3}
-              ref={notistackRef}
-              action={(key) => (
-                <Button
-                  onClick={onClickDismiss(key)}
-                  style={{ color: "white" }}
-                >
-                  Dismiss
-                </Button>
-              )}
-            >
-              <CartContextProvider>
-                <div>
-                  <Header />
-                  <Component {...pageProps} />
-                </div>
-              </CartContextProvider>
-            </SnackbarProvider>
-          </AuthContextProvider>
-        </ApolloProvider>
-      </Auth0>
-
+      <Provider store={store}>
+        <Auth0>
+          <ApolloProvider client={client}>
+            <AuthContextProvider>
+              <SnackbarProvider
+                maxSnack={3}
+                ref={notistackRef}
+                action={(key) => (
+                  <Button
+                    onClick={onClickDismiss(key)}
+                    style={{ color: "white" }}
+                  >
+                    Dismiss
+                  </Button>
+                )}
+              >
+                <CartContextProvider>
+                  <div>
+                    <Header />
+                    <Component {...pageProps} />
+                  </div>
+                </CartContextProvider>
+              </SnackbarProvider>
+            </AuthContextProvider>
+          </ApolloProvider>
+        </Auth0>
+      </Provider>
       <Footer />
     </div>
   );
