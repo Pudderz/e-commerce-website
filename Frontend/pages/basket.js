@@ -3,11 +3,25 @@ import React, { useEffect, useContext, useState } from "react";
 import { CartContext } from "../context/CartContext";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Link from "next/link";
+import {addCartItem, removeCartItem} from "../Redux/actions/actions"
+import { connect } from 'react-redux'
+
 // Shows a list of items added to the basket page
 
 //shows total price
-export const Basket = () => {
+export const Basket = (props) => {
+  console.log(props)
+
+  const {cart: stateCart =[]} = props.state.cart;
   const { cart, removeFromCart, updateQty } = useContext(CartContext);
+  console.log(stateCart)
+console.log(`stateCart ${typeof stateCart}`)
+  useEffect(() => {
+    console.log(stateCart)
+    return () => {
+      
+    }
+  }, [stateCart])
 
 
   const [isSmallDisplay, setIsSmallDisplay] = useState(false);
@@ -54,6 +68,7 @@ export const Basket = () => {
     <div>
       <h1>Shopping cart</h1>
       <hr />
+      {JSON.stringify(stateCart)}
       {isSmallDisplay ?
       (
         <div style={{ padding: "10px" }}>
@@ -67,7 +82,7 @@ export const Basket = () => {
             maxWidth: "100%",
           }}
         >
-          {cart?.line_items?.length === 0 ? (
+          {stateCart?.length === 0 ? (
             <div>
               <h3>Your Basket is empty</h3>
               <p>
@@ -78,7 +93,7 @@ export const Basket = () => {
             </div>
           ) : (
             <div>
-              {cart?.line_items?.map((item) => (
+              {[...stateCart]?.map((item) => (
                 <li key={item.id}>
                   <div
                     style={{
@@ -101,9 +116,9 @@ export const Basket = () => {
                        
                       >
                         <img
-                          src={item?.media?.source}
+                          src={`${process.env.GOOGLE_CLOUD_PUBLIC_URL}${item?.images[0]}`}
                           width="100"
-                          alt=""
+                          alt={item.name}
                           style={{
                             position: "absolute",
                             top: "0",
@@ -131,7 +146,7 @@ export const Basket = () => {
                           width: "fit-content",
                         }}
                       >
-                       UK {item?.variants?.[0]?.option_name} {item.price?.formatted_with_symbol}
+                       UK {item?.size} {item?.price}
                       </p>
                       <p
                         style={{
@@ -201,7 +216,7 @@ export const Basket = () => {
         <tbody>
 
        
-        {cart?.line_items?.map((item) => (
+        {[...stateCart]?.map((item) => (
           <tr key={item.id}>
             <td>
               <div
@@ -217,7 +232,7 @@ export const Basket = () => {
                   }}
                 >
                   <img
-                    src={item?.media?.source}
+                    src={`${process.env.GOOGLE_CLOUD_PUBLIC_URL}${item?.images[0]}`}
                     alt=""
                
                   />
@@ -233,13 +248,13 @@ export const Basket = () => {
                     {item.name}
                   </h3>
                   <p style={{ textAlign: "start" }}>
-                    Size: {item?.variants?.[0]?.option_name}
+                    Size: {item?.size}
                   </p>
                 </div>
               </div>
             </td>
             <td>
-              <p>{item.price?.formatted_with_symbol}</p>
+              <p>{item.price}</p>
             </td>
             <td>
               <div
@@ -306,4 +321,19 @@ export const Basket = () => {
 };
 
 
-export default Basket;
+const mapStateToProps = (state, ownProps) => ({
+  // ... computed data from state and optionally ownProps
+  state:{...state},
+  props:{...ownProps},
+})
+
+const mapDispatchToProps = {
+  addCartItem,
+  removeCartItem,
+  // ... normally is an object full of action creators
+}
+
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Basket)
+// export default Basket;
