@@ -5,12 +5,10 @@ import { WriteAReview } from "./WriteAReview";
 import { useLazyQuery } from "@apollo/client";
 import { LOAD_REVIEWS } from "../../GraphQL/Queries";
 
-
-
 export const ReviewProduct = ({ productId, productName, product }) => {
   const [showForm, setShowForm] = useState(false);
 
-  const [getReviews, { data}] = useLazyQuery(LOAD_REVIEWS);
+  const [getReviews, { data }] = useLazyQuery(LOAD_REVIEWS);
 
   const handleRefetch = () => {
     getReviews({
@@ -21,20 +19,19 @@ export const ReviewProduct = ({ productId, productName, product }) => {
   const handleWriteReview = () => {
     setShowForm(true);
   };
- const handleClose = ()=>{
-  setShowForm(false);
- }
- useEffect(() => {
-   console.log(productId, productName);
-  getReviews({
-    variables: { productId, productName },
-  })
- }, [productId, productName ]);
+  const handleClose = () => {
+    setShowForm(false);
+  };
+  useEffect(() => {
+    console.log(productId, productName);
+    getReviews({
+      variables: { productId, productName },
+    });
+  }, [productId, productName]);
 
-useEffect(() => {
-  console.log(product);
-}, [product])
-
+  useEffect(() => {
+    console.log(product);
+  }, [product]);
 
   return (
     <div style={{ textAlign: "start", margin: "auto" }}>
@@ -42,8 +39,12 @@ useEffect(() => {
 
       <div>
         <hr />
-        <h3  style={{ display: showForm ? "none" : "block" }}>Review this product</h3>
-        <p  style={{ display: showForm ? "none" : "block" }}>Share your thoughts with other customers</p>
+        <h3 style={{ display: showForm ? "none" : "block" }}>
+          Review this product
+        </h3>
+        <p style={{ display: showForm ? "none" : "block" }}>
+          Share your thoughts with other customers
+        </p>
         <Button
           variant="contained"
           style={{ display: showForm ? "none" : "block" }}
@@ -58,7 +59,6 @@ useEffect(() => {
           showForm={showForm}
           close={handleClose}
         />
-      
       </div>
 
       <h3>Reviews</h3>

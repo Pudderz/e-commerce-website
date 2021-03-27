@@ -35,10 +35,10 @@ export const RecentlyViewed = () => {
               width: "fit-content",
             }}
           >
-            <Link href={`/product/${item?.permalink}`}>
+            <Link href={(item?.permalink)?`/product/${item?.permalink}`: `/product/${item?.slug}`}>
               <img
-                src={item?.media?.source}
-                alt={item?.name}
+                src={item?.media?.source || `${process.env.GOOGLE_CLOUD_PUBLIC_URL}${item.images?.[0]}`}
+                alt={item?.name || item.productName}
                 style={{
                   maxWidth: "100%",
                   height: "100%",
@@ -48,6 +48,7 @@ export const RecentlyViewed = () => {
                   cursor:'pointer'
                 }}
               /></Link>
+              {/* //`${process.env.GOOGLE_CLOUD_PUBLIC_URL}${item.images?.[1]}` */}
           </li>
         ))}
       </ul>

@@ -143,7 +143,7 @@ export const Header = () => {
                 >
                   Men
                 </Button>
-                <div class="dropdown-content">
+                <div className="dropdown-content">
                   <div
                     style={{
                       display: "flex",
@@ -179,7 +179,7 @@ export const Header = () => {
                 >
                   Women
                 </Button>
-                <div class="dropdown-content">
+                <div className="dropdown-content">
                   <div
                     style={{
                       display: "flex",
@@ -215,7 +215,7 @@ export const Header = () => {
                 >
                   Categories
                 </Button>
-                <div class="dropdown-content">
+                <div className="dropdown-content">
                   <div
                     className="selection"
                     style={{
@@ -244,7 +244,7 @@ export const Header = () => {
                 >
                   Sales
                 </Button>
-                <div class="dropdown-content">
+                <div className="dropdown-content">
                   <div
                     style={{
                       display: "flex",
@@ -270,6 +270,42 @@ export const Header = () => {
                   </div>
                 </div>
               </div>
+              <div className="dropdown">
+                <Button
+                  className="headerButton"
+                  style={{
+                    textTransform: "none",
+                    backgroundColor: "transparent",
+                  }}
+                >
+                  Admin
+                </Button>
+                <div className="dropdown-content">
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      maxWidth: "900px",
+                      margin: "auto",
+                      padding: "40px 0",
+                    }}
+                  >
+                    <div>
+                      <Link href="/admin/orders">All Orders</Link>
+                    </div>
+                    <div>
+                      <Link href="/admin/createProducts">Create a product</Link>
+                    </div>
+                    <div>
+                    <Link href="/admin/allProducts">All Products</Link>
+                    </div>
+                    <div>
+                    <Link href="/admin/stock">Update and edit stock</Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          
             </div>
           </li>
           <li style={{ height: "fit-content", alignSelf: "center" }}>

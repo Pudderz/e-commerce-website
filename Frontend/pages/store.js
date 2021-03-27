@@ -139,7 +139,7 @@ export const StorePage = () => {
                     <Checkbox
                       // checked={state.checkedB}
                       // onChange={handleChange}
-                      name="checkedB"
+                      name="discounted"
                       color="primary"
                     />
                   }
@@ -156,8 +156,6 @@ export const StorePage = () => {
                 <FormControlLabel
                   control={
                     <Checkbox
-                      // checked={state.checkedB}
-                      // onChange={handleChange}
                       name="green"
                       color="primary"
                     />
@@ -167,8 +165,6 @@ export const StorePage = () => {
                 <FormControlLabel
                   control={
                     <Checkbox
-                      // checked={state.checkedB}
-                      // onChange={handleChange}
                       name="red"
                       color="primary"
                     />
