@@ -17,7 +17,8 @@ import SelectSmallSize from "../../components/ProductPages/SelectSizeSmall";
 import { initializeApollo } from "../../lib/apolloClient";
 import { LOAD_ALL_PRODUCTS, LOAD_PRODUCT_BY_SLUG } from "../../GraphQL/Queries";
 import { useLazyQuery } from "@apollo/client";
-
+import {addCartItem, removeCartItem} from "../../Redux/actions/actions"
+import { connect } from 'react-redux'
 // const fetchMongoDBProduct = () =>{
   
 // }
@@ -27,7 +28,10 @@ export const ProductPage = (props) => {
   console.log(props)
 
 
-  const [fetchMongoDBProduct, {data}] = useLazyQuery(LOAD_PRODUCT_BY_SLUG)
+  const [fetchMongoDBProduct, {data}] = useLazyQuery(LOAD_PRODUCT_BY_SLUG);
+
+
+
 
   console.log(props);
   const router = useRouter();
@@ -86,14 +90,33 @@ export const ProductPage = (props) => {
   }, []);
 
   const handleAddToCart = (item, quantity = 1) => {
+    console.log(item)
+    console.log(sizeId.current, size);
     if (size !== "") {
-      addVariantItemToCart(
-        item,
-        quantity,
-        sizeId.current,
-        sizeInfo[`${size}`].id,
-        enqueueSnackbar
-      );
+      // addVariantItemToCart(
+      //   item,
+      //   quantity,
+      //   sizeId.current,
+      //   sizeInfo[`${size}`].id,
+      //   enqueueSnackbar
+      // );
+        
+      //Work out maxStock
+      let minSize = 3.5;
+      let maxStock = 1;
+      maxStock = (size-minSize)*2
+  
+
+      //dispatch
+      props.addCartItem({
+        name: item.name,
+        price: item.price,
+        quantity: 1,
+        images: item.images,
+        size : size,
+        maxStock: item.stock[maxStock],
+      })
+
     } else {
       enqueueSnackbar("Please Select a size", {
         variant: "error",
@@ -137,8 +160,8 @@ export const ProductPage = (props) => {
             Select size
           </label>
           <SelectSize
-            availableSizes={sizeInfo}
-            productVariants={product.variants}
+            availableSizes={props?.stock || sizeInfo} 
+            // productVariants={product.variants}
             changeSize={changeSize}
             size={size}
           />
@@ -167,7 +190,7 @@ export const ProductPage = (props) => {
       {/* sticky header for when top section is not in view (intersection observer)
        */}
 
-      {/* <div className="itemNav">
+      <div className="itemNav">
         <Breadcrumbs aria-label="breadcrumb" style={{ margin: "1em" }}>
           <Link href="/">Home</Link>
           <Link href="/">Store</Link>
@@ -219,14 +242,35 @@ export const ProductPage = (props) => {
           </div>
         </div>
       </div>
-      <hr /> */}
+      <hr />
       <ProductTabs product={product} />
       <RecentlyViewed />
     </div>
   );
 };
 
-export default ProductPage;
+
+
+const mapStateToProps = (state, ownProps) => ({
+  // ... computed data from state and optionally ownProps
+  state:{...state},
+  props:{...ownProps},
+})
+
+const mapDispatchToProps = {
+  addCartItem,
+  removeCartItem,
+  // ... normally is an object full of action creators
+}
+
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProductPage)
+// export default Basket;
+
+
+
+
 
 export async function getStaticProps({ params }) {
   console.log(`params`);
