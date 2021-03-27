@@ -6,10 +6,11 @@ const ALL_SIZES = [3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5
 
 
 export const SelectSize = ({ availableSizes, changeSize,size }) => {
-  
+  console.log(availableSizes)
   const [selectedSize, setSelectedSize] = useState(null)
 
   useEffect(() => {
+    console.log(size)
     setSelectedSize(size);
   }, [size])
 
@@ -21,15 +22,15 @@ export const SelectSize = ({ availableSizes, changeSize,size }) => {
     <div className="selectSize"
  
     >
-      {ALL_SIZES.map((number, index) => {
+      {[...availableSizes]?.map((number, index) => {
         // Tests if that size is in the availableSizes object
         // If not sets avaliable size button to disabled
 
           return (
             <Button
               key={index}
-              disabled={!(number in availableSizes)}
-              className={`availableSize ${(number===selectedSize) && 'selected'}`}
+              disabled={!(1*availableSizes[index])}
+              className={`availableSize ${(1*ALL_SIZES[index]===selectedSize) && 'selected'}`}
               onClick={handleButtonChange}
               style={{
                 border: "1px solid #ebedee",
@@ -39,7 +40,7 @@ export const SelectSize = ({ availableSizes, changeSize,size }) => {
                 borderTop: "none",
               }}
             >
-              {number}
+              {ALL_SIZES[index]}
             </Button>
           );
         
