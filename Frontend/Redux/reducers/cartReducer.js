@@ -1,24 +1,32 @@
 const initialState = {
-  cart: []
+  cart: [],
 };
 
 const cartReducer = (state = initialState, { type, payload }) => {
   switch (type) {
     case "ADD_ITEM_TO_CART":
-      return { ...state, targetProjectNumber: payload };
+      return { ...state, cart: [...state.cart, payload] };
 
-    case "REMOVE_ITEM_TO_CART":
-      return { ...state, projectInViewNumber: payload };
-
+    case "REMOVE_ITEM_FROM_CART": {
+      let newState = { ...state };
+      let i = 0;
+      for (let item of newState.cart) {
+        if (payload.name == item.name && payload.size == item.size) {
+          newState.cart[i].splice(i, 1);
+          break;
+        }
+        i++;
+      }
+      return newState;
+    }
     case "REPLACE_CART":
-      return { ...state, fastTravelMode: payload };
+      return { ...state, cart: payload };
 
     case "UPDATE_CART":
-      return { ...state, fastTravelMode: payload };
-    
-      case "EMPTY_CART":
-        return { ...state, cart: [] };
-      
+      return { ...state, cart: payload };
+
+    case "EMPTY_CART":
+      return { ...state, cart: [] };
 
     default:
       return state;
