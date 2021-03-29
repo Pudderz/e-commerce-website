@@ -7,23 +7,21 @@ import Link from "next/link";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { Payment } from "../components/Checkout/Payment";
+import {
+  addCartItem,
+  removeCartItem,
+  addCartItemQuantity,
+} from "../Redux/actions/actions";
+import { connect } from "react-redux";
 
-const promise = loadStripe(
-  "pk_test_51ICSvvEduQoHI0PkPXFpVekvFm9fDb84KUYGy9CGtFlm1b6ZzjZ1Z9mVWaBEPIFvo3uQInuowX2KcEAbBANuqzeV00N77MhPiW"
-);
 
-export const Checkout = () => {
+const promise = loadStripe( "pk_test_51ICSvvEduQoHI0PkPXFpVekvFm9fDb84KUYGy9CGtFlm1b6ZzjZ1Z9mVWaBEPIFvo3uQInuowX2KcEAbBANuqzeV00N77MhPiW");
+//  
+// );
+
+export const Checkout = (props) => {
+  const {cart: stateCart} = props;
   const { cart } = useContext(CartContext);
-
-  const [shippingInfo, setShippingInfo] = useState({});
-
-
-  const changeShippingInfo = (target, value) => {
-    setShippingInfo({
-      ...shippingInfo,
-      [target]: value,
-    });
-  };
 
   return (
     <>
@@ -32,8 +30,9 @@ export const Checkout = () => {
           <Link href="/basket">Cart</Link>
           <Typography>Checkout</Typography>
         </Breadcrumbs>
+        <Link href="/basket">Go Back To Basket</Link>
       </div>
-
+      
       <div
         style={{
           // maxWidth: "800px",
@@ -71,17 +70,17 @@ export const Checkout = () => {
               maxWidth: "100%",
             }}
           >
-            {cart?.line_items?.length === 0 ? (
+            {stateCart?.length === 0 ? (
               <div>
                 <h3>Your Basket is empty</h3>
                 <p>
                   Continue shopping on the <a href="/">homepage</a>, browse our
-                  discounts, or visit your Wish List
+                  discounts.
                 </p>
               </div>
             ) : (
               <div>
-                {cart?.line_items?.map((item) => (
+                {stateCart?.map((item) => (
                   <li key={item.id}>
                     <div
                       style={{
@@ -99,9 +98,9 @@ export const Checkout = () => {
                           overflow: "hidden",
                         }}
                       >
-                        <Link href={`/product/${item.permalink}`}>
+                        <Link href={`/product/${item.slug}`}>
                           <img
-                            src={item?.media?.source}
+                            src={ `${process.env.GOOGLE_CLOUD_PUBLIC_URL}${item?.images[0]}`}
                             width="100"
                             alt=""
                             style={{
@@ -131,7 +130,7 @@ export const Checkout = () => {
                             width: "fit-content",
                           }}
                         >
-                          Size: UK {item?.variants?.[0]?.option_name}
+                          Size: UK {item?.size}
                         </p>
                         <p
                           style={{
@@ -139,7 +138,7 @@ export const Checkout = () => {
                             width: "fit-content",
                           }}
                         >
-                          {item.price?.formatted_with_symbol}
+                          £{item.price}.00
                         </p>
 
                         <p
@@ -198,5 +197,18 @@ export const Checkout = () => {
     </>
   );
 };
+const mapStateToProps = (state, ownProps) => ({
+  // ... computed data from state and optionally ownProps
+  cart: state.cart.cart,
+  props: { ...ownProps },
+});
 
-export default Checkout;
+const mapDispatchToProps = {
+  addCartItem,
+  removeCartItem,
+  addCartItemQuantity,
+  // ... normally is an object full of action creators
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Checkout);
+
