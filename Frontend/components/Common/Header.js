@@ -23,6 +23,8 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import { Filters } from "..//StorePage/Filters";
 import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
+import { connect } from "react-redux";
+import { addCartItem, removeCartItem } from "../../Redux/actions/actions";
 /* 
 HEADER COMPONENT
 
@@ -35,7 +37,8 @@ Basket Button showing num of items in Basket (onClick goes to basket page)
 
 */
 
-export const Header = () => {
+export const Header = (props) => {
+  console.log(props)
   const { user, isAuthenticated } = useAuth0();
   const { cart, changeCart, removeFromCart, updateQty } = useContext(
     CartContext
@@ -404,7 +407,7 @@ export const Header = () => {
               <li>
                 <Tooltip title="Basket">
                   <IconButton aria-label="cart" onClick={handleBasketClick}>
-                    <Badge badgeContent={cart.total_items} color="primary">
+                    <Badge badgeContent={props?.cartState?.length} color="primary">
                       <ShoppingBasketIcon />
                     </Badge>
                   </IconButton>
@@ -445,7 +448,7 @@ export const Header = () => {
                         maxWidth: "100%",
                       }}
                     >
-                      {cart?.line_items?.length === 0 ? (
+                      {props?.cartState?.length === 0 ? (
                         <div>
                           <h3>Your Basket is empty</h3>
                           <p>
@@ -456,7 +459,7 @@ export const Header = () => {
                         </div>
                       ) : (
                         <div>
-                          {cart?.line_items?.map((item) => (
+                          {props?.cartState?.map((item) => (
                             <li key={item.id}>
                               <div
                                 style={{
@@ -475,11 +478,11 @@ export const Header = () => {
                                   }}
                                 >
                                   <Link
-                                    href={`/product/${item.product_id}`}
+                                    href={`/product/${item.slug}`}
                                     onClick={handleBasketClose}
                                   >
                                     <img
-                                      src={item?.media?.source}
+                                      src={`${process.env.GOOGLE_CLOUD_PUBLIC_URL}${item?.images[0]}`}
                                       width="100"
                                       alt=""
                                       style={{
@@ -509,8 +512,8 @@ export const Header = () => {
                                       width: "fit-content",
                                     }}
                                   >
-                                    UK {item?.variants?.[0]?.option_name}{" "}
-                                    {item.price?.formatted_with_symbol}
+                                    UK {item?.size}{" "}
+                                    £{item?.price}.00
                                   </p>
                                   <p
                                     style={{
@@ -620,3 +623,18 @@ export const Header = () => {
     </>
   );
 };
+
+const mapStateToProps = (state, ownProps) => ({
+  // ... computed data from state and optionally ownProps
+  cartState: state.cart.cart,
+  props:{...ownProps},
+})
+
+
+const mapDispatchToProps = {
+  addCartItem,
+  removeCartItem,
+  // ... normally is an object full of action creators
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);
