@@ -1,7 +1,7 @@
 import "../styles/globals.css";
 import React, { useRef, useEffect } from "react";
 import "../App.scss";
-import { Header } from "../components/Common/Header";
+import  Header  from "../components/Common/Header";
 import { Footer } from "../components/Common/Footer";
 import { Auth0 } from "../components/Authentication/Auth0";
 import { SnackbarProvider } from "notistack";
@@ -79,7 +79,10 @@ function App({ Component, pageProps }) {
     if(state !== undefined){
       store.dispatch({
         type:"UPDATE_CART",
-        payload: state.cart.cart
+        payload: {
+          cart:state.cart.cart,
+          cartInfo: state.cart.cartInfo
+        }
       })
     }
 
