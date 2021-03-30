@@ -13,6 +13,7 @@ const {Storage} = require("@google-cloud/storage");
 const bodyParser = require("body-parser");
 const {apolloUploadExpress}= require("apollo-upload-server");
 const { graphqlUploadExpress } = require('graphql-upload');
+const { createPaymentIntent } = require("./Payments/stripePayments");
 require("dotenv").config();
 
 let database = null;
@@ -57,7 +58,11 @@ const context = async (req) => {
 app.use(cors());
 
 
+
 app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
 app.use(
   "/graphql",
   graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }),
@@ -122,6 +127,7 @@ app.use("/trending", (req, res) => {
   })();
 });
 
+app.use("/createPaymentIntent", (req, res)=>createPaymentIntent(req, res));
 
 
 
