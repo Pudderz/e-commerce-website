@@ -1,11 +1,11 @@
 import { Button, CircularProgress, Modal } from "@material-ui/core";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import ShippingForm from "./ShippingForm";
 import { CartContext } from "../../context/CartContext";
 import { commerce } from "../../lib/commerce";
 import { AvailableCountries } from "./AvailableCountries";
-import { useRouter } from 'next/router'
+import { useRouter } from "next/router";
 const CARD_OPTIONS = {
   iconStyle: "solid",
   style: {
@@ -44,14 +44,14 @@ const EXAMPLE_INFO = {
   },
 };
 
-export const Payment = () => {
+export const Payment = ({ cartInfo }) => {
   const router = useRouter();
   const [checkoutTokenId, setCheckoutToken] = useState();
   const [succeeded, setSucceeded] = useState(false);
   const [error, setError] = useState(null);
   const [processing, setProcessing] = useState("");
   const [disabled, setDisabled] = useState(true);
-  const { cart,changeCart } = useContext(CartContext);
+  const { cart, changeCart } = useContext(CartContext);
   const stripe = useStripe();
   const elements = useElements();
 
@@ -166,12 +166,12 @@ export const Payment = () => {
       console.log(order);
       // If we get here, the order has been successfully captured and the order detail is part of the `order` variable
       const receipt = await commerce.checkout.receipt(checkoutTokenId);
-      console.log(receipt)
+      console.log(receipt);
       setError(null);
       setProcessing(false);
       setSucceeded(true);
-      commerce.cart.empty().then(json => {
-        changeCart(json.cart)
+      commerce.cart.empty().then((json) => {
+        changeCart(json.cart);
       });
 
       return;
@@ -185,37 +185,58 @@ export const Payment = () => {
     }
   }
 
-
-
-
-  const handleStripeSubmit = async ev => {
+  const handleStripeSubmit = async (ev) => {
     ev.preventDefault();
     setProcessing(true);
-    const payload = await stripe.confirmCardPayment(clientSecret, {
+    const payload = await stripe.confirmCardPayment(clientSecret.current, {
       payment_method: {
-        card: elements.getElement(CardElement)
-      }
+        card: elements.getElement(CardElement),
+      },
     });
-    if (payload.error) {
+        if (payload.error) {
       setError(`Payment failed ${payload.error.message}`);
       setProcessing(false);
     } else {
-      console.log("[PaymentMethod]", paymentMethod);
       setError(null);
       setProcessing(false);
       setSucceeded(true);
     }
   };
 
-
+const [items, setItems] = useState([]);
+const [price, setPrice] = useState(0);
+const clientSecret = useRef(null);
 
   useEffect(() => {
-    commerce.checkout
-      .generateTokenFrom("cart", commerce.cart.id())
-      .then((response) => setCheckoutToken(response.id))
+    console.log(cartInfo)
+    if(cartInfo.length>0){
+      console.log(cartInfo)
+      let cart = JSON.stringify(cartInfo)
+      fetch(`${process.env.BACKEND_SERVER}/createPaymentIntent`, {
+      method: "POST",
+      headers:{
+        "Content-Type": "application/json",
+      },
+      body: cart,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        clientSecret.current = data.clientSecret;
+        setItems(data.confirmedItems);
+        setPrice(data.amount)
+      });
+    }
+    return () => {
 
-     
-  }, []);
+    }
+  }, [cartInfo])
+  // useEffect(() => {
+  //   console.log(cartInfo)
+  //   // commerce.checkout
+  //   //   .generateTokenFrom("cart", commerce.cart.id())
+  //   //   .then((response) => setCheckoutToken(response.id));
+    
+  // }, []);
 
   const handleChange = async (event) => {
     // Listen for changes in the CardElement
@@ -233,7 +254,7 @@ export const Payment = () => {
   // const handleSubmit = async ev => {
   //   ev.preventDefault();
   //   setProcessing(true);
-  //   const payload = await stripe.confirmCardPayment(clientSecret, {
+  //   const payload = await stripe.confirmCardPayment(clientSecret.current, {
   //     payment_method: {
   //       card: elements.getElement(CardElement)
   //     }
@@ -247,14 +268,13 @@ export const Payment = () => {
   //     setSucceeded(true);
   //   }
   // };
-const handleClose = () =>{
-  setSucceeded(false);
-  router.push("/");
-  
-}
+  const handleClose = () => {
+    setSucceeded(false);
+    router.push("/");
+  };
   return (
     <div style={{ minWidth: "min(400px,100%)" }}>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleStripeSubmit}>
         <Button onClick={importDemoShippingInfo}>Import Demo</Button>
         <div style={{ maxWidth: "700px", margin: "auto", padding: "0 20px" }}>
           <ShippingForm
@@ -263,6 +283,8 @@ const handleClose = () =>{
             changeValue={changeValue}
             checkoutToken={checkoutTokenId}
           />
+          <p>Price: £{(price/100).toFixed(2)}</p>
+          <p>Items: {items.length}</p>
           <h3>Payment Detail</h3>
           <div style={{ border: "1px solid gray", padding: "10px" }}>
             <label style={{ textAlign: "start" }}>
@@ -310,26 +332,27 @@ const handleClose = () =>{
               </a>
               Refresh the page to pay again.
             </p>
-            
           </div>
         </div>
       </form>
       <Modal
-      open={succeeded}
-      onClose={handleClose}
-      aria-labelledby="edit-review-modal"
-      aria-describedby="edits a chosen users review on submit"
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
+        open={succeeded}
+        onClose={handleClose}
+        aria-labelledby="edit-review-modal"
+        aria-describedby="edits a chosen users review on submit"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
       >
-       <div style={{backgroundColor:'white', padding:'20px'}}>
-        <h3>Order Successfull!!!</h3>
-        <p>We will send you a order confirmation via email</p>
-        <Button color="primary" variant="contained" onClick={handleClose}>Go Home</Button>
-      </div>       
+        <div style={{ backgroundColor: "white", padding: "20px" }}>
+          <h3>Order Successfull!!!</h3>
+          <p>We will send you a order confirmation via email</p>
+          <Button color="primary" variant="contained" onClick={handleClose}>
+            Go Home
+          </Button>
+        </div>
       </Modal>
     </div>
   );

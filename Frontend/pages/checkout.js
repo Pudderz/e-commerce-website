@@ -20,7 +20,7 @@ const promise = loadStripe( "pk_test_51ICSvvEduQoHI0PkPXFpVekvFm9fDb84KUYGy9CGtF
 // );
 
 export const Checkout = (props) => {
-  const {cart: stateCart} = props;
+  const {cart: stateCart, cartInfo} = props;
   const { cart } = useContext(CartContext);
 
   return (
@@ -45,7 +45,7 @@ export const Checkout = (props) => {
         }}
       >
         <Elements stripe={promise}>
-          <Payment />
+          <Payment cartInfo={stateCart} />
         </Elements>
 
         <div
@@ -187,9 +187,9 @@ export const Checkout = (props) => {
             }}
           >
             <p style={{ margin: "5px" }}>
-              Subtotal({cart?.total_items || 0} item
-              {cart?.total_items > 1 && "s"}
-              ): {cart?.subtotal?.formatted_with_symbol}
+              Subtotal({cartInfo.totalItems  || 0} item
+              {cartInfo.totalItems > 1 && "s"}
+              ): {cartInfo.totalPrice}
             </p>
           </div>
         </div>
@@ -200,6 +200,7 @@ export const Checkout = (props) => {
 const mapStateToProps = (state, ownProps) => ({
   // ... computed data from state and optionally ownProps
   cart: state.cart.cart,
+  cartInfo: state.cart.cartInfo,
   props: { ...ownProps },
 });
 
