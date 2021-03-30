@@ -106,9 +106,10 @@ export const ProductPage = (props) => {
       let maxStock = 1;
       maxStock = (size-minSize)*2
       console.log(item.stock[maxStock])
-
+      console.log(item.price)
       //dispatch
       props.addCartItem({
+        id: item.id,
         name: item.name,
         slug: item.slug,
         price: item.price,
