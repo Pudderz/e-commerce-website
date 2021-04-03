@@ -27,13 +27,6 @@ import { connect } from 'react-redux'
 export const ProductPage = (props) => {
   console.log(props)
 
-
-  const [fetchMongoDBProduct, {data}] = useLazyQuery(LOAD_PRODUCT_BY_SLUG);
-
-
-
-
-  console.log(props);
   const router = useRouter();
 
   // Fallback
@@ -49,39 +42,11 @@ export const ProductPage = (props) => {
   const { changeCart, addVariantItemToCart } = useContext(CartContext);
   const { enqueueSnackbar } = useSnackbar();
   const sizeId = useRef();
-  const [sizeInfo, setSizeInfo] = useState({});
 
   useEffect(() => {
-
-    // try{
-    //   fetchItem(props?.id, setProduct);
-    // }catch(err){
-    //   console.log(err);
-    //   console.log("fetching off MongoDB");
-    //   fetchMongoDBProduct({variables: {slug: props.slug}})
-    // }
-    
     setProduct(props);
   }, [props]);
 
-  useEffect(() => {
-    console.log(product);
-    if (
-      typeof product?.variants !== "undefined" &&
-      product?.variants?.length !== 0
-    ) {
-      let sizeObject = {};
-      product?.variants?.forEach((variant) => {
-        if (variant.name === "size") {
-          sizeId.current = variant.id;
-          variant?.options?.forEach((sizes, index) => {
-            sizeObject[sizes.name] = { id: sizes.id, quantity: sizes.quantity };
-          });
-          setSizeInfo(sizeObject);
-        }
-      });
-    }
-  }, [product]);
 
   useEffect(() => {
     return () => {
@@ -93,13 +58,6 @@ export const ProductPage = (props) => {
     console.log(item)
     console.log(sizeId.current, size);
     if (size !== "") {
-      // addVariantItemToCart(
-      //   item,
-      //   quantity,
-      //   sizeId.current,
-      //   sizeInfo[`${size}`].id,
-      //   enqueueSnackbar
-      // );
         
       //Work out maxStock
       let minSize = 3.5;
@@ -150,19 +108,16 @@ export const ProductPage = (props) => {
           <h1>{product.name}</h1>
           {/* +Review bar */}
 
-          <h2>{props?.price?.formatted_with_symbol || `£${props?.price}.00`}</h2>
+          <h2>{`£${props?.price}.00`}</h2>
           <p style={{ color: "green" }}>
-            In Stock{" "}
-            {/* {size !== ""
-              ? ` UK ${size} (${sizeInfo[size]?.quantity || 0} left)`
-              : `(${product.quantity} left)`} */}
+            In Stock
           </p>
 
           <label htmlFor="sizes" style={{ fontWeight: "bold" }}>
             Select size
           </label>
           <SelectSize
-            availableSizes={props?.stock || sizeInfo} 
+            availableSizes={props?.stock} 
             // productVariants={product.variants}
             changeSize={changeSize}
             size={size}
@@ -214,7 +169,7 @@ export const ProductPage = (props) => {
           }}
         >
           <SelectSmallSize
-            availableSizes={sizeInfo}
+            availableSizes={props?.stock}
             productVariants={product.variants}
             changeSize={changeSize}
             size={size}

@@ -24,7 +24,6 @@ import "../styles/productPages.scss";
 import { createUploadLink } from "apollo-upload-client";
 import store from "../Redux/store";
 import { Provider } from "react-redux";
-import { createStore } from "redux";
 import { loadState, saveState } from "../lib/localStorage";
 
 const errorLink = onError(({ graphqlErrors, networkError }) => {
@@ -68,10 +67,8 @@ function App({ Component, pageProps }) {
     notistackRef.current.closeSnackbar(key);
   };
 
-
-
   
-// Persist redux data in localStorage
+  // Persist redux data in localStorage
   useEffect(() => {
     console.log('grabbing state')
     let state = loadState();
