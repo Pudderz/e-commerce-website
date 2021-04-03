@@ -44,8 +44,20 @@ export const LOAD_USER_ORDERS = gql`
 
 
 export const LOAD_ALL_PRODUCTS = gql`
-  query {
-    getAllProducts{
+  query(
+    $male: Boolean
+    $female: Boolean
+    $under50: Boolean
+    $under100: Boolean
+    $discounted: Boolean
+  ) {
+    getAllProducts(
+      male: $male
+      female: $female
+      under50: $under50
+      under100: $under100
+      discounted: $discounted
+    ){
       images
       productName
       _id
@@ -53,6 +65,8 @@ export const LOAD_ALL_PRODUCTS = gql`
       price
       numOfReviews
       averageRating
+      discounted
+      discountedPrice
     }
   }
 `

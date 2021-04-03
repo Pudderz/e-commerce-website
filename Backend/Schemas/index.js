@@ -1,5 +1,4 @@
 const graphql = require("graphql");
-const mongoose = require("mongoose");
 const {
   GraphQLObjectType,
   GraphQLSchema,
@@ -13,7 +12,6 @@ const {
 const {
   ProductType,
   ProductReviews,
-  FileType,
   UserOrders,
 } = require("./TypeDefs/UserType");
 const isTokenValid = require("../Authenication/validate");
@@ -22,7 +20,6 @@ const Product = require("../models/products");
 const Order = require("../models/order");
 const { ObjectId } = require("mongodb");
 const { TypeComposer, schemaComposer } = require("graphql-compose");
-// const { GraphQLUpload } = require('apollo-upload-server');
 const { GraphQLUpload } = require("graphql-upload");
 const { Storage } = require("@google-cloud/storage");
 const path = require("path");
@@ -36,7 +33,7 @@ const gc = new Storage({
 
 // gc.getBuckets().then(x=>console.log(x));
 const projectImages = gc.bucket("e-commerce-image-storage-202");
-console.log(projectImages);
+// console.log(projectImages);
 
 // schemaComposer.set('Upload', GraphQLUpload);
 
@@ -47,16 +44,43 @@ const RootQuery = new GraphQLObjectType({
       type: new GraphQLList(ProductType),
       args: { 
         id: { type: GraphQLInt },
-        category: {type: GraphQLString}
+        category: {type: GraphQLString},
+        male:{type: GraphQLBoolean},
+        female:{type: GraphQLBoolean},
+        under50:{type: GraphQLBoolean},
+        under100:{type: GraphQLBoolean},
+        discounted:{type: GraphQLBoolean},
+        search: {type: GraphQLString},
     },
       resolve: async (parent, args, context) => {
-        
         await context();
-        console.log('finding all products')
-        if(typeof args.category !== "undefined"){
-          return Product.find({categories: args.category})
+
+        let searchParameters = {};
+
+
+        if(args.search){
+          searchParameters.productName =  { $regex: args.search, $options: "i" };
         }
-        return Product.find({});
+
+        if(args.male || args.female){
+          const filterGender = [];
+          if(args.male) filterGender.push("male");
+          if(args.female) filterGender.push("female");
+          if(filterGender.length === 1){
+            searchParameters[gender] = { $in : filterGender[0]};
+          }
+          
+          
+
+        }
+        if(args.discounted){
+          searchParameters.discounted = true;
+        }
+        if(typeof args.category !== "undefined"){
+          searchParameters.categories = args.category;
+        }
+
+          return Product.find({...searchParameters}).sort({datePosted: 'desc'});
       },
     },
     getAllReviews: {
@@ -170,7 +194,6 @@ const Mutation = new GraphQLObjectType({
       resolve: async (parent, args, context) => {
         const { db, token } = await context();
         // Tests if user is authenticated to create a review
-        const { error } = await isTokenValid(token);
         let { error } = await isTokenValid(token);
         if (error) return new Error("You do not have a valid token");
         
