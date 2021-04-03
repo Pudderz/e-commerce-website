@@ -14,4 +14,4 @@ const reviewSchema = new Schema({
   edited: Boolean,
 });
 
-module.exports = mongoose.model("review", reviewSchema);
+module.exports = mongoose.model("reviews", reviewSchema);

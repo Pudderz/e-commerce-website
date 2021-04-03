@@ -7,4 +7,4 @@ const orderSchema = new Schema({
     price: String,   
 })
 
-module.exports = mongoose.model('order', orderSchema);
+module.exports = mongoose.model('orders', orderSchema);
