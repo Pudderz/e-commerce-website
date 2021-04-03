@@ -16,6 +16,8 @@ const cartReducer = (state = initialState, { type, payload }) => {
       
       for (let item of newState.cart) {
         if (payload.name == item.name && payload.size == item.size) {
+
+          if(payload.quantity+ item.quantity > 1*item.maxStock) return newState;
           // If new quantity is 0, remove item
           item.quantity += payload.quantity;
           newState.cartInfo.totalItems += payload.quantity;
@@ -24,9 +26,10 @@ const cartReducer = (state = initialState, { type, payload }) => {
         }
       }
       
+      newState.cartInfo.totalItems += payload.quantity;
+       newState.cartInfo.totalPrice += payload.quantity * payload.price;
 
-
-      return { ...state, cart: [...state.cart, payload] };
+      return { ...newState, cart: [...newState.cart, payload] };
     }
       
 
