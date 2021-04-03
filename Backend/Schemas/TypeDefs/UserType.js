@@ -40,6 +40,7 @@ const ProductType = new GraphQLObjectType({
     slug: { type: GraphQLString },
     discounted: {type: GraphQLBoolean},
     discountedPrice: {type: GraphQLString},
+    gender: {type: new GraphQLList(GraphQLString) },
     male: {type: GraphQLBoolean},
     female: {type: GraphQLBoolean},
     numOfReviews: { 

@@ -26,8 +26,7 @@ import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 import FilepondPluginDragReorder from "filepond-plugin-drag-reorder";
 import { ChangeStock } from "../../components/Admin/ChangeStock";
 import {useForm} from "react-hook-form";
-
-
+import { useSnackbar } from "notistack";
 
 registerPlugin(
   FilePondPluginImageExifOrientation,
@@ -53,20 +52,13 @@ const ALL_SIZES = [
   10.5,
 ];
 
-const uploadFileMutation = gql`
-  mutation UploadFile($file: Upload!) {
-    uploadFile(file: $file) {
-      averageRating
-    }
-  }
-`;
+
 const createProductMutation = gql`
   mutation UploadProduct(
     $files: [Upload!]
     $productname: String!
     $price: String!
     $stock: [Int!]
-    $slug: String!
     $description: String!
     $categories: [String!]
     $female: Boolean
@@ -77,7 +69,6 @@ const createProductMutation = gql`
       productname: $productname
       price: $price
       stock: $stock
-      slug: $slug
       description: $description
       categories: $categories
       male: $male
@@ -95,42 +86,36 @@ export const CreateProducts = () => {
   const [stockTotal, setTotalStock] = useState(0);
   const [stockArray, setStockArray] = useState(Array.from({length: ALL_SIZES.length}, ()=> 0))
   const [files, setFiles] = useState([]);
-
-
+  const { enqueueSnackbar } = useSnackbar();
+  const form = useRef(null)
   const [createProduct, {data, error}] = useMutation(createProductMutation);
 
   const [categories, setCategories] = useState([]);
 
-
+  const {register, handleSubmit, reset} = useForm()
 
   console.log(data, error)
-  const {register, handleSubmit} = useForm();
 
 
   const filePond = useRef(null);
 
-  const handleFormSubmit = (data) => {
+
+  const resetForm =()=>{
+    setFiles([]);
+    setCategories([]);
+
+    reset();
+  }
+
+  const handleFormSubmit = async (data) => {
     const fileArray = [];
 
     files.forEach(file=>{
       fileArray.push(file.file);
     })
-    // console.log({
-    //   productname: data.productName,
-    //   slug: data.slug,
-    //   price: data.productPrice,
-    //   description: data.description,
-    //   files: fileArray,
-    //   stock: stockArray,
-    //       categories: categories,
-    //   male:data.male,
-    //   female:data.female,
-    //   males: typeof data.male,
-    //   females: typeof data.female,
-    // });
-    createProduct({variables: {
+    try{
+      await createProduct({variables: {
       productname: data.productName,
-      slug: data.slug,
       price: String(data.productPrice),
       description: data.description,
       files: fileArray,
@@ -139,6 +124,19 @@ export const CreateProducts = () => {
       male:data.male,
       female:data.female
     }})
+
+    enqueueSnackbar("product created", {
+      variant: "success",
+    });
+    resetForm();
+
+    } catch(err){
+      console.log(err.message)
+      enqueueSnackbar(err.message, {
+        variant: "error",
+      });
+    }
+    
   };
 
   useEffect(() => {
@@ -166,7 +164,7 @@ export const CreateProducts = () => {
   return (
     <div style={{ backgroundColor: "#efefef" }}>
       <h3>Create a Product</h3>
-      <form onSubmit={handleSubmit(handleFormSubmit)}>
+      <form onSubmit={handleSubmit(handleFormSubmit)} ref={form}>
         <div
           style={{
             backgroundColor: "#fff",
@@ -185,17 +183,6 @@ export const CreateProducts = () => {
               inputRef={register}
               name="productName"
               label="Product Name"
-              fullWidth
-              variant="outlined"
-              style={{ margin: "10px 0" }}
-            ></TextField>
-          </div>
-          <div>
-            <TextField
-              required
-              name="slug"
-              inputRef={register}
-              label="Slug"
               fullWidth
               variant="outlined"
               style={{ margin: "10px 0" }}
@@ -222,7 +209,19 @@ export const CreateProducts = () => {
               required
             />
           </FormControl>
-
+          <div style={{display:'grid'}}>
+            <h5 style={{textAlign:'start', margin:'0'}}>Gender</h5>
+            <hr style={{width:'100%'}}/>
+            <FormControlLabel
+        control={<Checkbox inputRef={register} name="male" />}
+        label="Male"
+      />
+         <FormControlLabel
+        control={<Checkbox inputRef={register} name="female" />}
+        label="Female"
+      />
+          </div>
+          
           <TextField
             required
             inputRef={register}
@@ -281,14 +280,7 @@ export const CreateProducts = () => {
             </Select>
           </FormControl>
 
-          <FormControlLabel
-        control={<Checkbox inputRef={register} name="male" />}
-        label="Male"
-      />
-         <FormControlLabel
-        control={<Checkbox inputRef={register} name="female" />}
-        label="Female"
-      />
+      
         </div>
         <div
           style={{

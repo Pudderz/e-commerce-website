@@ -171,10 +171,26 @@ const Mutation = new GraphQLObjectType({
         const { db, token } = await context();
         // Tests if user is authenticated to create a review
         const { error } = await isTokenValid(token);
-        if (error) return null;
+        let { error } = await isTokenValid(token);
+        if (error) return new Error("You do not have a valid token");
+        
+        // Checks if name already exists in mongoDB product collection
+        await Product.find({productName: args.productname},(err, doc)=>{
+          console.log('found product')
+          console.log(doc.length);
+          if(doc.length >0){
+            console.log('doc is greater than 1')
+            error = true;
+          }
+        });
+        if (error) return new Error("The name you have choosen already exists");
+
         const { files } = args;
-        console.log(args)
+        console.log('uploading images')
         let fileNameArray = [];
+
+        if(files.length < 2) return new Error("Must have 2 or more images");
+
         for(let img of files){
            const { createReadStream, filename } = await img;
             await new Promise((res) =>
@@ -190,13 +206,17 @@ const Mutation = new GraphQLObjectType({
             fileNameArray.push(filename); 
         }
        
-        console.log("product uploading");
+        console.log('images uploaded')
         console.log(fileNameArray);
-
+console.log("Uploading product");
         const time = new Date().getTime();
         
+        const gender = [];
+        if(args.male)gender.push("male");
+        if(args.female)gender.push("female")
+
         let product = new Product({
-          slug: args.slug,
+          slug: encodeURIComponent(args.productname),
           productName: args.productname,
           images: fileNameArray,
           price: args.price,
@@ -204,12 +224,10 @@ const Mutation = new GraphQLObjectType({
           categories: args.categories,
           stock: args.stock,
           datePosted: time,
-          female: args.female,
-          male: args.male,
+          gender: gender,
           averageRating: 0,
         });
-        console.log('product')
-        console.log(product);
+
         return product.save();
       },
     },
