@@ -4,10 +4,11 @@ import { GetReviews } from "./GetReviews";
 import { WriteAReview } from "./WriteAReview";
 import { useLazyQuery } from "@apollo/client";
 import { LOAD_REVIEWS } from "../../GraphQL/Queries";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export const ReviewProduct = ({ productId, productName, product }) => {
   const [showForm, setShowForm] = useState(false);
-
+  const { user, isAuthenticated } = useAuth0();
   const [getReviews, { data }] = useLazyQuery(LOAD_REVIEWS);
 
   const handleRefetch = () => {
@@ -39,7 +40,9 @@ export const ReviewProduct = ({ productId, productName, product }) => {
 
       <div>
         <hr />
-        <h3 style={{ display: showForm ? "none" : "block" }}>
+        {isAuthenticated ? (
+          <>
+           <h3 style={{ display: showForm ? "none" : "block" }}>
           Review this product
         </h3>
         <p style={{ display: showForm ? "none" : "block" }}>
@@ -59,6 +62,14 @@ export const ReviewProduct = ({ productId, productName, product }) => {
           showForm={showForm}
           close={handleClose}
         />
+          </>
+        ):(
+          <>
+          <h3>Log in to write a review</h3>
+          <LoginButton />
+        </>
+        )}
+       
       </div>
 
       <h3>Reviews</h3>

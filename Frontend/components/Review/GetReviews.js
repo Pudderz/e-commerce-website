@@ -3,8 +3,6 @@ import { Avatar } from "@material-ui/core";
 import Rating from "@material-ui/lab/Rating";
 
 export const GetReviews = ({ data }) => {
-
-
   return (
     <>
       {data?.getProduct?.[0]?.numOfReviews && (
@@ -37,18 +35,13 @@ export const GetReviews = ({ data }) => {
               <Rating value={review?.rating} readOnly />
               <h4 style={{ margin: "5px 0" }}>{review?.descriptionTitle}</h4>
             </div>
-            <div>
-              <p style={{ margin: "5px 0" }}>
-                Reviewed in the United Kingdom on 3 August 2018
-              </p>
-            </div>
+
             <div>
               <p>{review?.description}</p>
             </div>
-            {/* <div>
-              <p>84 people found this helpful</p>
-              <button>Helpful</button>
-            </div> */}
+            <div>
+              <p style={{ margin: "5px 0" }}>Reviewed on ...</p>
+            </div>
           </li>
         ))}
       </ol>

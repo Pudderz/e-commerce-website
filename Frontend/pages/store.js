@@ -3,7 +3,7 @@ import { RecentlyViewed } from "../components/Common/RecentlyViewed";
 import {
   Button,
 } from "@material-ui/core";
-import { useLazyQuery, useQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import { LOAD_ALL_PRODUCTS } from "../GraphQL/Queries";
 import StoreFilter from "../components/StorePage/storeFilter";
 import StoreItems from "../components/StorePage/StoreItems";
@@ -42,7 +42,6 @@ export const StorePage = () => {
           <h3>Store</h3>
           <div style={{ display: "flex" }}>
             <Button>Hide Filters</Button>
-            {/* <Button>Sort By</Button> */}
           </div>
         </div>
         <div style={{ display: "flex" }}>

@@ -19,8 +19,8 @@ export const DeliveryAndReturns = () => {
 
             <h2>Delivery And Returns</h2>
          <p>See below information about the delivery & return options</p>
-         <Button>DELIVERY</Button>   
-         <Button>RETURNS</Button>    
+         {/* <Button>DELIVERY</Button>   
+         <Button>RETURNS</Button>     */}
             
             <h3>UNITED KINGDOM DELIVERIES</h3>
             <hr />

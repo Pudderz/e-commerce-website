@@ -23,13 +23,15 @@ export const WriteAReview = ({
   close
 }) => {
   const { enqueueSnackbar } = useSnackbar();
-  const { user, isAuthenticated } = useAuth0();
+  const { user} = useAuth0();
   const [value, setValue] = useState(2);
   const [hover, setHover] = useState(-1);
   const [reviewSending, setReviewSending] = useState(false);
   const [sent, setSent] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+
+console.log(user);
 
   const [
     createReview,
@@ -66,6 +68,7 @@ await createReview({
     e.target.reset();
     setTitle("");
     setDescription("");
+    handleRefetch();
 }catch{
   console.log('failed to connect with server');
   enqueueSnackbar("Failed to connect with backend server, please try again later", {
@@ -88,7 +91,7 @@ await createReview({
       setReviewSending(true);
     } else if (mutationLoading === false && reviewSending === true && !!mutationError === false) {
       setSent(true);
-      handleRefetch();
+      // handleRefetch();
     }
   }, [mutationLoading]);
 
@@ -98,8 +101,7 @@ await createReview({
   const handleClose = ()=> close();
   return (
     <div>
-      {isAuthenticated ? (
-       
+
           <form
             onSubmit={handleSubmit}
             style={{
@@ -167,13 +169,7 @@ await createReview({
               Submit
             </Button>
           </form>
-       
-      ) : (
-        <>
-          <h3>You need to be logged in to write a review</h3>
-          <LoginButton />
-        </>
-      )}
+
     </div>
   );
 };
