@@ -50,13 +50,17 @@ export const LOAD_ALL_PRODUCTS = gql`
     $under50: Boolean
     $under100: Boolean
     $discounted: Boolean
-  ) {
+    $search: String
+    $limit:Int
+    ) {
     getAllProducts(
       male: $male
       female: $female
       under50: $under50
       under100: $under100
       discounted: $discounted
+      search: $search
+      limit:$limit
     ){
       images
       productName

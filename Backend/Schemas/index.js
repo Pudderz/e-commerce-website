@@ -19,7 +19,6 @@ const Review = require("../models/review");
 const Product = require("../models/products");
 const Order = require("../models/order");
 const { ObjectId } = require("mongodb");
-const { TypeComposer, schemaComposer } = require("graphql-compose");
 const { GraphQLUpload } = require("graphql-upload");
 const { Storage } = require("@google-cloud/storage");
 const path = require("path");
@@ -33,9 +32,7 @@ const gc = new Storage({
 
 // gc.getBuckets().then(x=>console.log(x));
 const projectImages = gc.bucket("e-commerce-image-storage-202");
-// console.log(projectImages);
 
-// schemaComposer.set('Upload', GraphQLUpload);
 
 const RootQuery = new GraphQLObjectType({
   name: "RootQueryType",
@@ -51,6 +48,8 @@ const RootQuery = new GraphQLObjectType({
         under100:{type: GraphQLBoolean},
         discounted:{type: GraphQLBoolean},
         search: {type: GraphQLString},
+        limit: {type: GraphQLInt},
+        skip: {type: GraphQLInt},
     },
       resolve: async (parent, args, context) => {
         await context();
@@ -67,7 +66,7 @@ const RootQuery = new GraphQLObjectType({
           if(args.male) filterGender.push("male");
           if(args.female) filterGender.push("female");
           if(filterGender.length === 1){
-            searchParameters[gender] = { $in : filterGender[0]};
+            searchParameters[gender] = filterGender;
           }
           
           
@@ -80,6 +79,12 @@ const RootQuery = new GraphQLObjectType({
           searchParameters.categories = args.category;
         }
 
+        if(args.limit){
+          if(args.skip){
+            return Product.find({...searchParameters}).sort({datePosted: 'desc'}).skip(args.skip).limit(args.limit);
+          }
+          return Product.find({...searchParameters}).sort({datePosted: 'desc'}).limit(args.limit);
+        }
           return Product.find({...searchParameters}).sort({datePosted: 'desc'});
       },
     },
