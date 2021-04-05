@@ -1,16 +1,9 @@
-import Head from "next/head";
-import styles from "../styles/Home.module.css";
 import Link from "next/link";
 import React, { useEffect } from "react";
 import { RecentlyViewed } from "../components/Common/RecentlyViewed";
-import hikingBackground from "../images/hikingBackground.jpg";
 import { MostPopular } from "../components/FrontPage/MostPopular";
 import { RecentProducts } from "../components/FrontPage/RecentProducts";
-import { FollowInstagram } from "../components/FrontPage/FollowInstagram";
-import LocalShippingIcon from "@material-ui/icons/LocalShipping";
-import PaymentIcon from "@material-ui/icons/Payment";
 import { Categories } from "../components/FrontPage/Categories";
-import { commerce } from "../lib/commerce";
 import { Button, IconButton } from "@material-ui/core";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
@@ -20,7 +13,6 @@ const axios = require("axios").default;
 
 export const FrontPage = ({ products }) => {
 
-  
   console.log(products);
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -34,7 +26,6 @@ export const FrontPage = ({ products }) => {
           height: "min(90vh, 750px)",
           width: "100%",
           backgroundColor: "#111111",
-
           position: "relative",
         }}
       >
@@ -147,16 +138,16 @@ export const FrontPage = ({ products }) => {
 };
 export async function getStaticProps({ params }) {
   let popularProducts = [];
-  const fetchProducts = async () => {
-    await commerce.products
-      .list({ limit: 4 })
-      .then((item) => {
-        popularProducts = item.data;
-      })
-      .catch((error) => {
-        console.log("There was an error fetching the products", error);
-      });
-  };
+  // const fetchProducts = async () => {
+  //   await commerce.products
+  //     .list({ limit: 4 })
+  //     .then((item) => {
+  //       popularProducts = item.data;
+  //     })
+  //     .catch((error) => {
+  //       console.log("There was an error fetching the products", error);
+  //     });
+  // };
 
   let data = [];
 
@@ -168,34 +159,34 @@ export async function getStaticProps({ params }) {
     console.log(err);
   } finally {
     let j = 0;
+console.log(data)
+    // if (data.length === 0 || typeof data === "undefined") {
+    //   // await fetchProducts();
+    // } else {
+    //   for (let i = 0; j <= 4 && i < data.length; i++) {
+    //     // Have to call them separately as the commerce library has no option to find a group of products.
 
-    if (data.length === 0 || typeof data === "undefined") {
-      await fetchProducts();
-    } else {
-      for (let i = 0; j <= 4 && i < data.length; i++) {
-        // Have to call them separately as the commerce library has no option to find a group of products.
+    //     // In the Future I hope to have the commerce db in mongoDB allowing this process to effiecient
 
-        // In the Future I hope to have the commerce db in mongoDB allowing this process to effiecient
-
-        await commerce.products
-          .retrieve(data?.[i].slug, { type: "permalink" })
-          .then((item) => {
-            if (!!item) {
-              popularProducts.push(item);
-              j++;
-            }
-          })
-          .catch((error) => {
-            console.log("There was an error fetching the products", error);
-            fetchProducts();
-          });
-      }
-    }
+    //     await commerce.products
+    //       .retrieve(data?.[i].slug, { type: "permalink" })
+    //       .then((item) => {
+    //         if (!!item) {
+    //           popularProducts.push(item);
+    //           j++;
+    //         }
+    //       })
+    //       .catch((error) => {
+    //         console.log("There was an error fetching the products", error);
+    //         fetchProducts();
+    //       });
+    //   // }
+    // }
     console.log("products");
     console.log(popularProducts);
     return {
       props: {
-        products: popularProducts,
+        products: data.products,
       },
       revalidate: 300,
     };

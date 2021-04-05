@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
-import { commerce } from "../../lib/commerce";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { Button, Typography } from "@material-ui/core";
 import { CartContext } from "../../context/CartContext";
@@ -8,47 +7,32 @@ import { CartContext } from "../../context/CartContext";
 import { ItemImage } from "../Common/ItemImage";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
+import { useLazyQuery } from "@apollo/client";
+import { LOAD_ALL_PRODUCTS } from "../../GraphQL/Queries";
 
 export const RecentProducts = (props) => {
   const [products, setProducts] = useState(Array.from({ length: 8 }, () => 0));
-  // const [cart, changeCart] = useState({});
+  // let {data} = useQuery(LOAD_ALL_PRODUCTS, {limit:8});
+  const [fetchProducts, { loading, error, data }] = useLazyQuery(LOAD_ALL_PRODUCTS);
 
-  const { changeCart } = useContext(CartContext);
   const container = useRef();
   const isMin = useRef(false);
-  const fetchProducts = () => {
-    commerce.products
-      .list({ limit: 8 })
-      .then((item) => {
-        setProducts((items) => item.data);
-      })
-      .catch((error) => {
-        console.log("There was an error fetching the products", error);
-      });
-  };
+  useEffect(() => {
+    fetchProducts({variables: {limit: 8}})
+  }, [])
 
-  const fetchCart = () => {
-    commerce.cart
-      .retrieve()
-      .then((cart) => {
-        changeCart(cart);
-      })
-      .catch((error) => {
-        console.error("There was an error fetching the cart", error);
-      });
-  };
+  useEffect(() => {
+    console.log(data)
+    if(typeof data !== "undefined"){
+      setProducts(data.getAllProducts)
+    }
+    
+  }, [data])
 
   const handleMinimize = () => {
     container.current.style.height = isMin.current ? "fit-content" : "0px";
     isMin.current = !isMin.current;
   };
-
-  useEffect(() => {
-    fetchProducts();
-    fetchCart();
-
-    return () => {};
-  }, []);
 
   useEffect(() => {
     console.log(products);
@@ -117,16 +101,16 @@ export const RecentProducts = (props) => {
               ) : (
                 <>
                   <ItemImage
-                    id={item.id}
-                    name={item.name}
-                    firstImage={item.media.source}
-                    secondImage={item.assets[1].url}
-                    link={item.permalink}
+                     id={item.id || item._id}
+                     name={item.name || item.productName}
+                     firstImage={item?.media?.source || `${process.env.GOOGLE_CLOUD_PUBLIC_URL}${item.images?.[0]}`}
+                     secondImage={item.assets?.[1]?.url || `${process.env.GOOGLE_CLOUD_PUBLIC_URL}${item.images?.[1]}`}
+                     link={item.permalink || item.slug}
                   />
                   <div style={{ margin: "auto", width: "200px", textAlign:'start' }}>
-                    <h4 style={{ margin: "0px", fontWeight:'500' }}>{item.name}</h4>
+                    <h4 style={{ margin: "0px", fontWeight:'500' }}>{item.name || item.productName}</h4>
                     <p style={{ margin: "auto" }}>
-                      {item.price.formatted_with_symbol}
+                      £{item.price}.00
                     </p>
                   </div>
                 </>

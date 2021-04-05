@@ -14,14 +14,18 @@ const bodyParser = require("body-parser");
 const {apolloUploadExpress}= require("apollo-upload-server");
 const { graphqlUploadExpress } = require('graphql-upload');
 const { createPaymentIntent } = require("./Payments/stripePayments");
+const Product = require("./models/products");
+const { searchconsole } = require("googleapis/build/src/apis/searchconsole");
 require("dotenv").config();
 
-let database = null;
+let db = null;
 const uri = `mongodb+srv://dbAdmin:${process.env.MONGODB_PASSWORD}@cluster0.s5qsx.mongodb.net/${process.env.MONGODB_NAME}?retryWrites=true&w=majority`;
 console.log(uri);
 
 const startDatabase = () => {
-  console.log('connecting to the database')
+  if(db !== null) return db;
+
+     console.log('connecting to the database')
   return mongoose.connect(
     uri,
     { useNewUrlParser: true, useUnifiedTopology: true },
@@ -37,15 +41,20 @@ const startDatabase = () => {
       }
     }
   );
+
+ 
 };
 
+mongoose.connection.on('error', err => {
+  db = null;
+});
+
 const context = async (req) => {
-  const db = await startDatabase();
+  db = await startDatabase();
   const token = req.headers.authorization;
   let decoded = { sub: null, permissions: [] };
   if (token) {
     decoded = jwt_decode(token);
-    console.log(decoded);
   }
 
   return { db, token, subId: decoded.sub, permissions: decoded.permissions };
@@ -73,7 +82,7 @@ app.use(
   }))
 );
 
-app.use("/trending", (req, res) => {
+app.use("/trending", async(req, res) => {
   if (!fs.existsSync("./key.json")) {
     //create json file for analytics
     let data = {
@@ -111,15 +120,22 @@ app.use("/trending", (req, res) => {
       console.log(requestPopularProducts);
 
       const slugs = [];
+      const search = [];
       requestPopularProducts.forEach((element) => {
         let slug = element.pagePath.slice(9);
         if (slug != null) {
+          search.push(slug)
           slugs.push({ slug, pageviews: element.pageviews });
         }
       });
 
       console.log(slugs);
-      res.send(slugs);
+      await startDatabase();
+      const products =  await Product.find({slug: search}, (err, data)=>{
+        console.log(data.length);
+      }).lean();
+      console.log(products)
+      res.send({slugs, products});
       GOOGLE_PAGEPATHS = slugs;
     } catch (err) {
       console.error(err);
