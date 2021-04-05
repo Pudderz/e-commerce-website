@@ -1,8 +1,6 @@
 import { Breadcrumbs, Button, Typography } from "@material-ui/core";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import React, { useContext, useState } from "react";
-import ShippingForm from "../components/Checkout/ShippingForm";
-import { CartContext } from "../context/CartContext";
+import React, { useContext, useState, useRef, useEffect} from "react";
 import Link from "next/link";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
@@ -15,13 +13,38 @@ import {
 import { connect } from "react-redux";
 
 
-const promise = loadStripe( "pk_test_51ICSvvEduQoHI0PkPXFpVekvFm9fDb84KUYGy9CGtFlm1b6ZzjZ1Z9mVWaBEPIFvo3uQInuowX2KcEAbBANuqzeV00N77MhPiW");
-//  
-// );
+const promise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_API_KEY);
+
 
 export const Checkout = (props) => {
   const {cart: stateCart, cartInfo} = props;
-  const { cart } = useContext(CartContext);
+  const [items, setItems] = useState([]);
+  const [price, setPrice] = useState(0);
+  const clientSecret = useRef(null);
+
+  useEffect(() => {
+    console.log(cartInfo);
+    console.log(stateCart);
+    if (stateCart.length > 0) {
+      let cart = JSON.stringify(stateCart);
+      fetch(`${process.env.BACKEND_SERVER}/createPaymentIntent`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: cart,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data)
+          clientSecret.current = data.clientSecret;
+          setItems(data.confirmedItems);
+          setPrice(data.amount);
+        });
+    }
+  }, [cartInfo]);
+
+ 
 
   return (
     <>
@@ -35,9 +58,7 @@ export const Checkout = (props) => {
       
       <div
         style={{
-          // maxWidth: "800px",
           margin: "30px auto",
-          // backgroundColor: "#ddd",
           padding: "15px",
           borderRadius: "30px",
           display: "flex",
@@ -45,7 +66,7 @@ export const Checkout = (props) => {
         }}
       >
         <Elements stripe={promise}>
-          <Payment cartInfo={stateCart} />
+          <Payment cartInfo={stateCart} clientSecret={clientSecret} items={items} price={price} />
         </Elements>
 
         <div
@@ -74,14 +95,14 @@ export const Checkout = (props) => {
               <div>
                 <h3>Your Basket is empty</h3>
                 <p>
-                  Continue shopping on the <a href="/">homepage</a>, browse our
+                  Continue shopping on the <a href="/">homepage</a> and browse our
                   discounts.
                 </p>
               </div>
             ) : (
               <div>
-                {stateCart?.map((item) => (
-                  <li key={item.id}>
+                {items?.map((item) => (
+                  <li key={`${item.id}${item.size}`}>
                     <div
                       style={{
                         display: "flex",
@@ -151,7 +172,6 @@ export const Checkout = (props) => {
                         </p>
                       </div>
                     </div>
-                    {/* <hr style={{margin:'0 0 5px'}}/> */}
                   </li>
                 ))}
               </div>
@@ -179,17 +199,15 @@ export const Checkout = (props) => {
 
           <div
             style={{
-              // backgroundColor: "#111",
-              // color: "#fff",
               padding: "5px",
               borderRadius: "5px",
               fontSize: "20px",
             }}
           >
             <p style={{ margin: "5px" }}>
-              Subtotal({cartInfo.totalItems  || 0} item
-              {cartInfo.totalItems > 1 && "s"}
-              ): {cartInfo.totalPrice}
+              Subtotal({items.length  || 0} item
+              {items.length > 1 && "s"}
+              ): £{(price/100).toFixed(2)}
             </p>
           </div>
         </div>

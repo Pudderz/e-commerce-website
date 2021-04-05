@@ -5,9 +5,8 @@ import { commerce } from "../../lib/commerce";
 export const ShippingForm = (props) => {
   const [countries, setCountries] = useState({});
   const [subDivision, setSubdivisions] = useState({});
-  const [selectedCountry, setSelectedCountry] = useState("");
-  const [selectedRegion, setSelectedRegion] = useState("");
-  const subDivisionRef = useRef();
+
+
   useEffect(() => {
     commerce.services.localeListCountries().then((response) => {
       console.log(response);
@@ -15,6 +14,7 @@ export const ShippingForm = (props) => {
       setCountries(response);
     });
   }, []);
+
 
   useEffect(() => {
     console.log(props.shippingInfo.deliveryCountry);
@@ -73,13 +73,6 @@ export const ShippingForm = (props) => {
           <label>
             <p>Country*</p>
 
-            {/* <input
-                
-                placeholder="Enter a country"
-                required
-                onChange={handleChange}
-                value={props.shippingInfo.deliveryCountry}
-              /> */}
             <select
               name="deliveryCountry"
               value={props.shippingInfo.deliveryCountry}
@@ -139,14 +132,6 @@ export const ShippingForm = (props) => {
         <div className="inputContainer">
           <label>
             <p>State/province/region*</p>
-
-            {/* <input
-                placeholder="Select a region"
-                
-                required
-                onChange={handleChange}
-                value={props.shippingInfo.deliveryRegion}
-              /> */}
 
             <select
               name="deliveryRegion"

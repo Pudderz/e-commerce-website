@@ -1,52 +1,36 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { CartContext } from "../../context/CartContext";
 import ShoppingBasketIcon from "@material-ui/icons/ShoppingBasket";
 import {
   Avatar,
   Badge,
   Button,
-  ClickAwayListener,
-  Drawer,
   IconButton,
-  TextField,
   Tooltip,
 } from "@material-ui/core";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import { useAuth0 } from "@auth0/auth0-react";
 import { LoginButton } from "../Authentication/LoginButton";
-import { Switch } from "@material-ui/core";
 import Popover from "@material-ui/core/Popover";
 import { LogoutButton } from "../Authentication/LogoutButton";
-import { fetchCart } from "../../lib/commerce";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { Filters } from "..//StorePage/Filters";
 import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
 import { connect } from "react-redux";
-import { addCartItem, removeCartItem } from "../../Redux/actions/actions";
-/* 
-HEADER COMPONENT
-
-
-Location Page (Links to Map showing shops nearby)
-
-Profile button (goes to login in page if not signed in)
-
-Basket Button showing num of items in Basket (onClick goes to basket page)
-
-*/
+import { addCartItem, removeCartItem,addCartItemQuantity, } from "../../Redux/actions/actions";
+import { useRouter } from 'next/router';
 
 export const Header = (props) => {
-  console.log(props)
-  const { user, isAuthenticated } = useAuth0();
-  const { cart, changeCart, removeFromCart, updateQty } = useContext(
-    CartContext
-  );
   const [anchorBasketEl, setAnchorBasketEl] = useState(null);
   const [anchorProfileEl, setAnchorProfileEl] = useState(null);
-
+  const [search, setSearch] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
+
+
+  // const router = useRouter();
+
+  const { user, isAuthenticated } = useAuth0();
 
   const handleProfileClick = (event) => {
     setAnchorProfileEl(event.currentTarget);
@@ -65,25 +49,41 @@ export const Header = (props) => {
   };
 
   const openProfile = Boolean(anchorProfileEl);
-
   const openBasket = Boolean(anchorBasketEl);
 
-  useEffect(() => {
-    fetchCart(changeCart);
-  }, []);
-
-  const updateItemQty = (id, newQuantity, variantId, optionId) => {
-    updateQty(id, newQuantity, variantId, optionId);
+  const updateItemQty = (name, size, newQuantity) => {
+    console.log(name, size, newQuantity);
+    props.addCartItemQuantity({
+      name,
+      size,
+      quantity: newQuantity,
+    });
   };
 
-  const removeItem = (id) => removeFromCart(id);
-
-  const handledarkmodeChange = () => {};
+  const removeItem = (name, size) => {
+    console.log(name, size);
+    props.removeCartItem({
+      name,
+      size,
+    });
+  };
 
   const handleMenuOpen = () => {
     setMenuOpen(true);
   };
   const handleMenuClose = () => setMenuOpen(false);
+
+
+
+  const handleSearch = (ev) =>{
+    ev.preventDefault();
+    console.log(search);
+    // router.push(`/search`)
+  }
+
+  const handleSearchChange = (ev)=>{
+    setSearch(ev.target.value);
+  }
 
   return (
     <>
@@ -93,7 +93,6 @@ export const Header = (props) => {
           top: "0",
           backgroundColor: "#fff",
           boxShadow: "rgb(0 0 0) 0px -17px 26px",
-          // padding: "10px 0",
           margin: "0",
           zIndex: "4",
         }}
@@ -321,24 +320,13 @@ export const Header = (props) => {
                 padding: "0",
               }}
             >
-              {/* <li style={{ alignSelf: "center" }}>
-                <Tooltip title="Dark Mode On/Off">
-                  <Switch
-                    checked={false}
-                    onChange={handledarkmodeChange}
-                    name="darkMode"
-                    color="primary"
-                  />
-                </Tooltip>
-              </li> */}
               <li style={{ height: "fit-content", alignSelf: "center" }}>
-                <form onSubmit={(e) => {}}>
+                <form onSubmit={(e) => {handleSearch}}>
                     <InputBase
                       autoComplete="off"
-                      // ref={searchBar}
                       name="search"
-                      // value={searchQuery}
-                      // onChange={changeSearchQuery}
+                      value={search}
+                      onChange={handleSearchChange}
                       placeholder="Search…"
                       style={{
                         margin: "10px auto",
@@ -460,7 +448,7 @@ export const Header = (props) => {
                       ) : (
                         <div>
                           {props?.cartState?.map((item) => (
-                            <li key={item.id}>
+                            <li key={`${item.id}${item.size}`}>
                               <div
                                 style={{
                                   display: "flex",
@@ -528,10 +516,9 @@ export const Header = (props) => {
                                       <Button
                                         onClick={() =>
                                           updateItemQty(
-                                            item.id,
-                                            item.quantity + 1,
-                                            item?.variants?.[0]?.variant_id,
-                                            item?.variants?.[0]?.option_id
+                                            item.name,
+                                            item.size,
+                                            item.quantity + 1
                                           )
                                         }
                                       >
@@ -542,10 +529,9 @@ export const Header = (props) => {
                                       <Button
                                         onClick={() =>
                                           updateItemQty(
-                                            item.id,
-                                            item.quantity - 1,
-                                            item?.variants?.[0]?.variant_id,
-                                            item?.variants?.[0]?.option_id
+                                            item.name,
+                                            item.size,
+                                            item.quantity - 1
                                           )
                                         }
                                       >
@@ -554,7 +540,7 @@ export const Header = (props) => {
                                     </Tooltip>
                                     <Tooltip title="Remove Item">
                                       <IconButton
-                                        onClick={() => removeItem(item.id)}
+                                        onClick={() => removeItem(item.name, item.size)}
                                       >
                                         <DeleteIcon fontSize="small" />
                                       </IconButton>
@@ -586,9 +572,9 @@ export const Header = (props) => {
                         }}
                       >
                         <p style={{ margin: "5px 0" }}>
-                          Subtotal({cart?.total_items || 0} item
+                          {/* Subtotal({cart?.total_items || 0} item
                           {cart?.total_items > 1 && "s"}):{" "}
-                          {cart?.subtotal?.formatted_with_symbol}
+                          {cart?.subtotal?.formatted_with_symbol} */}
                         </p>
                         <div
                           style={{
@@ -618,7 +604,7 @@ export const Header = (props) => {
           </li>
         </ul>
       </nav>
-
+      {/* blur background when access menu */}
       <div className={`backdrop ${menuOpen && "menuOpen"}`}></div>
     </>
   );
@@ -627,6 +613,7 @@ export const Header = (props) => {
 const mapStateToProps = (state, ownProps) => ({
   // ... computed data from state and optionally ownProps
   cartState: state.cart.cart,
+  cartInfo: state.cart.cartInfo,
   props:{...ownProps},
 })
 
@@ -634,6 +621,7 @@ const mapStateToProps = (state, ownProps) => ({
 const mapDispatchToProps = {
   addCartItem,
   removeCartItem,
+  addCartItemQuantity,
   // ... normally is an object full of action creators
 }
 

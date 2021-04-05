@@ -6,6 +6,12 @@ import { CartContext } from "../../context/CartContext";
 import { commerce } from "../../lib/commerce";
 import { AvailableCountries } from "./AvailableCountries";
 import { useRouter } from "next/router";
+import { connect } from "react-redux";
+import {
+  addCartItem,
+  removeCartItem,
+  addCartItemQuantity,
+} from "../../Redux/actions/actions";
 const CARD_OPTIONS = {
   iconStyle: "solid",
   style: {
@@ -44,14 +50,13 @@ const EXAMPLE_INFO = {
   },
 };
 
-export const Payment = ({ cartInfo }) => {
+export const Payment = ({ cartInfo, clientSecret, items, price }) => {
   const router = useRouter();
-  const [checkoutTokenId, setCheckoutToken] = useState();
   const [succeeded, setSucceeded] = useState(false);
   const [error, setError] = useState(null);
   const [processing, setProcessing] = useState("");
   const [disabled, setDisabled] = useState(true);
-  const { cart, changeCart } = useContext(CartContext);
+
   const stripe = useStripe();
   const elements = useElements();
 
@@ -94,106 +99,31 @@ export const Payment = ({ cartInfo }) => {
   useEffect(() => {
     console.log(shippingInfo);
   }, [shippingInfo]);
-  useEffect(() => {
-    console.log(checkoutTokenId);
-  }, [checkoutTokenId]);
 
-  async function handleSubmit(ev) {
-    ev.preventDefault();
-    setProcessing(true);
-    // This process includes a few API calls, so now is a good time to show a loading indicator
 
-    // Create a payment method using the card element on the page
-    const cardElement = elements.getElement(CardElement);
-    const paymentMethodResponse = await stripe.createPaymentMethod({
-      type: "card",
-      card: cardElement,
-    });
-
-    if (paymentMethodResponse.error) {
-      // There was some issue with the information that the customer entered into the payment details form.
-      console.error(paymentMethodResponse.error.message);
-      console.log(paymentMethodResponse.error);
-      setError(`Payment failed 1 ${paymentMethodResponse.error.message}`);
-      setProcessing(false);
-      return;
-    }
-
-    try {
-      // TODO: Import name from shipping form
-      console.log({
-        customer: {
-          firstname: shippingInfo.firstName,
-          lastname: shippingInfo.lastName,
-          email: shippingInfo.email,
-        },
-        shipping: {
-          name: `${shippingInfo.firstName} ${shippingInfo.lastName}`,
-          street: shippingInfo.street,
-          town_city: shippingInfo.town_city,
-          county_state: shippingInfo.deliveryRegion,
-          postal_zip_code: shippingInfo.postal_zip_code,
-          country: shippingInfo.deliveryCountry,
-        },
-        payment: {
-          gateway: "stripe",
-          stripe: {
-            payment_method_id: paymentMethodResponse.paymentMethod.id,
-          },
-        },
-      });
-      const order = await commerce.checkout.capture(checkoutTokenId, {
-        customer: {
-          firstname: shippingInfo.firstName,
-          lastname: shippingInfo.lastName,
-          email: shippingInfo.email,
-        },
-        shipping: {
-          name: `${shippingInfo.firstName} ${shippingInfo.lastName}`,
-          street: shippingInfo.street,
-          town_city: shippingInfo.town_city,
-          county_state: shippingInfo.deliveryRegion,
-          postal_zip_code: shippingInfo.postal_zip_code,
-          country: shippingInfo.deliveryCountry,
-        },
-        payment: {
-          gateway: "stripe",
-          stripe: {
-            payment_method_id: paymentMethodResponse.paymentMethod.id,
-          },
-        },
-      });
-      console.log(order);
-      // If we get here, the order has been successfully captured and the order detail is part of the `order` variable
-      const receipt = await commerce.checkout.receipt(checkoutTokenId);
-      console.log(receipt);
-      setError(null);
-      setProcessing(false);
-      setSucceeded(true);
-      commerce.cart.empty().then((json) => {
-        changeCart(json.cart);
-      });
-
-      return;
-    } catch (response) {
-      // There was an issue with capturing the order with Commerce.js
-      console.log(response);
-      console.log(response.message);
-      setError(`Payment failed ${response.message}`);
-      setProcessing(false);
-      return;
-    }
-  }
+  // const clientSecret = useRef(null);
 
   const handleStripeSubmit = async (ev) => {
     ev.preventDefault();
+
     setProcessing(true);
     const payload = await stripe.confirmCardPayment(clientSecret.current, {
       payment_method: {
         card: elements.getElement(CardElement),
       },
+      receipt_email: shippingInfo.email,
+      shipping: {
+        name: `${shippingInfo.firstName} ${shippingInfo.lastName}`,
+        address: {
+          line1: shippingInfo.street,
+          city: shippingInfo.town_city,
+          country: shippingInfo.deliveryCountry,
+          postal_code: shippingInfo.postal_zip_code,
+          state: shippingInfo.deliveryRegion,
+        },
+      },
     });
-        if (payload.error) {
+    if (payload.error) {
       setError(`Payment failed ${payload.error.message}`);
       setProcessing(false);
     } else {
@@ -203,40 +133,6 @@ export const Payment = ({ cartInfo }) => {
     }
   };
 
-const [items, setItems] = useState([]);
-const [price, setPrice] = useState(0);
-const clientSecret = useRef(null);
-
-  useEffect(() => {
-    console.log(cartInfo)
-    if(cartInfo.length>0){
-      console.log(cartInfo)
-      let cart = JSON.stringify(cartInfo)
-      fetch(`${process.env.BACKEND_SERVER}/createPaymentIntent`, {
-      method: "POST",
-      headers:{
-        "Content-Type": "application/json",
-      },
-      body: cart,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        clientSecret.current = data.clientSecret;
-        setItems(data.confirmedItems);
-        setPrice(data.amount)
-      });
-    }
-    return () => {
-
-    }
-  }, [cartInfo])
-  // useEffect(() => {
-  //   console.log(cartInfo)
-  //   // commerce.checkout
-  //   //   .generateTokenFrom("cart", commerce.cart.id())
-  //   //   .then((response) => setCheckoutToken(response.id));
-    
-  // }, []);
 
   const handleChange = async (event) => {
     // Listen for changes in the CardElement
@@ -249,25 +145,6 @@ const clientSecret = useRef(null);
     setShippingInfo({ ...shippingInfo, [target]: value });
   };
 
-  // code for not using commerce.js
-
-  // const handleSubmit = async ev => {
-  //   ev.preventDefault();
-  //   setProcessing(true);
-  //   const payload = await stripe.confirmCardPayment(clientSecret.current, {
-  //     payment_method: {
-  //       card: elements.getElement(CardElement)
-  //     }
-  //   });
-  //   if (payload.error) {
-  //     setError(`Payment failed ${payload.error.message}`);
-  //     setProcessing(false);
-  //   } else {
-  //     setError(null);
-  //     setProcessing(false);
-  //     setSucceeded(true);
-  //   }
-  // };
   const handleClose = () => {
     setSucceeded(false);
     router.push("/");
@@ -281,16 +158,18 @@ const clientSecret = useRef(null);
             shippingInfo={shippingInfo}
             changeShippingInfo={changeShippingInfo}
             changeValue={changeValue}
-            checkoutToken={checkoutTokenId}
+            items={items}
+            price={price}
           />
-          <p>Price: £{(price/100).toFixed(2)}</p>
-          <p>Items: {items.length}</p>
           <h3>Payment Detail</h3>
           <div style={{ border: "1px solid gray", padding: "10px" }}>
             <label style={{ textAlign: "start" }}>
               <p style={{ margin: "2px 0 10px" }}>Credit/Debit card</p>
+              
               <hr />
               <CardElement options={CARD_OPTIONS} onChange={handleChange} />
+              <p>Example card - 4242 4242 4242 4242</p>
+              <p>04/24 242 42424</p>
             </label>
 
             <Button
@@ -303,7 +182,7 @@ const clientSecret = useRef(null);
                 color: "#fff",
                 padding: "5px",
                 width: "100%",
-                marginTop: "50px",
+                marginTop: "20px",
                 borderRadius: "5px",
                 fontSize: "18px",
               }}
@@ -312,7 +191,7 @@ const clientSecret = useRef(null);
                 {processing ? (
                   <CircularProgress size={24} />
                 ) : (
-                  `Pay ${cart?.subtotal?.formatted_with_symbol}`
+                  `Pay £${(price / 100).toFixed(2)}`
                 )}
               </span>
             </Button>
@@ -326,11 +205,7 @@ const clientSecret = useRef(null);
             <p
               className={succeeded ? "result-message" : "result-message hidden"}
             >
-              Payment succeeded, see the result in your
-              <a href={`https://dashboard.stripe.com/test/payments`}>
-                Stripe dashboard.
-              </a>
-              Refresh the page to pay again.
+              Payment succeeded
             </p>
           </div>
         </div>
@@ -347,7 +222,7 @@ const clientSecret = useRef(null);
         }}
       >
         <div style={{ backgroundColor: "white", padding: "20px" }}>
-          <h3>Order Successfull!!!</h3>
+          <h3>Order Successfull!</h3>
           <p>We will send you a order confirmation via email</p>
           <Button color="primary" variant="contained" onClick={handleClose}>
             Go Home
@@ -357,3 +232,18 @@ const clientSecret = useRef(null);
     </div>
   );
 };
+
+const mapStateToProps = (state, ownProps) => ({
+  // ... computed data from state and optionally ownProps
+  cartState: state.cart.cart,
+  cartInfo: state.cart.cartInfo,
+  props: { ...ownProps },
+});
+
+const mapDispatchToProps = {
+  addCartItem,
+  removeCartItem,
+  addCartItemQuantity,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Payment);
