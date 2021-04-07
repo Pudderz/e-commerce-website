@@ -16,7 +16,6 @@ export const Categories = () => {
       }}
     >
       <h3 style={{ textAlign: "start", padding: "0 20px" }}>Categories</h3>
-      {/* <hr/> */}
       <div className="categoryContainer">
         <div
           className="imageCategoryContainer"

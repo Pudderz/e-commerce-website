@@ -1,23 +1,15 @@
 import React from 'react'
-import { gql } from "@apollo/client";
-import { useDropzone } from "react-dropzone";
-import {  useLazyQuery } from "@apollo/client";
+import dynamic from 'next/dynamic';
+import AdminRoutes from "../../components/Authentication/AdminRoutes";
 
-// const findAllOrders = gql`
-//   query{
-//     allOrders{
-      
-//     }
-//   }
-// `;
-// Get all orders sorted by date
-// Display in order
-export const Orders = () => {
+const Orders = dynamic(() => import("../pagesAuth/adminPages/Orders"));
+
+export const OrdersPage = () => {
     return (
-        <div>
-            <h2>Orders page</h2>
-        </div>
+        <AdminRoutes>
+            <Orders/>
+        </AdminRoutes>
     )
 }
 
-export default Orders;
+export default OrdersPage;
