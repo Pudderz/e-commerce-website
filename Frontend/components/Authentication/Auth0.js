@@ -13,9 +13,10 @@ export const Auth0 = (props) => {
   const domain = process.env.REACT_APP_AUTH0_DOMAIN;
   const clientId = process.env.REACT_APP_AUTH0_CLIENT_ID;
 
-  const router = useRouter()
+  const router = useRouter();
   const onRedirectCallback = (appState) => {
-    router.push(appState?.returnTo ||  process.env.WEBSITE_URL);
+    // Use Next.js's Router.replace method to replace the url
+    router.push(appState?.returnTo || '/');
   };
 
   return (
@@ -23,7 +24,7 @@ export const Auth0 = (props) => {
       <Auth0Provider
         domain={domain}
         clientId={clientId}
-        redirectUri={process.env.WEBSITE_URL}
+        redirectUri={typeof window !== 'undefined' && window.location.origin}
         onRedirectCallback={onRedirectCallback}
         scope={requestedScopes.join(' ')}
         audience={process.env.REACT_APP_AUTH0_AUDIENCE}
