@@ -10,16 +10,15 @@ Demo - https://e-commerce-website-j8wvkus9z-pudderz.vercel.app/
 
 ## To Do
 
-* Add error handler for when payment isnt received
-* verify contents of cart can be purchased(in stock)
-* create Admin pages
-* move all products over to MongoDB from commerce.js
 * Add searchBar
 * Add filter options to category and store pages
 * Add darkMode option
+* Add stripe payments server side
+* store order information
+* create mens, womens, discounts main pages
+* responsive header
 
-## Improvements
-* Don't use commerce.js and use mongoDB and a something like a CDN for the images. This would make most of the backend on one server and allows us to quickly query result.
+
 
 
 
