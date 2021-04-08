@@ -18,36 +18,6 @@ const Product = require("./models/products");
 const { searchconsole } = require("googleapis/build/src/apis/searchconsole");
 require("dotenv").config();
 
-let db = null;
-const uri = `mongodb+srv://dbAdmin:${process.env.MONGODB_PASSWORD}@cluster0.s5qsx.mongodb.net/${process.env.MONGODB_NAME}?retryWrites=true&w=majority`;
-console.log(uri);
-
-const startDatabase = () => {
-  if(db !== null) return db;
-
-     console.log('connecting to the database')
-  return mongoose.connect(
-    uri,
-    { useNewUrlParser: true, useUnifiedTopology: true },
-    (err) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log("db connection is okay");
-
-        // if (!database) {
-        //   console.log("no database set");
-        // }
-      }
-    }
-  );
-
- 
-};
-
-mongoose.connection.on('error', err => {
-  db = null;
-});
 
 const context = async (req) => {
   db = await startDatabase();
@@ -61,16 +31,9 @@ const context = async (req) => {
 };
 
 
-
-
-
 app.use(cors());
 
-
-
 app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
 
 app.use(
   "/graphql",
