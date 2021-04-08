@@ -1,10 +1,11 @@
 const { SimpleGA, Request } = require("node-simple-ga");
 const { startDatabase } = require("../database");
-const Product = require("./models/products");
+const Product = require("../models/products");
+const path = require("path");
 require("dotenv").config();
 
 const getGoogleAnalyticsData = async ({ filterByString, res }) => {
-  var analytics = new SimpleGA(path.join(__dirname, "./key.json"));
+  var analytics = new SimpleGA(path.join(__dirname, "../googleKey.json"));
 
   var request = Request()
     .select("pagepath", "pageviews")
@@ -13,18 +14,14 @@ const getGoogleAnalyticsData = async ({ filterByString, res }) => {
     .beginsWith(filterByString)
     .orderDesc("pageviews")
     .limit(20);
-
-
   try {
     var r1 = analytics.run(request);
 
-    var [request] = await Promise.all([r1]);
-
-    console.log(request);
+    var [requestResult] = await Promise.all([r1]);
 
     const slugs = [];
     const search = [];
-    request.forEach((element) => {
+    requestResult.forEach((element) => {
       let slug = element.pagePath.slice(9);
       if (slug != null) {
         search.push(slug);
@@ -36,10 +33,12 @@ const getGoogleAnalyticsData = async ({ filterByString, res }) => {
 
     await startDatabase();
     const products = await Product.find({ slug: search }).lean();
-
+    console.log("trending fin");
     res.send({ slugs, products });
   } catch (err) {
+    console.log("catch has ran");
     console.error(err);
+    res.send({ slugs: [], products: [], error: err });
   }
 };
 
