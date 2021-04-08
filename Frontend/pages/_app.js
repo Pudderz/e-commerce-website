@@ -1,6 +1,6 @@
 import "../styles/globals.css";
 import React, { useRef, useEffect } from "react";
-import "../App.scss";
+import "../styles/App.scss";
 import  Header  from "../components/Common/Header";
 import { Footer } from "../components/Common/Footer";
 import { Auth0 } from "../components/Authentication/Auth0";
