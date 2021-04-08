@@ -3,6 +3,7 @@ import { Box, Tab, Tabs, Typography } from "@material-ui/core";
 import React, { useEffect, useState, useRef } from "react";
 import { LoginButton } from "../../components/Authentication/LoginButton";
 import { LogoutButton } from "../../components/Authentication/LogoutButton";
+import UserOrders from "../../components/profilePage/userOrders";
 import UserReviews from "../../components/profilePage/userReviews";
 
 function TabPanel(props) {
@@ -77,7 +78,7 @@ export const Profile = () => {
                 <UserReviews/>
             </TabPanel>
             <TabPanel value={value} index={1}>
-              <div></div>
+              <UserOrders/>
             </TabPanel>
           </div>
         </div>

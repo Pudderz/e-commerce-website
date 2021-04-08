@@ -32,12 +32,53 @@ export const LOAD_USER_REVIEWS = gql`
   }
 `;
 
+
 export const LOAD_USER_ORDERS = gql`
   query {
     getUserOrders {
-      id
+      _id
       date
       price
+      items
+      status
+      orderNotes
+      shippingAddress{
+        name
+        street
+        city
+        country
+        postalCode
+      }
+      allOrderItems{
+        productName
+        slug
+
+      }
+    }
+  }
+`;
+
+export const LOAD_ALL_ORDERS = gql`
+  query {
+    getAllOrders {
+      _id
+      date
+      price
+      items
+      status
+      orderNotes
+      shippingAddress{
+        name
+        street
+        city
+        country
+        postalCode
+      }
+      allOrderItems{
+        productName
+        slug
+
+      }
     }
   }
 `;
@@ -67,6 +108,7 @@ export const LOAD_ALL_PRODUCTS = gql`
       _id
       slug
       price
+      gender
       numOfReviews
       averageRating
       discounted
