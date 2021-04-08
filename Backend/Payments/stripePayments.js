@@ -1,26 +1,7 @@
 const Product = require("../models/products");
 const mongoose = require("mongoose");
+const { startDatabase } = require("../database");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
-
-const uri = `mongodb+srv://dbAdmin:${process.env.MONGODB_PASSWORD}@cluster0.s5qsx.mongodb.net/${process.env.MONGODB_NAME}?retryWrites=true&w=majority`;
-const startDatabase = () => {
-  console.log("connecting to the database");
-  return mongoose.connect(
-    uri,
-    { useNewUrlParser: true, useUnifiedTopology: true },
-    (err) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log("db connection is okay");
-
-        // if (!database) {
-        //   console.log("no database set");
-        // }
-      }
-    }
-  );
-};
 
 const calculateOrderAmount = async (items = []) => {
   // Replace this constant with a calculation of the order's amount
@@ -28,13 +9,13 @@ const calculateOrderAmount = async (items = []) => {
   // people from directly manipulating the amount on the client
   console.log("items");
   const itemsId = [];
-  items.forEach(item=> itemsId.push(item.id));
-console.log(itemsId)
+  items.forEach((item) => itemsId.push(item.id));
+  console.log(itemsId);
   const confirmedItems = {};
   const confirmedItemsArray = [];
   const db = await startDatabase();
   let total = 0;
-  await Product.find({_id: itemsId}, (err, doc) => {
+  await Product.find({ _id: itemsId }, (err, doc) => {
     if (err) {
       console.log(err);
     }
@@ -50,7 +31,6 @@ console.log(itemsId)
       }
     });
   });
-
 
   console.log(confirmedItems);
   for (let item of items) {
@@ -71,12 +51,11 @@ const createPaymentIntent = async (req, res) => {
   // Create a PaymentIntent with the order amount and currency
 
   const [confirmedItems, orderAmount] = await calculateOrderAmount(items);
-  
 
   const paymentIntent = await stripe.paymentIntents.create({
     amount: orderAmount,
     currency: "gbp",
-    description:"test" 
+    description: "test",
   });
 
   res.send({
