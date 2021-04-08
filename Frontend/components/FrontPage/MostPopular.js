@@ -7,7 +7,7 @@ import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import { ItemImage } from "../Common/ItemImage";
 
 
-export const MostPopular = ({popularProducts}) => {
+export const MostPopular = ({popularProducts, header}) => {
   const [products, setProducts] = useState(Array.from({ length: 4 }, () => 0));
   const [shouldShrink, setShouldShrink] = useState(false);
   // Currently fetches 4 most recent products
@@ -27,7 +27,7 @@ useEffect(() => {
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <h3 style={{ textAlign: "start", marginLeft: "20px" }}>Most Popular</h3>
+        <h3 style={{ textAlign: "start", marginLeft: "20px" }}>{header}</h3>
         <Button onClick={handleMinimize}>
           <ExpandMoreIcon />
           <ExpandLessIcon />

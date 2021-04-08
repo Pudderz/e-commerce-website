@@ -118,7 +118,7 @@ export const FrontPage = ({ products }) => {
         </div>
       </div>
 
-      <MostPopular popularProducts={products} />
+      <MostPopular popularProducts={products} header={"Most Popular"}/>
 
       <Categories />
 

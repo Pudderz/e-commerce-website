@@ -1,6 +1,10 @@
 import React from "react";
+import { MostPopular } from "../components/FrontPage/MostPopular";
+import webBanner from "../images/WebBannerPNG.png";
 
-export const Women = () => {
+const axios = require("axios").default;
+
+export const Women = ({products}) => {
   return (
     <div>
       <div style={{ backgroundColor: "#CE1121" }}>
@@ -10,6 +14,7 @@ export const Women = () => {
       <div>
         <h3>Best Sellers Womens products</h3>
         <hr />
+        <MostPopular popularProducts={products} header={"Trending Women's Products"}/>
       </div>
       <div>
         <h3>Newest Women Products</h3>
@@ -29,5 +34,31 @@ export const Women = () => {
     </div>
   );
 };
+
+
+
+export async function getStaticProps({ params }) {
+  let data = [];
+
+  try {
+    await axios.get(`${process.env.BACKEND_SERVER}/trendingFemale`).then((res) => {
+      data = res.data;
+    });
+  } catch (err) {
+    console.log(err);
+  } finally {
+
+    console.log(data)
+
+    console.log("products");
+    return {
+      props: {
+        products: data.products,
+      },
+      revalidate: 300,
+    };
+  }
+}
+
 
 export default Women;
