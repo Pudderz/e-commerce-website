@@ -1,24 +1,20 @@
 import { Breadcrumbs, Button, Typography } from "@material-ui/core";
-import React, { useEffect, useState, useContext, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { ProductImages } from "../../components/ProductPages/ProductImages";
 import { ProductTabs } from "../../components/ProductPages/ProductTabs";
 import { RecentlyViewed } from "../../components/Common/RecentlyViewed";
-import { commerce, fetchItem } from "../../lib/commerce";
 import { addToHistory } from "../../lib/localStorage";
 import { useSnackbar } from "notistack";
-import { CartContext } from "../../context/CartContext";
 import { SelectSize } from "../../components/ProductPages/SelectSize";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import { useRouter } from "next/router";
 import DefaultErrorPage from "next/error";
-import Image from "next/image";
 import SelectSmallSize from "../../components/ProductPages/SelectSizeSmall";
 import { initializeApollo } from "../../lib/apolloClient";
 import { LOAD_ALL_PRODUCTS, LOAD_PRODUCT_BY_SLUG } from "../../GraphQL/Queries";
-import { useLazyQuery } from "@apollo/client";
-import {addCartItem, removeCartItem} from "../../Redux/actions/actions"
-import { connect } from 'react-redux'
+import {addCartItem, removeCartItem} from "../../Redux/actions/actions";
+import { connect } from 'react-redux';
 // const fetchMongoDBProduct = () =>{
   
 // }
@@ -39,7 +35,6 @@ export const ProductPage = (props) => {
 
   const [product, setProduct] = useState({});
   const [size, setSize] = useState("");
-  const { changeCart, addVariantItemToCart } = useContext(CartContext);
   const { enqueueSnackbar } = useSnackbar();
   const sizeId = useRef();
 
@@ -239,27 +234,6 @@ export async function getStaticProps({ params }) {
     variables: { slug: params.product },
   });
 
-  if (!data.getProductBySlug) {
-    let productData = {};
-    await commerce.products
-      .retrieve(params.product, { type: "permalink" })
-      .then((product) => {
-        console.log(product);
-        productData = product;
-      });
-    return {
-      props: {
-        name: productData?.name || "",
-        id: productData?.id || "",
-        price: productData?.price?.formatted_with_symbol,
-        description: productData?.description || "",
-        variants: productData?.variants || [],
-        assets: productData?.assets || [],
-      },
-      revalidate: 120,
-    };
-  }
-
   const result = data?.getProductBySlug;
 
   return {
@@ -278,15 +252,7 @@ export async function getStaticProps({ params }) {
 
 export async function getStaticPaths() {
   let products = [];
-  await commerce.products.list().then(({ data }) => {
-    // if(data){
-    //   // products = data;
-    // }
-    data?.forEach((product)=>{
-      products.push({slug: product.permalink})
-    })
-    
-  });
+
   const apolloClient = initializeApollo();
 
 
@@ -294,9 +260,8 @@ export async function getStaticPaths() {
     query: LOAD_ALL_PRODUCTS});
     if(data?.getAllProducts){
       data?.getAllProducts?.forEach((product)=>{
-        products.push({slug: product.slug})
+        products.push({slug: product.slug, gender: product.gender})
       })
-      // products = [...data.getAllProducts, ...products];
     }
   
   products = products.filter(product => product.slug !== null)
@@ -306,16 +271,12 @@ export async function getStaticPaths() {
     paths:
       products?.map((product) => {
         
-        if(product){
-          console.log(product.slug, product.permalink)
-          if(product.slug){
-            console.log("slug - ", product.slug);
+        if(product && product?.slug){
+
+          console.log(product.slug);
+          console.log("slug - ", product.slug);
           return `/product/${product.slug}`;
-        }
-        if(product.permalink){
-          console.log("slug - ", product.permalink);
-        return `/product/${product.permalink}`;
-        }
+
         }
         
       }) ?? [],
