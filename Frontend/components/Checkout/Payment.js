@@ -2,11 +2,9 @@ import { Button, CircularProgress, Modal } from "@material-ui/core";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import React, { useContext, useState, useEffect, useRef } from "react";
 import ShippingForm from "./ShippingForm";
-import { CartContext } from "../../context/CartContext";
-import { commerce } from "../../lib/commerce";
-import { AvailableCountries } from "./AvailableCountries";
 import { useRouter } from "next/router";
 import { connect } from "react-redux";
+import { useAuth0 } from "@auth0/auth0-react";
 import {
   addCartItem,
   removeCartItem,
@@ -50,13 +48,14 @@ const EXAMPLE_INFO = {
   },
 };
 
-export const Payment = ({ cartInfo, clientSecret, items, price }) => {
+export const Payment = ({ cartInfo, items, price }) => {
+  const { getAccessTokenSilently, isAuthenticated } = useAuth0();
   const router = useRouter();
   const [succeeded, setSucceeded] = useState(false);
   const [error, setError] = useState(null);
   const [processing, setProcessing] = useState("");
   const [disabled, setDisabled] = useState(true);
-
+  const [orderId, setOrderId] = useState("");
   const stripe = useStripe();
   const elements = useElements();
 
@@ -100,19 +99,120 @@ export const Payment = ({ cartInfo, clientSecret, items, price }) => {
     console.log(shippingInfo);
   }, [shippingInfo]);
 
-
   // const clientSecret = useRef(null);
+
+  const handleServerResponse = async (response) => {
+    if (response.error) {
+      // Show error from server on payment form
+      setError(`Payment failed ${response.error}`);
+      setProcessing(false);
+    } else if (response.requires_action) {
+      // Use Stripe.js to handle the required card action
+      const {
+        error: errorAction,
+        paymentIntent,
+      } = await stripe.handleCardAction(response.payment_intent_client_secret);
+
+      if (errorAction) {
+        // Show error from Stripe.js in payment form
+        setError(`Payment failed ${errorAction}`);
+        setProcessing(false);
+      } else {
+        // The card action has been handled
+        // The PaymentIntent can be confirmed again on the server
+        let token = null;
+        token = await getAccessTokenSilently();
+
+        const serverResponse = await fetch(
+          `${process.env.BACKEND_SERVER}/pay`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: token ? `Bearer ${token}` : null,
+            },
+            body: JSON.stringify({
+              payment_intent_id: paymentIntent.id,
+              items,
+              shipping_details: {
+                name: `${shippingInfo.firstName} ${shippingInfo.lastName}`,
+                address: {
+                  street: shippingInfo.street,
+                  city: shippingInfo.town_city,
+                  country: shippingInfo.deliveryCountry,
+                  postalCode: shippingInfo.postal_zip_code,
+                },
+                orderNotes: shippingInfo.orderNotes,
+              },
+            }),
+          }
+        );
+        handleServerResponse(await serverResponse.json());
+      }
+    } else {
+      console.log(response);
+      setOrderId(response.orderId);
+      setError(null);
+      setProcessing(false);
+      setSucceeded(true);
+    }
+  };
+
+  const stripePaymentMethodHandler = async (result) => {
+    if (result.error) {
+      // Show error in payment form
+      setError(`Payment failed ${result.error}`);
+      setProcessing(false);
+    } else {
+      // Otherwise send paymentMethod.id to your server (see Step 4)
+
+      // get access token for saving future order if payment is successful
+      let token;
+      token = await getAccessTokenSilently();
+      console.log(token);
+      const res = await fetch(`${process.env.BACKEND_SERVER}/pay`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token ? `Bearer ${token}` : null,
+        },
+        body: JSON.stringify({
+          payment_method_id: result.paymentMethod.id,
+          items,
+          shipping_details: {
+            name: `${shippingInfo.firstName} ${shippingInfo.lastName}`,
+            address: {
+              street: shippingInfo.street,
+              city: shippingInfo.town_city,
+              country: shippingInfo.deliveryCountry,
+              postalCode: shippingInfo.postal_zip_code,
+            },
+            orderNotes: shippingInfo.orderNotes,
+          },
+        }),
+      });
+      const paymentResponse = await res.json();
+
+      // Handle server response (see Step 4)
+      handleServerResponse(paymentResponse);
+    }
+  };
 
   const handleStripeSubmit = async (ev) => {
     ev.preventDefault();
 
+    if (!stripe || !elements) {
+      // Stripe.js has not yet loaded.
+      return;
+    }
+
     setProcessing(true);
-    const payload = await stripe.confirmCardPayment(clientSecret.current, {
-      payment_method: {
-        card: elements.getElement(CardElement),
-      },
-      receipt_email: shippingInfo.email,
-      shipping: {
+
+    const result = await stripe.createPaymentMethod({
+      type: "card",
+      card: elements.getElement(CardElement),
+      billing_details: {
+        // Include any additional collected billing details.
         name: `${shippingInfo.firstName} ${shippingInfo.lastName}`,
         address: {
           line1: shippingInfo.street,
@@ -123,16 +223,11 @@ export const Payment = ({ cartInfo, clientSecret, items, price }) => {
         },
       },
     });
-    if (payload.error) {
-      setError(`Payment failed ${payload.error.message}`);
-      setProcessing(false);
-    } else {
-      setError(null);
-      setProcessing(false);
-      setSucceeded(true);
-    }
-  };
 
+    console.log(result);
+
+    stripePaymentMethodHandler(result);
+  };
 
   const handleChange = async (event) => {
     // Listen for changes in the CardElement
@@ -165,7 +260,7 @@ export const Payment = ({ cartInfo, clientSecret, items, price }) => {
           <div style={{ border: "1px solid gray", padding: "10px" }}>
             <label style={{ textAlign: "start" }}>
               <p style={{ margin: "2px 0 10px" }}>Credit/Debit card</p>
-              
+
               <hr />
               <CardElement options={CARD_OPTIONS} onChange={handleChange} />
               <p>Example card - 4242 4242 4242 4242</p>
@@ -224,6 +319,7 @@ export const Payment = ({ cartInfo, clientSecret, items, price }) => {
         <div style={{ backgroundColor: "white", padding: "20px" }}>
           <h3>Order Successfull!</h3>
           <p>We will send you a order confirmation via email</p>
+          <p>Order ID: {orderId}</p>
           <Button color="primary" variant="contained" onClick={handleClose}>
             Go Home
           </Button>

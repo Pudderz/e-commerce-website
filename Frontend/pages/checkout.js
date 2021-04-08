@@ -20,14 +20,13 @@ export const Checkout = (props) => {
   const {cart: stateCart, cartInfo} = props;
   const [items, setItems] = useState([]);
   const [price, setPrice] = useState(0);
-  const clientSecret = useRef(null);
 
   useEffect(() => {
     console.log(cartInfo);
     console.log(stateCart);
     if (stateCart.length > 0) {
       let cart = JSON.stringify(stateCart);
-      fetch(`${process.env.BACKEND_SERVER}/createPaymentIntent`, {
+      fetch(`${process.env.BACKEND_SERVER}/verifyCart`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -37,7 +36,6 @@ export const Checkout = (props) => {
         .then((response) => response.json())
         .then((data) => {
           console.log(data)
-          clientSecret.current = data.clientSecret;
           setItems(data.confirmedItems);
           setPrice(data.amount);
         });
@@ -66,7 +64,7 @@ export const Checkout = (props) => {
         }}
       >
         <Elements stripe={promise}>
-          <Payment cartInfo={stateCart} clientSecret={clientSecret} items={items} price={price} />
+          <Payment cartInfo={stateCart} items={items} price={price} />
         </Elements>
 
         <div
