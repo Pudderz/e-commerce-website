@@ -165,7 +165,7 @@ const RootQuery = new GraphQLObjectType({
         if (!permissions.includes("read:allOrders")) return;
         //get sub id from accessToken
         //returns all orders with that subId
-        return Order.find({});
+        return Order.find({}).sort({date: 'desc'});;
       },
     },
     getProductBySlug: {
