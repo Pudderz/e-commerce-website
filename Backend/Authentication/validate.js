@@ -3,9 +3,8 @@
 require("dotenv").config();
 
 const jwt = require("jsonwebtoken");
-const expressjwt = require('express-jwt');
 const jwksClient = require("jwks-rsa");
-var jwks = require('jwks-rsa');
+
 const client = jwksClient({
   jwksUri: `https://${process.env.AUTH0_DOMAIN}/.well-known/jwks.json`
 });

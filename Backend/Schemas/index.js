@@ -14,7 +14,7 @@ const {
   ProductReviews,
   UserOrders,
 } = require("./TypeDefs/UserType");
-const isTokenValid = require("../Authenication/validate");
+const isTokenValid = require("../Authentication/validate");
 const Review = require("../models/review");
 const Product = require("../models/products");
 const Order = require("../models/order");
