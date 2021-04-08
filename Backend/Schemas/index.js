@@ -22,16 +22,17 @@ const { ObjectId } = require("mongodb");
 const { GraphQLUpload } = require("graphql-upload");
 const { Storage } = require("@google-cloud/storage");
 const path = require("path");
+const { projectImages } = require("../analytics/googleCloudBucket");
 
 const files = [];
 
-const gc = new Storage({
-  keyFilename: path.join(__dirname, "../key.json"),
-  projectId: "e-commerce-web-project",
-});
+// const gc = new Storage({
+//   keyFilename: path.join(__dirname, "../key.json"),
+//   projectId: "e-commerce-web-project",
+// });
 
-// gc.getBuckets().then(x=>console.log(x));
-const projectImages = gc.bucket("e-commerce-image-storage-202");
+// // gc.getBuckets().then(x=>console.log(x));
+// const projectImages = gc.bucket("e-commerce-image-storage-202");
 
 
 const RootQuery = new GraphQLObjectType({
@@ -243,8 +244,18 @@ console.log("Uploading product");
         if(args.male)gender.push("male");
         if(args.female)gender.push("female")
 
+
+        let slug =  encodeURIComponent(args.productname);
+        if(args.male && args.female){
+          slug = 'u/'+ slug;
+        }else if(args.male){
+          slug = 'm/'+ slug;
+        }else if(args.female){
+          slug = 'f'+ slug;
+        }
+        console.log(`slug - ${slug}`)
         let product = new Product({
-          slug: encodeURIComponent(args.productname),
+          slug,
           productName: args.productname,
           images: fileNameArray,
           price: args.price,
@@ -252,7 +263,7 @@ console.log("Uploading product");
           categories: args.categories,
           stock: args.stock,
           datePosted: time,
-          gender: gender,
+          gender,
           averageRating: 0,
         });
 
