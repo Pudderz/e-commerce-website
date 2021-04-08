@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import ShoppingBasketIcon from "@material-ui/icons/ShoppingBasket";
-import {
-  Avatar,
-  Badge,
-  Button,
-  IconButton,
-  Tooltip,
-} from "@material-ui/core";
+import { Avatar, Badge, Button, IconButton, Tooltip } from "@material-ui/core";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import { useAuth0 } from "@auth0/auth0-react";
 import { LoginButton } from "../Authentication/LoginButton";
@@ -18,8 +12,12 @@ import { Filters } from "..//StorePage/Filters";
 import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
 import { connect } from "react-redux";
-import { addCartItem, removeCartItem,addCartItemQuantity, } from "../../Redux/actions/actions";
-import { useRouter } from 'next/router';
+import {
+  addCartItem,
+  removeCartItem,
+  addCartItemQuantity,
+} from "../../Redux/actions/actions";
+import { useRouter } from "next/router";
 
 export const Header = (props) => {
   const [anchorBasketEl, setAnchorBasketEl] = useState(null);
@@ -27,8 +25,7 @@ export const Header = (props) => {
   const [search, setSearch] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
-
-  // const router = useRouter();
+  const router = useRouter();
 
   const { user, isAuthenticated } = useAuth0();
 
@@ -73,17 +70,18 @@ export const Header = (props) => {
   };
   const handleMenuClose = () => setMenuOpen(false);
 
-
-
-  const handleSearch = (ev) =>{
+  const handleSearch = (ev) => {
     ev.preventDefault();
     console.log(search);
-    // router.push(`/search`)
-  }
+    router.push({
+      pathname: "/search",
+      query: { search },
+    });
+  };
 
-  const handleSearchChange = (ev)=>{
+  const handleSearchChange = (ev) => {
     setSearch(ev.target.value);
-  }
+  };
 
   return (
     <>
@@ -299,15 +297,14 @@ export const Header = (props) => {
                       <Link href="/admin/createProducts">Create a product</Link>
                     </div>
                     <div>
-                    <Link href="/admin/allProducts">All Products</Link>
+                      <Link href="/admin/allProducts">All Products</Link>
                     </div>
                     <div>
-                    <Link href="/admin/stock">Update and edit stock</Link>
+                      <Link href="/admin/stock">Update and edit stock</Link>
                     </div>
                   </div>
                 </div>
               </div>
-          
             </div>
           </li>
           <li style={{ height: "fit-content", alignSelf: "center" }}>
@@ -321,29 +318,29 @@ export const Header = (props) => {
               }}
             >
               <li style={{ height: "fit-content", alignSelf: "center" }}>
-                <form onSubmit={(e) => {handleSearch}}>
-                    <InputBase
-                      autoComplete="off"
-                      name="search"
-                      value={search}
-                      onChange={handleSearchChange}
-                      placeholder="Search…"
-                      style={{
-                        margin: "10px auto",
-                        backgroundColor: "#e2e2e2",
-                        padding: "0px 11px",
-                        borderRadius: "20px",
-                      }}
-                      inputProps={{
-                        "aria-label": "search",
-                      }}
-                      endAdornment={
-                        <IconButton size="small" type="submit">
-                          <SearchIcon style={{ fill: "black" }} />
-                        </IconButton>
-                      }
-                    />
-                  </form>
+                <form onSubmit={handleSearch}>
+                  <InputBase
+                    autoComplete="off"
+                    name="search"
+                    value={search}
+                    onChange={handleSearchChange}
+                    placeholder="Search…"
+                    style={{
+                      margin: "10px auto",
+                      backgroundColor: "#e2e2e2",
+                      padding: "0px 11px",
+                      borderRadius: "20px",
+                    }}
+                    inputProps={{
+                      "aria-label": "search",
+                    }}
+                    endAdornment={
+                      <IconButton size="small" type="submit">
+                        <SearchIcon style={{ fill: "black" }} />
+                      </IconButton>
+                    }
+                  />
+                </form>
               </li>
               {isAuthenticated ? (
                 <li>
@@ -395,7 +392,10 @@ export const Header = (props) => {
               <li>
                 <Tooltip title="Basket">
                   <IconButton aria-label="cart" onClick={handleBasketClick}>
-                    <Badge badgeContent={props?.cartState?.length} color="primary">
+                    <Badge
+                      badgeContent={props?.cartState?.length}
+                      color="primary"
+                    >
                       <ShoppingBasketIcon />
                     </Badge>
                   </IconButton>
@@ -500,8 +500,7 @@ export const Header = (props) => {
                                       width: "fit-content",
                                     }}
                                   >
-                                    UK {item?.size}{" "}
-                                    £{item?.price}.00
+                                    UK {item?.size} £{item?.price}.00
                                   </p>
                                   <p
                                     style={{
@@ -540,7 +539,9 @@ export const Header = (props) => {
                                     </Tooltip>
                                     <Tooltip title="Remove Item">
                                       <IconButton
-                                        onClick={() => removeItem(item.name, item.size)}
+                                        onClick={() =>
+                                          removeItem(item.name, item.size)
+                                        }
                                       >
                                         <DeleteIcon fontSize="small" />
                                       </IconButton>
@@ -614,15 +615,14 @@ const mapStateToProps = (state, ownProps) => ({
   // ... computed data from state and optionally ownProps
   cartState: state.cart.cart,
   cartInfo: state.cart.cartInfo,
-  props:{...ownProps},
-})
-
+  props: { ...ownProps },
+});
 
 const mapDispatchToProps = {
   addCartItem,
   removeCartItem,
   addCartItemQuantity,
   // ... normally is an object full of action creators
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);
