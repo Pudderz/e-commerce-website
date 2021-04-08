@@ -1,7 +1,11 @@
 const Product = require("../models/products");
+const Order = require("../models/order");
 const mongoose = require("mongoose");
 const { startDatabase } = require("../database");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const isTokenValid = require("../Authentication/validate");
+const jwt_decode = require("jwt-decode");
+
 
 const calculateOrderAmount = async (items = []) => {
   // Replace this constant with a calculation of the order's amount
@@ -64,8 +68,47 @@ const generateResponse = async ({intent, confirmedItems, orderAmount, request}) 
   } else if (intent.status === 'succeeded') {
     // The payment didn’t need any additional actions and completed!
     // Handle post-payment fulfillment
+    items = [];
+    confirmedItems.forEach((item)=>{
+      items.push(item.id);
+    })
+
+    //work out subId
+    const token = request.headers.authorization;
+    console.log(token);
+    let subId = "guest"
+    let decoded = { sub: null, permissions: [] };
+    if (token) {
+      decoded = jwt_decode(token);
+    }
+    const { error } = await isTokenValid(token);
+
+
+    let shippingDetails = request.body.shipping_details;
+    console.log(shippingDetails);
+
+    if (!error && decoded.sub){
+      subId = decoded.sub;
+    }; 
+    let order = new Order({
+      subId:subId,
+      date: Date(),
+      price: orderAmount,
+      items: items,
+      shippingAddress:{
+        name:shippingDetails.name,
+        ...shippingDetails.address,
+      },
+      status: 'Paid',
+      orderNotes: shippingDetails.orderNotes,
+    });
+
+    let savedOrder = await order.save();
+    console.log(`id - ${savedOrder._id}`);
+    console.log(savedOrder)
     return {
       success: true,
+      orderId: savedOrder._id,
     };
   } else {
     // Invalid status
