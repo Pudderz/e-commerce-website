@@ -70,7 +70,6 @@ export const FrontPage = ({ products }) => {
         style={{
           height: "70px",
           width: "100%",
-          // backgroundColor: "#efefef",
           display: "flex",
           justifyContent: "space-between",
         }}
@@ -137,18 +136,6 @@ export const FrontPage = ({ products }) => {
   );
 };
 export async function getStaticProps({ params }) {
-  let popularProducts = [];
-  // const fetchProducts = async () => {
-  //   await commerce.products
-  //     .list({ limit: 4 })
-  //     .then((item) => {
-  //       popularProducts = item.data;
-  //     })
-  //     .catch((error) => {
-  //       console.log("There was an error fetching the products", error);
-  //     });
-  // };
-
   let data = [];
 
   try {
@@ -158,32 +145,10 @@ export async function getStaticProps({ params }) {
   } catch (err) {
     console.log(err);
   } finally {
-    let j = 0;
-console.log(data)
-    // if (data.length === 0 || typeof data === "undefined") {
-    //   // await fetchProducts();
-    // } else {
-    //   for (let i = 0; j <= 4 && i < data.length; i++) {
-    //     // Have to call them separately as the commerce library has no option to find a group of products.
 
-    //     // In the Future I hope to have the commerce db in mongoDB allowing this process to effiecient
+    console.log(data)
 
-    //     await commerce.products
-    //       .retrieve(data?.[i].slug, { type: "permalink" })
-    //       .then((item) => {
-    //         if (!!item) {
-    //           popularProducts.push(item);
-    //           j++;
-    //         }
-    //       })
-    //       .catch((error) => {
-    //         console.log("There was an error fetching the products", error);
-    //         fetchProducts();
-    //       });
-    //   // }
-    // }
     console.log("products");
-    console.log(popularProducts);
     return {
       props: {
         products: data.products,
