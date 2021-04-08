@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { Button, Typography } from "@material-ui/core";
-import { CartContext } from "../../context/CartContext";
 // import hikingBackground from "../images/hikingBackground.jpg";
 // import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import { ItemImage } from "../Common/ItemImage";

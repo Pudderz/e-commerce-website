@@ -213,6 +213,7 @@ export const CreateProducts = () => {
         control={<Checkbox inputRef={register} name="male" />}
         label="Male"
       />
+      
          <FormControlLabel
         control={<Checkbox inputRef={register} name="female" />}
         label="Female"

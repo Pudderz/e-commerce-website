@@ -6,7 +6,6 @@ import { Footer } from "../components/Common/Footer";
 import { Auth0 } from "../components/Authentication/Auth0";
 import { SnackbarProvider } from "notistack";
 import { Button } from "@material-ui/core";
-import { CartContextProvider } from "../context/CartContext";
 import {
   ApolloClient,
   InMemoryCache,
@@ -70,7 +69,7 @@ function App({ Component, pageProps }) {
   
   // Persist redux data in localStorage
   useEffect(() => {
-    console.log('grabbing state')
+    console.log('grabbing state');
     let state = loadState();
     console.log(state);
     if(state !== undefined){
@@ -124,12 +123,10 @@ function App({ Component, pageProps }) {
                   </Button>
                 )}
               >
-                <CartContextProvider>
                   <div>
                     <Header />
                     <Component {...pageProps} />
                   </div>
-                </CartContextProvider>
               </SnackbarProvider>
             </AuthContextProvider>
           </ApolloProvider>
