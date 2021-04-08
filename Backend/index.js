@@ -1,21 +1,15 @@
 const express = require("express");
-const path = require("path");
 const app = express();
 const PORT = 6969;
 const cors = require("cors");
 const { graphqlHTTP } = require("express-graphql");
 const schema = require("./Schemas");
-const mongoose = require("mongoose");
-const { SimpleGA, Request } = require("node-simple-ga");
 const jwt_decode = require("jwt-decode");
-var fs = require("fs");
-const {Storage} = require("@google-cloud/storage");
-const bodyParser = require("body-parser");
-const {apolloUploadExpress}= require("apollo-upload-server");
 const { graphqlUploadExpress } = require('graphql-upload');
 const { createPaymentIntent } = require("./Payments/stripePayments");
-const Product = require("./models/products");
-const { searchconsole } = require("googleapis/build/src/apis/searchconsole");
+const { startDatabase } = require("./database");
+const { getPopularProducts, getPopularMaleProducts, getPopularFemaleProducts } = require("./analytics/trending");
+const { checkKeyFile } = require("./analytics/key");
 require("dotenv").config();
 
 
@@ -45,65 +39,21 @@ app.use(
   }))
 );
 
+
 app.use("/trending", async(req, res) => {
-  if (!fs.existsSync("./key.json")) {
-    //create json file for analytics
-    let data = {
-    "type": "service_account",
-    "project_id": "e-commerce-web-project",
-    "private_key_id": process.env.GA_PRIVATE_KEY_ID ,
-    "private_key": process.env.GA_PRIVATE_KEY,
-    "client_email": process.env.GA_CLIENT_EMAIL,
-    "client_id": process.env.GA_CLIENT_ID ,
-    "auth_uri": process.env.GA_AUTH_URI ,
-    "token_uri": process.env.GA_TOKEN_URI ,
-    "auth_provider_x509_cert_url": process.env.GA_PROVIDER_CERT,
-    "client_x509_cert_url": process.env.GA_CLIENT_CERT_URL,
-  }
-    data = JSON.stringify(data);
+  checkKeyFile();
+  getPopularProducts(res);
+});
 
-    fs.writeFileSync("key.json", data);
-  }
-  (async function () {
-    var analytics = new SimpleGA(path.join(__dirname, "./key.json"));
+app.use("/trendingMen", async(req, res) => {
+  checkKeyFile();
+  getPopularMaleProducts(res);
+});
 
-    var requestPopularProducts = Request()
-      .select("pagepath", "pageviews")
-      .from(process.env.GA_VIEW_ID)
-      .where("pagepath")
-      .beginsWith("/product")
-      .orderDesc("pageviews")
-      .limit(20);
 
-    try {
-      var r1 = analytics.run(requestPopularProducts);
-
-      var [requestPopularProducts] = await Promise.all([r1]);
-
-      console.log(requestPopularProducts);
-
-      const slugs = [];
-      const search = [];
-      requestPopularProducts.forEach((element) => {
-        let slug = element.pagePath.slice(9);
-        if (slug != null) {
-          search.push(slug)
-          slugs.push({ slug, pageviews: element.pageviews });
-        }
-      });
-
-      console.log(slugs);
-      await startDatabase();
-      const products =  await Product.find({slug: search}, (err, data)=>{
-        console.log(data.length);
-      }).lean();
-      console.log(products)
-      res.send({slugs, products});
-      GOOGLE_PAGEPATHS = slugs;
-    } catch (err) {
-      console.error(err);
-    }
-  })();
+app.use("/trendingFemale", async(req, res) => {
+  checkKeyFile();
+  getPopularFemaleProducts(res);
 });
 
 app.use("/createPaymentIntent", (req, res)=>createPaymentIntent(req, res));
