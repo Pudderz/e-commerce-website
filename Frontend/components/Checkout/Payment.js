@@ -245,7 +245,7 @@ export const Payment = ({ cartInfo, items, price }) => {
     router.push("/");
   };
   return (
-    <div style={{ minWidth: "min(400px,100%)" }}>
+    <div style={{ minWidth: "min(100%,650px)", margin:'auto' }}>
       <form onSubmit={handleStripeSubmit}>
         <Button onClick={importDemoShippingInfo}>Import Demo</Button>
         <div style={{ maxWidth: "700px", margin: "auto", padding: "0 20px" }}>

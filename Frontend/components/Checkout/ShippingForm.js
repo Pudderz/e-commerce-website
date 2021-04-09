@@ -1,48 +1,14 @@
-import { Select } from "@material-ui/core";
-import React, { useState, useEffect, useRef } from "react";
-import { commerce } from "../../lib/commerce";
+import React from "react";
+
 
 export const ShippingForm = (props) => {
-  const [countries, setCountries] = useState({});
-  const [subDivision, setSubdivisions] = useState({});
-
-
-  useEffect(() => {
-    commerce.services.localeListCountries().then((response) => {
-      console.log(response);
-      setSubdivisions();
-      setCountries(response);
-    });
-  }, []);
-
-
-  useEffect(() => {
-    console.log(props.shippingInfo.deliveryCountry);
-
-    if (props.shippingInfo.deliveryCountry !== "") {
-      commerce.services
-        .localeListSubdivisions(props.shippingInfo.deliveryCountry)
-        .then((response) => {
-          setSubdivisions(response);
-          console.log(response);
-        });
-    }
-  }, [props.shippingInfo.deliveryCountry]);
-
-  const handleCountryChange = (e) => {
-    props.changeValue("deliveryCountry", e.target.value);
-  };
-
-  const handleRegionChange = (e) => {
-    props.changeValue("deliveryRegion", e.target.value);
-  };
 
   const handleChange = (e) => {
     props.changeValue(e.target.name, e.target.value);
   };
 
   return (
-    <div className="shippingForm">
+    <div className="shippingForm" >
       <div className="row">
         <div className="inputContainer">
           <label>
@@ -72,23 +38,14 @@ export const ShippingForm = (props) => {
         <div className="inputContainer">
           <label>
             <p>Country*</p>
-
-            <select
+            <input
               name="deliveryCountry"
-              value={props.shippingInfo.deliveryCountry}
-              onChange={handleCountryChange}
-              style={{ width: "100%", fontSize: "18px", height: "25px" }}
+              
               required
-            >
-              <option value="" key="0">
-                Please select Country
-              </option>
-              {Object.keys(countries?.countries || {}).map((value) => (
-                <option value={value} key={value}>
-                  {countries.countries[value]}
-                </option>
-              ))}
-            </select>
+              onChange={handleChange}
+              value={props.shippingInfo.deliveryCountry}
+            />
+           
           </label>
         </div>
         <div className="inputContainer">
@@ -132,25 +89,13 @@ export const ShippingForm = (props) => {
         <div className="inputContainer">
           <label>
             <p>State/province/region*</p>
-
-            <select
+            <input
               name="deliveryRegion"
-              disabled={props.shippingInfo.deliveryCountry === ""}
+              placeholder="Appartment, buero, etc."
+              onChange={handleChange}
               value={props.shippingInfo.deliveryRegion}
-              onChange={handleRegionChange}
-              placeholder="State/province/region"
-              style={{ width: "100%", fontSize: "14px", height: "25px" }}
-              required
-            >
-              <option value="" key="0">
-                Please select region
-              </option>
-              {Object.keys(subDivision?.subdivisions || {}).map((value) => (
-                <option value={value} key={value}>
-                  {subDivision.subdivisions[value]}
-                </option>
-              ))}
-            </select>
+            />
+            
           </label>
         </div>
         <div className="inputContainer">
