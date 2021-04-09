@@ -9,7 +9,7 @@ import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import { useLazyQuery } from "@apollo/client";
 import { LOAD_ALL_PRODUCTS } from "../../GraphQL/Queries";
 
-export const RecentProducts = (props) => {
+export const RecentProducts = ({variables, header}) => {
   const [products, setProducts] = useState(Array.from({ length: 8 }, () => 0));
   // let {data} = useQuery(LOAD_ALL_PRODUCTS, {limit:8});
   const [fetchProducts, { loading, error, data }] = useLazyQuery(LOAD_ALL_PRODUCTS);
@@ -17,7 +17,7 @@ export const RecentProducts = (props) => {
   const container = useRef();
   const isMin = useRef(false);
   useEffect(() => {
-    fetchProducts({variables: {limit: 8}})
+    fetchProducts({variables: {limit: 8, ...variables}})
   }, [])
 
   useEffect(() => {
@@ -41,7 +41,7 @@ export const RecentProducts = (props) => {
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <h3 style={{ textAlign: "start", marginLeft: "20px" }}>Newest</h3>
+        <h3 style={{ textAlign: "start", marginLeft: "20px" }}>{header || "Newest"}</h3>
         <Button onClick={handleMinimize}>
           <ExpandMoreIcon />
           <ExpandLessIcon />
@@ -109,7 +109,7 @@ export const RecentProducts = (props) => {
                   <div style={{ margin: "auto", width: "200px", textAlign:'start' }}>
                     <h4 style={{ margin: "0px", fontWeight:'500' }}>{item.name || item.productName}</h4>
                     <p style={{ margin: "auto" }}>
-                      £{item.price}.00
+                      £{(item.price/100).toFixed(2)}
                     </p>
                   </div>
                 </>

@@ -5,29 +5,27 @@ export const Discounts = () => {
   return (
     <div>
       <div style={{ backgroundColor: "#CE1121" }}>
-           <img src={webBanner} alt="" />
+        <img src={webBanner} alt="" />
       </div>
-      
-     
-      <div>
-        <h3>Best Sellers discounts</h3>
-        <hr/>
-      </div>
-      <div>
-        <h3>Newest discounts</h3>
-        <hr/>
-        <RecentProducts/>
-      </div>
-      <div>
-        <h3>Men discounts</h3>
-        <hr/>
-        <RecentProducts/>
-      </div>
-      <div>
-        <h3>Women discounts</h3>
-        <hr/>
-        <RecentProducts/>
-      </div>
+
+      <RecentProducts
+        header={"Best Sellers discounts"}
+        variables={{ discounted: true, sortBy: "sold" }}
+      />
+
+      <RecentProducts
+        header={"Newest Discounts"}
+        variables={{ discounted: true }}
+      />
+
+      <RecentProducts
+        header={"Men's discounts"}
+        variables={{ discounted: true, male: true }}
+      />
+      <RecentProducts
+        header={"Women's discounts"}
+        variables={{ discounted: true, female: true }}
+      />
     </div>
   );
 };

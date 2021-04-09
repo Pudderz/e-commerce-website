@@ -3,39 +3,35 @@ import { Categories } from "../components/FrontPage/Categories";
 import { MostPopular } from "../components/FrontPage/MostPopular";
 import { RecentProducts } from "../components/FrontPage/RecentProducts";
 import casualBackground from "../images/casualBackground.jpg";
-export const Men = () => {
+
+const axios = require("axios").default;
+
+export const Men = ({products}) => {
   return (
     <div>
       <div style={{ backgroundColor: "#CE1121", position:'relative' }}>
         <img src={casualBackground} alt="" style={{ maxWidth: "100vw", maxHeight:'700px', objectFit:'cover', width:'100%' }} />
       </div>
 
-      <div>
+
         <MostPopular popularProducts={products} header={"Trending Men's Products"}/>
-      </div>
-      <div>
-        <h3>Newest men's products</h3>
-        <hr />
-        <RecentProducts />
-      </div>
-      <div>
-        <h3>Men discounts</h3>
-        <hr />
-        <RecentProducts />
-      </div>
-      <div>
-        <h3>Men Categorys</h3>
-        <hr />
+
+        <RecentProducts header={"Newest men's products"} variables={{ male:true}}/>
+  
+        <RecentProducts header={"Men discounts"} variables={{discounted: true, male:true}}/>
+
+      <hr/>
         <Categories />
-      </div>
+      
     </div>
   );
 };
 
 
 export async function getStaticProps({ params }) {
-  let data = [];
-
+  let data = {products: []};
+console.log('getting static props');
+console.log(process.env.BACKEND_SERVER);
   try {
     await axios.get(`${process.env.BACKEND_SERVER}/trendingMale`).then((res) => {
       data = res.data;

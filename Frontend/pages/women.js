@@ -1,7 +1,8 @@
 import React from "react";
 import { MostPopular } from "../components/FrontPage/MostPopular";
 import webBanner from "../images/WebBannerPNG.png";
-
+import { Categories } from "../components/FrontPage/Categories";
+import { RecentProducts } from "../components/FrontPage/RecentProducts";
 const axios = require("axios").default;
 
 export const Women = ({products}) => {
@@ -11,25 +12,19 @@ export const Women = ({products}) => {
         <img src={webBanner} alt="" />
       </div>
 
-      <div>
-        <h3>Best Sellers Womens products</h3>
-        <hr />
-        <MostPopular popularProducts={products} header={"Trending Women's Products"}/>
-      </div>
-      <div>
-        <h3>Newest Women Products</h3>
-        <hr />
-        <RecentProducts />
-      </div>
-      <div>
-        <h3>Women discounts</h3>
-        <hr />
-        <RecentProducts />
-      </div>
+      <MostPopular popularProducts={products} header={"Trending Women's Products"}/>
+
+<RecentProducts header={"Newest Women Products"} variables={{ female:true}}/>
+
+<RecentProducts header={"Women discounts"} variables={{discounted: true, female:true}}/>
+
       <div>
         <h3>Women Categorys</h3>
         <hr />
         <Categories />
+
+        
+   
       </div>
     </div>
   );
@@ -38,7 +33,7 @@ export const Women = ({products}) => {
 
 
 export async function getStaticProps({ params }) {
-  let data = [];
+  let data = {products: []};
 
   try {
     await axios.get(`${process.env.BACKEND_SERVER}/trendingFemale`).then((res) => {
