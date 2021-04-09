@@ -8,7 +8,6 @@ import { LoginButton } from "../Authentication/LoginButton";
 import Popover from "@material-ui/core/Popover";
 import { LogoutButton } from "../Authentication/LogoutButton";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { Filters } from "..//StorePage/Filters";
 import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
 import { connect } from "react-redux";
@@ -18,6 +17,7 @@ import {
   addCartItemQuantity,
 } from "../../Redux/actions/actions";
 import { useRouter } from "next/router";
+import { Filters } from "../StorePage/Filters";
 
 export const Header = (props) => {
   const [anchorBasketEl, setAnchorBasketEl] = useState(null);
@@ -134,15 +134,27 @@ export const Header = (props) => {
               }}
             >
               <div className="dropdown">
-                <Button
+                <div
                   className="headerButton"
                   style={{
-                    textTransform: "none",
-                    backgroundColor: "transparent",
+                    display: "flex",
+                    alignItems: "center",
+                    height: "100%",
                   }}
                 >
-                  Men
-                </Button>
+                  <Link href="/men">
+                    <a
+                      className="MuiButton-root"
+                      style={{
+                        textTransform: "none",
+                        backgroundColor: "transparent",
+                      }}
+                    >
+                      Men
+                    </a>
+                  </Link>
+                </div>
+
                 <div className="dropdown-content">
                   <div
                     style={{
@@ -170,15 +182,26 @@ export const Header = (props) => {
                 </div>
               </div>
               <div className="dropdown">
-                <Button
+                <div
                   className="headerButton"
                   style={{
-                    textTransform: "none",
-                    backgroundColor: "transparent",
+                    display: "flex",
+                    alignItems: "center",
+                    height: "100%",
                   }}
                 >
-                  Women
-                </Button>
+                  <Link href="/women">
+                    <a
+                      className="MuiButton-root"
+                      style={{
+                        textTransform: "none",
+                        backgroundColor: "transparent",
+                      }}
+                    >
+                      Women
+                    </a>
+                  </Link>
+                </div>
                 <div className="dropdown-content">
                   <div
                     style={{
@@ -235,15 +258,26 @@ export const Header = (props) => {
                 </div>
               </div>
               <div className="dropdown">
-                <Button
+                <div
                   className="headerButton"
                   style={{
-                    textTransform: "none",
-                    backgroundColor: "transparent",
+                    display: "flex",
+                    alignItems: "center",
+                    height: "100%",
                   }}
                 >
-                  Sales
-                </Button>
+                  <Link href="/discounts">
+                    <a
+                      className="MuiButton-root"
+                      style={{
+                        textTransform: "none",
+                        backgroundColor: "transparent",
+                      }}
+                    >
+                      Sales
+                    </a>
+                  </Link>
+                </div>
                 <div className="dropdown-content">
                   <div
                     style={{
@@ -271,21 +305,32 @@ export const Header = (props) => {
                 </div>
               </div>
               <div className="dropdown">
-                <Button
+              <div
                   className="headerButton"
                   style={{
-                    textTransform: "none",
-                    backgroundColor: "transparent",
+                    display: "flex",
+                    alignItems: "center",
+                    height: "100%",
                   }}
                 >
-                  Admin
-                </Button>
+                  <Link href="/admin">
+                    <a
+                      className="MuiButton-root"
+                      style={{
+                        textTransform: "none",
+                        backgroundColor: "transparent",
+                      }}
+                    >
+                      Admin
+                    </a>
+                  </Link>
+                </div>
                 <div className="dropdown-content">
                   <div
                     style={{
                       display: "flex",
                       justifyContent: "space-between",
-                      maxWidth: "900px",
+                      maxWidth: "min(100%,900px)",
                       margin: "auto",
                       padding: "40px 0",
                     }}
@@ -299,9 +344,7 @@ export const Header = (props) => {
                     <div>
                       <Link href="/admin/allProducts">All Products</Link>
                     </div>
-                    <div>
-                      <Link href="/admin/stock">Update and edit stock</Link>
-                    </div>
+                    <div></div>
                   </div>
                 </div>
               </div>
