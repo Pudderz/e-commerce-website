@@ -239,21 +239,23 @@ const Mutation = new GraphQLObjectType({
         console.log(fileNameArray);
 console.log("Uploading product");
         const time = new Date().getTime();
-        
-        const gender = [];
-        if(args.male)gender.push("male");
-        if(args.female)gender.push("female")
 
+        console.log(`slug - ${slug}`);
+        const stockContainer = [];
 
-        let slug =  encodeURIComponent(args.productname);
-        if(args.male && args.female){
-          slug = 'u/'+ slug;
-        }else if(args.male){
-          slug = 'm/'+ slug;
-        }else if(args.female){
-          slug = 'f'+ slug;
-        }
-        console.log(`slug - ${slug}`)
+        args.stock.forEach((shoeSizeStock, index) => {
+          if (Number(shoeSizeStock)) {
+            let shoeSize = 3.5 + index * 0.5;
+            const container = {
+              shoeSize: Math.floor(Number(shoeSize) * 10),
+              stock: Math.floor(Number(shoeSizeStock)),
+            };
+            stockContainer.push(container);
+          }
+        });
+
+        console.log(stockContainer);
+
         let product = new Product({
           slug,
           productName: args.productname,
@@ -261,7 +263,7 @@ console.log("Uploading product");
           price: args.price,
           description: args.description,
           categories: args.categories,
-          stock: args.stock,
+          stock: stockContainer,
           datePosted: time,
           gender,
           averageRating: 0,
@@ -401,7 +403,7 @@ console.log("Uploading product");
         }
       },
     },
-    updateProductStock:{
+    updateProductStock: {
       type: ProductType,
       args: {
         id: { type: new GraphQLNonNull(GraphQLString) },
@@ -418,7 +420,7 @@ console.log("Uploading product");
 
         try {
           return await Product.findOneAndUpdate(
-            { _id: ObjectId(args.id)},
+            { _id: ObjectId(args.id) },
             {
               stock: args.stock,
             },

@@ -7,7 +7,8 @@ const {
   GraphQLString,
   GraphQLList,
   GraphQLID,
-  GraphQLBoolean
+  GraphQLBoolean,
+  GraphQLFloat
 } = graphql;
 
 const { GraphQLScalarType, Kind } = require('graphql');
@@ -44,6 +45,16 @@ const ProductReviews = new GraphQLObjectType({
   }),
 });
 
+
+const StockSize = new GraphQLObjectType({
+  name: "stockSize",
+  fields: ()=>({
+    shoeSize: {type: GraphQLInt},
+    stock: {type: GraphQLInt}
+  })
+})
+
+
 const ProductType = new GraphQLObjectType({
   name: "Product",
   fields: () => ({
@@ -54,7 +65,7 @@ const ProductType = new GraphQLObjectType({
     
     averageRating: { type: GraphQLString },
     description: { type: GraphQLString },
-    stock: { type: new GraphQLList(GraphQLString) },
+    stock: { type: new GraphQLList(StockSize) },
     images: { type: new GraphQLList(GraphQLString) },
     datePosted:{type: GraphQLInt },
     categories: {type: new GraphQLList(GraphQLString) },
