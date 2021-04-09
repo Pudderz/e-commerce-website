@@ -49,7 +49,7 @@ app.use("/trending", async(req, res) => {
 
 
 
-app.use("/trendingMen", async (req, res) => {
+app.use("/trendingMale", async (req, res) => {
   checkKeyFile();
   getPopularMaleProducts(res);
 });
