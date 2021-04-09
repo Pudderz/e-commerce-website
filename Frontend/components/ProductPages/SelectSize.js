@@ -9,10 +9,21 @@ export const SelectSize = ({ availableSizes, changeSize,size }) => {
   console.log(availableSizes)
   const [selectedSize, setSelectedSize] = useState(null)
 
+  const [shoeSizes, setShoeSizes] = useState([]);
   useEffect(() => {
     console.log(size)
     setSelectedSize(size);
   }, [size])
+
+  useEffect(() => {
+    const stock = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    availableSizes.forEach(sizeObject=>{
+      let shoeIndex = (sizeObject.shoeSize/10 - 3.5)/0.5;
+      stock[shoeIndex] = sizeObject.stock;
+    })
+    setShoeSizes(stock);
+    
+  }, [availableSizes])
 
   const handleButtonChange = (e)=>{
     changeSize(1*e.target.textContent);
@@ -22,14 +33,14 @@ export const SelectSize = ({ availableSizes, changeSize,size }) => {
     <div className="selectSize"
  
     >
-      {[...availableSizes]?.map((number, index) => {
+      {shoeSizes?.map((number, index) => {
         // Tests if that size is in the availableSizes object
         // If not sets avaliable size button to disabled
 
           return (
             <Button
               key={index}
-              disabled={!(1*availableSizes[index])}
+              disabled={!(1*shoeSizes[index])}
               className={`availableSize ${(1*ALL_SIZES[index]===selectedSize) && 'selected'}`}
               onClick={handleButtonChange}
               style={{
