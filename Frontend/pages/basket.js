@@ -1,6 +1,5 @@
 import { Button, IconButton, Tooltip } from "@material-ui/core";
 import React, { useEffect, useContext, useState } from "react";
-import { CartContext } from "../context/CartContext";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Link from "next/link";
 import {
@@ -17,7 +16,6 @@ export const Basket = (props) => {
   console.log(props);
 
   const { cartState: stateCart = [], cartInfo } = props;
-  const { cart, removeFromCart, updateQty } = useContext(CartContext);
   console.log(stateCart);
   console.log(`stateCart ${typeof stateCart}`);
   useEffect(() => {
@@ -72,7 +70,6 @@ export const Basket = (props) => {
     <div>
       <h1>Shopping cart</h1>
       <hr />
-      {JSON.stringify(stateCart)}
       {isSmallDisplay ? (
         <div style={{ padding: "10px" }}>
           <ul

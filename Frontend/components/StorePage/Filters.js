@@ -1,27 +1,26 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Link from 'next/link';
-import { commerce, retreiveAllCategories } from "../../lib/commerce";
-//Filter section for the list of items
-
-// Gender
-
-// Price bar
-
-// Colour
-
-// Brand
-
-// Category
-
-// Size
 
 export const Filters = ({onClick}) => {
-  const [categories, setCategories] = useState([]);
 
- 
-  useEffect(() => {
-    retreiveAllCategories(setCategories);
-  }, []);
+  const categories = [
+    {
+      name:"Hiking",
+      description:"",
+      slug:"hiking", 
+    },
+    {
+      name:"Running",
+      description:"",
+      slug:"running"
+    },
+    {
+      name:"Casual",
+      description:"",
+      slug:"casual",
+    }
+  ]
+
   const handleClick = ()=>{
     console.log('linkClicked')
     if(onClick){
@@ -33,12 +32,11 @@ export const Filters = ({onClick}) => {
   return (
     <div>
 
-        {/* <h4 style={{textAlign:'start'}}>All Categories</h4> */}
         <hr/>
         <ul style={{listStyle:'none', display:'flex', gap:'10px', padding:'0px'}}>
-          {categories?.map((el, index) => (
+          {categories?.map((category, index) => (
             <li key={index} style={{textAlign:'start',backgroundColor:'#eee', padding:'5px', width:'fit-content', borderRadius:'5px' }}>
-              <Link href={`/category/${el.slug}`} onClick={handleClick}>{el.name}</Link>
+              <Link href={`/category/${category.slug}`} onClick={handleClick}>{category.name}</Link>
             </li>
           ))}
         </ul>
@@ -47,3 +45,5 @@ export const Filters = ({onClick}) => {
     </div>
   );
 };
+
+export default Filters;
