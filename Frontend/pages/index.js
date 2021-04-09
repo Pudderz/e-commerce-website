@@ -41,8 +41,8 @@ export const FrontPage = ({ products }) => {
           }}
         >
           <h3 style={{margin:'0'}}>E-Commerce Site</h3>
-          <p style={{margin:'0'}}>view the great deals</p>
-          <Button className="buttonOutlined light" variant="outlined">Shop Now</Button>
+          <p style={{margin:'0'}}>view our great deals</p>
+          <Button className="buttonOutlined light" variant="outlined">Save Now</Button>
         </div>
         {/* <img src={webBanner} alt="" height="100%"/> */}
         <div

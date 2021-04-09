@@ -142,7 +142,7 @@ export const Basket = (props) => {
                             width: "fit-content",
                           }}
                         >
-                          UK {item?.size} {item?.price}
+                          UK {item?.size} £{(item?.price/100).toFixed(2)}
                         </p>
                         <p
                           style={{
@@ -248,7 +248,7 @@ export const Basket = (props) => {
                   </div>
                 </td>
                 <td>
-                  <p>£{item.price}.00</p>
+                  <p> £{(item?.price/100).toFixed(2)}</p>
                 </td>
                 <td>
                   <div style={{ margin: "0 auto", width: "fit-content" }}>

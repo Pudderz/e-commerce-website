@@ -26,8 +26,13 @@ body {
 
 .row {
   display: flex;
+  
   gap: 30px;
   justify-content: space-between;
+}
+
+.shippingForm{
+  margin:auto;
 }
 
 .inputContainer {
