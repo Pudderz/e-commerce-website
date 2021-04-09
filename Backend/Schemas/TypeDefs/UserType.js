@@ -61,7 +61,7 @@ const ProductType = new GraphQLObjectType({
     _id: { type: GraphQLID },
     // productId: { type: GraphQLString },
     productName: { type: GraphQLString },
-    price: { type: GraphQLString },
+    price: { type: GraphQLInt },
     
     averageRating: { type: GraphQLString },
     description: { type: GraphQLString },
@@ -71,10 +71,9 @@ const ProductType = new GraphQLObjectType({
     categories: {type: new GraphQLList(GraphQLString) },
     slug: { type: GraphQLString },
     discounted: {type: GraphQLBoolean},
-    discountedPrice: {type: GraphQLString},
-    gender: {type: new GraphQLList(GraphQLString) },
-    male: {type: GraphQLBoolean},
-    female: {type: GraphQLBoolean},
+    discountedFrom: {type: GraphQLInt},
+    gender: {type: GraphQLString },
+    sold: {type: GraphQLInt},
     numOfReviews: { 
       type: GraphQLInt ,
       resolve(parent, args){

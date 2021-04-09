@@ -187,57 +187,40 @@ const Mutation = new GraphQLObjectType({
     createProduct: {
       type: ProductType,
       args: {
-        productname: {type: GraphQLString},
-        slug: {type: GraphQLString},
-        price: {type: GraphQLString},
-        description: {type: GraphQLString},
+        productname: { type: GraphQLString },
+        slug: { type: GraphQLString },
+        price: { type: GraphQLInt },
+        description: { type: GraphQLString },
         files: { type: new GraphQLList(GraphQLUpload) },
-        stock: {type: new GraphQLList(GraphQLInt)},
-        categories: {type: new GraphQLList(GraphQLString)},
-        male: {type: GraphQLBoolean},
-        female: {type: GraphQLBoolean}
+        stock: { type: new GraphQLList(GraphQLInt) },
+        categories: { type: new GraphQLList(GraphQLString) },
+        gender: { type: GraphQLString },
       },
       resolve: async (parent, args, context) => {
         const { db, token } = await context();
         // Tests if user is authenticated to create a review
         let { error } = await isTokenValid(token);
         if (error) return new Error("You do not have a valid token");
-        
+
         // Checks if name already exists in mongoDB product collection
-        await Product.find({productName: args.productname},(err, doc)=>{
-          console.log('found product')
-          console.log(doc.length);
-          if(doc.length >0){
-            console.log('doc is greater than 1')
-            error = true;
-          }
-        });
-        if (error) return new Error("The name you have choosen already exists");
+        const productCheck = await Product.find({ productName: args.productname });
+        console.log(productCheck.length);
+        if (productCheck.length > 0)
+          return new Error("The name you have choosen already exists");
 
         const { files } = args;
-        console.log('uploading images')
+        console.log("uploading images");
         let fileNameArray = [];
 
-        if(files.length < 2) return new Error("Must have 2 or more images");
+        if (files.length < 2) return new Error("Must have 2 or more images");
 
-        for(let img of files){
-           const { createReadStream, filename } = await img;
-            await new Promise((res) =>
-                      createReadStream()
-                        .pipe(
-                          projectImages.file(filename).createWriteStream({
-                            resumable: false,
-                            gzip: true,
-                          })
-                        )
-                        .on("finish", res)
-                    );
-            fileNameArray.push(filename); 
+        // appends slug based on gender
+        let slug = encodeURIComponent(args.productname);
         }
-       
-        console.log('images uploaded')
+
+        console.log("images uploaded");
         console.log(fileNameArray);
-console.log("Uploading product");
+        console.log("Uploading product");
         const time = new Date().getTime();
 
         console.log(`slug - ${slug}`);
@@ -260,13 +243,15 @@ console.log("Uploading product");
           slug,
           productName: args.productname,
           images: fileNameArray,
-          price: args.price,
+          price: args.price * 100,
           description: args.description,
           categories: args.categories,
           stock: stockContainer,
           datePosted: time,
-          gender,
+          gender: args.gender,
           averageRating: 0,
+          discounted:false,
+          discountedFrom: args.price *100,
         });
 
         return product.save();
