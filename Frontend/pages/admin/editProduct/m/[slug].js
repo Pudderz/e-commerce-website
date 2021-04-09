@@ -1,12 +1,12 @@
 import React from "react";
 import { useRouter } from "next/router";
 import DefaultErrorPage from "next/error";
-import { LOAD_PRODUCT_BY_SLUG } from "../../../GraphQL/Queries";
+import { LOAD_PRODUCT_BY_SLUG } from "../../../../GraphQL/Queries";
 import dynamic from 'next/dynamic';
-import { initializeApollo } from "../../../lib/apolloClient";
-import AdminRoutes from "../../../components/Authentication/AdminRoutes";
+import { initializeApollo } from "../../../../lib/apolloClient";
+import AdminRoutes from "../../../../components/Authentication/AdminRoutes";
 
-const EditProductPage = dynamic(() => import("../../../pagesAuth/adminPages/EditProductPage"));
+const EditProductPage = dynamic(() => import("../../../../pagesAuth/adminPages/EditProductPage"));
 
 
 export const ProductPage = (props) => {
@@ -38,7 +38,7 @@ export async function getStaticProps({ params }) {
 
   const { data } = await apolloClient.query({
     query: LOAD_PRODUCT_BY_SLUG,
-    variables: { slug: params.slug },
+    variables: { slug: `m/${params.slug}` },
   });
 
   const result = data?.getProductBySlug;
@@ -53,7 +53,7 @@ export async function getStaticProps({ params }) {
       description: result?.description || "",
       variants: result?.stock || [],
       isDiscounted: result?.discounted || "",
-      discountedPrice: result?.discountedPrice || result?.price || "",
+      discountedFrom: result?.discountedFrom || result?.price || "",
     },
     // revalidate: 120,
   };

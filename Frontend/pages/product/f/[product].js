@@ -1,27 +1,26 @@
 import { Breadcrumbs, Button, Typography } from "@material-ui/core";
 import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
-import { ProductImages } from "../../components/ProductPages/ProductImages";
-import { ProductTabs } from "../../components/ProductPages/ProductTabs";
-import { RecentlyViewed } from "../../components/Common/RecentlyViewed";
-import { addToHistory } from "../../lib/localStorage";
+import { ProductImages } from "../../../components/ProductPages/ProductImages";
+import { ProductTabs } from "../../../components/ProductPages/ProductTabs";
+import { RecentlyViewed } from "../../../components/Common/RecentlyViewed";
+import { addToHistory } from "../../../lib/localStorage";
 import { useSnackbar } from "notistack";
-import { SelectSize } from "../../components/ProductPages/SelectSize";
+import { SelectSize } from "../../../components/ProductPages/SelectSize";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import { useRouter } from "next/router";
 import DefaultErrorPage from "next/error";
-import SelectSmallSize from "../../components/ProductPages/SelectSizeSmall";
-import { initializeApollo } from "../../lib/apolloClient";
-import { LOAD_ALL_PRODUCTS, LOAD_PRODUCT_BY_SLUG } from "../../GraphQL/Queries";
-import {addCartItem, removeCartItem} from "../../Redux/actions/actions";
-import { connect } from 'react-redux';
-// const fetchMongoDBProduct = () =>{
-  
-// }
-
+import SelectSmallSize from "../../../components/ProductPages/SelectSizeSmall";
+import { initializeApollo } from "../../../lib/apolloClient";
+import {
+  LOAD_ALL_PRODUCTS,
+  LOAD_PRODUCT_BY_SLUG,
+} from "../../../GraphQL/Queries";
+import { addCartItem, removeCartItem } from "../../../Redux/actions/actions";
+import { connect } from "react-redux";
 
 export const ProductPage = (props) => {
-  console.log(props)
+  console.log(props);
 
   const router = useRouter();
 
@@ -42,7 +41,6 @@ export const ProductPage = (props) => {
     setProduct(props);
   }, [props]);
 
-
   useEffect(() => {
     return () => {
       addToHistory(product);
@@ -50,16 +48,15 @@ export const ProductPage = (props) => {
   }, []);
 
   const handleAddToCart = (item, quantity = 1) => {
-    console.log(item)
+    console.log(item);
     console.log(sizeId.current, size);
     if (size !== "") {
-        
       //Work out maxStock
       let minSize = 3.5;
       let maxStock = 1;
-      maxStock = (size-minSize)*2
-      console.log(item.stock[maxStock])
-      console.log(item.price)
+      maxStock = (size - minSize) * 2;
+      console.log(item.stock[maxStock]);
+      console.log(item.price);
       //dispatch
       props.addCartItem({
         id: item.id,
@@ -68,10 +65,9 @@ export const ProductPage = (props) => {
         price: item.price,
         quantity: 1,
         images: item.images,
-        size : size,
+        size: size,
         maxStock: item.stock[maxStock],
-      })
-
+      });
     } else {
       enqueueSnackbar("Please Select a size", {
         variant: "error",
@@ -104,15 +100,13 @@ export const ProductPage = (props) => {
           {/* +Review bar */}
 
           <h2>{`£${props?.price}.00`}</h2>
-          <p style={{ color: "green" }}>
-            In Stock
-          </p>
+          <p style={{ color: "green" }}>In Stock</p>
 
           <label htmlFor="sizes" style={{ fontWeight: "bold" }}>
             Select size
           </label>
           <SelectSize
-            availableSizes={props?.stock} 
+            availableSizes={props?.stock}
             // productVariants={product.variants}
             changeSize={changeSize}
             size={size}
@@ -201,37 +195,29 @@ export const ProductPage = (props) => {
   );
 };
 
-
-
 const mapStateToProps = (state, ownProps) => ({
   // ... computed data from state and optionally ownProps
-  state:{...state},
-  props:{...ownProps},
-})
+  state: { ...state },
+  props: { ...ownProps },
+});
 
 const mapDispatchToProps = {
   addCartItem,
   removeCartItem,
   // ... normally is an object full of action creators
-}
+};
 
-
-
-export default connect(mapStateToProps, mapDispatchToProps)(ProductPage)
+export default connect(mapStateToProps, mapDispatchToProps)(ProductPage);
 // export default Basket;
-
-
-
-
 
 export async function getStaticProps({ params }) {
   console.log(`params`);
-  console.log(params)
+  console.log(params);
   const apolloClient = initializeApollo();
 
   const { data } = await apolloClient.query({
     query: LOAD_PRODUCT_BY_SLUG,
-    variables: { slug: params.product },
+    variables: { slug: `f/${params.product}`, gender: "female" },
   });
 
   const result = data?.getProductBySlug;
@@ -255,30 +241,28 @@ export async function getStaticPaths() {
 
   const apolloClient = initializeApollo();
 
-
   const { data } = await apolloClient.query({
-    query: LOAD_ALL_PRODUCTS});
-    if(data?.getAllProducts){
-      data?.getAllProducts?.forEach((product)=>{
-        products.push({slug: product.slug, gender: product.gender})
-      })
-    }
-  
-  products = products.filter(product => product.slug !== null)
-  console.log('[product] paths')
-  console.log(products)
+    query: LOAD_ALL_PRODUCTS,
+    variables: { female: true },
+  });
+  if (data?.getAllProducts) {
+    data?.getAllProducts?.forEach((product) => {
+      products.push({ slug: product.slug, gender: product.gender });
+    });
+  }
+
+  products = products.filter((product) => product.slug !== null);
+  console.log("[product] paths");
+  console.log(products);
   return {
     paths:
       products?.map((product) => {
-        
-        if(product && product?.slug){
-
-          console.log(product.slug);
-          console.log("slug - ", product.slug);
-          return `/product/${product.slug}`;
-
+        if (product && product?.slug) {
+          let slug = product.slug.replace("f/", "");
+          console.log(slug);
+          console.log("female slug - ", product.slug);
+          return `/product/f/${slug}`;
         }
-        
       }) ?? [],
     fallback: true,
   };
