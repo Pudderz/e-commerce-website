@@ -88,20 +88,26 @@ export const LOAD_ALL_PRODUCTS = gql`
   query(
     $male: Boolean
     $female: Boolean
+    $unisex: Boolean
     $under50: Boolean
     $under100: Boolean
     $discounted: Boolean
     $search: String
     $limit:Int
+    $stockSize:[Float]
+    $sortBy: String
     ) {
     getAllProducts(
       male: $male
       female: $female
+      unisex: $unisex
       under50: $under50
       under100: $under100
       discounted: $discounted
       search: $search
       limit:$limit
+      stockSize: $stockSize
+      sortBy: $sortBy
     ){
       images
       productName
@@ -112,7 +118,7 @@ export const LOAD_ALL_PRODUCTS = gql`
       numOfReviews
       averageRating
       discounted
-      discountedPrice
+      discountedFrom
     }
   }
 `
@@ -141,13 +147,16 @@ export const LOAD_PRODUCT_BY_SLUG = gql`
       productName
       _id
       slug
-      stock
+      stock{
+        shoeSize
+        stock
+      }
       price
       numOfReviews
       averageRating
       description
       discounted
-      discountedPrice
+      discountedFrom
     }
   }
 `

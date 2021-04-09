@@ -20,19 +20,11 @@ const Product = require("../models/products");
 const Order = require("../models/order");
 const { ObjectId } = require("mongodb");
 const { GraphQLUpload } = require("graphql-upload");
-const { Storage } = require("@google-cloud/storage");
-const path = require("path");
+
 const { projectImages } = require("../analytics/googleCloudBucket");
+const { GraphQLFloat } = require("graphql");
 
 const files = [];
-
-// const gc = new Storage({
-//   keyFilename: path.join(__dirname, "../key.json"),
-//   projectId: "e-commerce-web-project",
-// });
-
-// // gc.getBuckets().then(x=>console.log(x));
-// const projectImages = gc.bucket("e-commerce-image-storage-202");
 
 
 const RootQuery = new GraphQLObjectType({
@@ -40,53 +32,89 @@ const RootQuery = new GraphQLObjectType({
   fields: {
     getAllProducts: {
       type: new GraphQLList(ProductType),
-      args: { 
+      args: {
         id: { type: GraphQLInt },
-        category: {type: GraphQLString},
-        male:{type: GraphQLBoolean},
-        female:{type: GraphQLBoolean},
-        under50:{type: GraphQLBoolean},
-        under100:{type: GraphQLBoolean},
-        discounted:{type: GraphQLBoolean},
-        search: {type: GraphQLString},
-        limit: {type: GraphQLInt},
-        skip: {type: GraphQLInt},
-    },
+        category: { type: GraphQLString },
+        male: { type: GraphQLBoolean },
+        female: { type: GraphQLBoolean },
+        unisex: { type: GraphQLBoolean },
+        under50: { type: GraphQLBoolean },
+        under100: { type: GraphQLBoolean },
+        discounted: { type: GraphQLBoolean },
+        search: { type: GraphQLString },
+        limit: { type: GraphQLInt },
+        skip: { type: GraphQLInt },
+        stockSize: { type: new GraphQLList(GraphQLFloat) },
+        sortBy: { type: GraphQLString },
+      },
       resolve: async (parent, args, context) => {
         await context();
-
+        let sortBy = {};
         let searchParameters = {};
 
-
-        if(args.search){
-          searchParameters.productName =  { $regex: args.search, $options: "i" };
+        if (args.search) {
+          searchParameters.productName = { $regex: args.search, $options: "i" };
         }
 
-        if(args.male || args.female){
-          const filterGender = [];
-          if(args.male) filterGender.push("male");
-          if(args.female) filterGender.push("female");
-          if(filterGender.length === 1){
-            searchParameters[gender] = filterGender;
+        if (args.sortBy) {
+          switch (args.sortBy) {
+            case "sold": {
+              sortBy.sold = -1;
+              break;
+            }
+            case "LowToHigh": {
+              sortBy.price = 1;
+              break;
+            }
+            case "HighToLow": {
+              sortBy.price = -1;
+              break;
+            }
+            default: {
+              sortBy.datePosted = "desc";
+            }
           }
-          
-          
-
+        } else {
+          sortBy.datePosted = "desc";
         }
-        if(args.discounted){
+
+        if (args.male || args.female || args.unisex) {
+          const filterGender = [];
+          if (args.male) filterGender.push("male");
+          if (args.female) filterGender.push("female");
+          if (args.unisex) filterGender.push("unisex");
+          if (filterGender.length === 1) {
+            searchParameters.gender = filterGender ;
+          }
+        }
+
+        if (args.stockSize) {
+          searchParameters.stock = {
+            $elemMatch: { stock: { $gt: 0 }, shoeSize: [...args.stockSize] },
+          };
+        }
+        if (args.discounted) {
           searchParameters.discounted = true;
         }
-        if(typeof args.category !== "undefined"){
+        if (typeof args.category !== "undefined") {
           searchParameters.categories = args.category;
         }
 
-        if(args.limit){
-          if(args.skip){
-            return Product.find({...searchParameters}).sort({datePosted: 'desc'}).skip(args.skip).limit(args.limit);
+        if (args.limit) {
+          if (args.skip) {
+            return Product.find({ ...searchParameters })
+              .sort({ ...sortBy, _id: 1 })
+              .skip(args.skip)
+              .limit(args.limit);
           }
-          return Product.find({...searchParameters}).sort({datePosted: 'desc'}).limit(args.limit);
+          return Product.find({ ...searchParameters })
+            .sort({ ...sortBy, _id: 1 })
+            .limit(args.limit);
         }
-          return Product.find({...searchParameters}).sort({datePosted: 'desc'});
+        return Product.find({ ...searchParameters }).sort({
+          ...sortBy,
+          _id: 1,
+        });
       },
     },
     getAllReviews: {
