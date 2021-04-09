@@ -138,7 +138,7 @@ const RootQuery = new GraphQLObjectType({
         productName: { type: new GraphQLNonNull(GraphQLString) },
       },
       resolve: async (parent, args, context) => {
-        console.log(args)
+        console.log(args);
         await context();
         console.log("finding");
         return Product.find({ productName: args.productName });
@@ -193,19 +193,19 @@ const RootQuery = new GraphQLObjectType({
         if (!permissions.includes("read:allOrders")) return;
         //get sub id from accessToken
         //returns all orders with that subId
-        return Order.find({}).sort({date: 'desc'});;
+        return Order.find({}).sort({ date: "desc" });
       },
     },
     getProductBySlug: {
       type: ProductType,
-      args: {slug: {type: GraphQLString}},
+      args: { slug: { type: GraphQLString } },
       resolve: async (parent, args, context) => {
         const { db, token } = await context();
-        console.log('getProductBySlug');
-        console.log(args.slug)
-        return Product.findOne({slug: args.slug });
+        console.log("getProductBySlug");
+        console.log(args.slug);
+        return Product.findOne({ slug: args.slug });
       },
-    }
+    },
   },
 });
 
@@ -308,7 +308,6 @@ const Mutation = new GraphQLObjectType({
         return product.save();
       },
     },
-
 
     createReview: {
       type: ProductReviews,
@@ -475,11 +474,11 @@ const Mutation = new GraphQLObjectType({
         }
       },
     },
-    updateProductImageOrder:{
+    updateProductImageOrder: {
       type: ProductType,
       args: {
         id: { type: new GraphQLNonNull(GraphQLString) },
-        images: { type: new GraphQLNonNull(GraphQLString)},
+        images: { type: new GraphQLNonNull(GraphQLString) },
       },
       resolve: async (parent, args, context) => {
         console.log("editing a review");
@@ -489,16 +488,12 @@ const Mutation = new GraphQLObjectType({
         const { error } = await isTokenValid(token);
         if (error) return null;
         if (!subId) return null;
-
-
-        
-        
 
         try {
           return await Product.findOneAndUpdate(
             { _id: ObjectId(args.id), subId: subId },
             {
-              images: args.images
+              images: args.images,
             },
             { new: true, useFindAndModify: true },
             (err, doc) => {
@@ -515,11 +510,11 @@ const Mutation = new GraphQLObjectType({
         }
       },
     },
-    updateProductImages:{
+    updateProductImages: {
       type: ProductType,
       args: {
         id: { type: new GraphQLNonNull(GraphQLString) },
-        images: { type: new GraphQLNonNull(GraphQLString)},
+        images: { type: new GraphQLNonNull(GraphQLString) },
       },
       resolve: async (parent, args, context) => {
         console.log("editing a review");
@@ -530,14 +525,11 @@ const Mutation = new GraphQLObjectType({
         if (error) return null;
         if (!subId) return null;
 
-
-
-
         try {
           return await Review.findOneAndUpdate(
-            { _id: ObjectId(args.id)},
+            { _id: ObjectId(args.id) },
             {
-              images: args.images
+              images: args.images,
             },
             { new: true, useFindAndModify: true },
             (err, doc) => {
@@ -554,50 +546,51 @@ const Mutation = new GraphQLObjectType({
         }
       },
     },
-    updateProductPrice:{
+    updateProductPrice: {
       type: ProductType,
-    args: {
-      id: { type: new GraphQLNonNull( GraphQLString)},
-      price: { type: new GraphQLNonNull(GraphQLString) },
-      discounted:{type: new GraphQLNonNull(GraphQLBoolean)},
-      discountedPrice:{type: new GraphQLNonNull(GraphQLString)},
-    },
-    resolve: async (parent, args, context) => {
-      console.log("updating product price");
-      console.log(args);
-      const { db, token, subId } = await context();
-      //Test if JWT is valid
-      const { error } = await isTokenValid(token);
-      if (error) return null;
-      if (!subId) return null;
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLString) },
+        price: { type: new GraphQLNonNull(GraphQLInt) },
+        discounted: { type: new GraphQLNonNull(GraphQLBoolean) },
+        discountedPrice: { type: new GraphQLNonNull(GraphQLInt) },
+      },
+      resolve: async (parent, args, context) => {
+        console.log("updating product price");
+        console.log(args);
+        const { db, token, subId } = await context();
+        //Test if JWT is valid
+        const { error } = await isTokenValid(token);
+        if (error) return null;
+        if (!subId) return null;
 
-      let id = ObjectId(args.id);
+        let id = ObjectId(args.id);
 
-      try {
-        return await Product.findOneAndUpdate(
-          { _id: id},
-          {
-            price: args.price,
-            discounted: args.discounted,
-            discountedPrice: args.discountedPrice,
-          },
-          { new: true, useFindAndModify: false },
-          (err, doc) => {
-            console.log(`doc - ${doc}`);
-            if (err) {
-              console.log("Something wrong when updating data!");
-              return null;
+        try {
+          return await Product.findOneAndUpdate(
+            { _id: id },
+            {
+              price: args.discounted
+                ? args.discountedPrice * 1
+                : args.price * 1,
+              discounted: args.discounted,
+              discountedFrom: args.price * 1,
+            },
+            { new: true, useFindAndModify: false },
+            (err, doc) => {
+              console.log(`doc - ${doc}`);
+              if (err) {
+                console.log("Something wrong when updating data!");
+                return null;
+              }
             }
-            
-          }
-        );
-      } catch (err) {
-        console.log("error" + err);
-        return null;
-      }
+          );
+        } catch (err) {
+          console.log("error" + err);
+          return null;
+        }
+      },
     },
-    },
-    updateProductDescription:{
+    updateProductDescription: {
       type: ProductType,
       args: {
         id: { type: new GraphQLNonNull(GraphQLString) },
@@ -614,7 +607,7 @@ const Mutation = new GraphQLObjectType({
 
         try {
           return await Product.findOneAndUpdate(
-            { _id: ObjectId(args.id)},
+            { _id: ObjectId(args.id) },
             {
               description: args.description,
             },
@@ -633,7 +626,6 @@ const Mutation = new GraphQLObjectType({
         }
       },
     },
-
   },
 });
 
