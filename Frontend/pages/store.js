@@ -27,10 +27,16 @@ export const StorePage = () => {
 
     let filterBy = {};
     for(const [key, value] of Object.entries(data)){
+      console.log([key,value])
       if(value){
         filterBy[key] = true;
       }
+      if(key == "sortBy"){
+        filterBy[key] = value;
+      }
     }
+
+    console.log(filterBy)
     fetchProducts({variables:{...filterBy}})
   }
 

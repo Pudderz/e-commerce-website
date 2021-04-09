@@ -38,6 +38,16 @@ export const StoreFilter = ({handleFormChange}) => {
                   }
                   label="Female"
                 />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      inputRef={register}
+                      name="unisex"
+                      color="primary"
+                    />
+                  }
+                  label="Unisex"
+                />
               </li>
 
               <li>
@@ -82,41 +92,16 @@ export const StoreFilter = ({handleFormChange}) => {
                 <Button style={{ width: "100%" }}>Size</Button>
                 {/* <SelectSize availableSizes={[2,4,5]}></SelectSize> */}
               </li>
-              {/* <li>
-                <Button style={{ width: "100%" }}>Colours</Button>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      name="green"
-                      color="primary"
-                      inputRef={register}
-                    />
-                  }
-                  label="Green"
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                    inputRef={register}
-                      name="red"
-                      color="primary"
-                    />
-                  }
-                  label="Green"
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      // checked={state.checkedB}
-                      // onChange={handleChange}
-                      name="blue"
-                      inputRef={register}
-                      color="primary"
-                    />
-                  }
-                  label="blue"
-                />
-              </li> */}
+              <li>
+                <label htmlFor="sortBy"></label>
+                <select name="sortBy" ref={register}>
+                  <option value="" key="date">Newest</option>
+                  <option value="LowToHigh" key="LowToHigh">Low - High</option>
+                  <option value="HighToLow" key="HighToLow">High - Low</option>
+                  <option value="sold" key="sold">BestSellers</option>
+                </select>
+              </li>
+              
             </ul>
             <Button variant="contained" color="primary" type="submit">Submit</Button>
           </form>
