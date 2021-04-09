@@ -7,6 +7,16 @@ const isTokenValid = require("../Authentication/validate");
 const jwt_decode = require("jwt-decode");
 
 
+const updateSoldItems = async (items)=>{
+  console.log(items)
+  for (const item of items){
+    const sold = (sold == null)? 0: item.sold;
+    await Product.findByIdAndUpdate(item.id,
+        {sold: sold + 1}
+      ) 
+  }
+}
+
 const calculateOrderAmount = async (items = []) => {
   // Replace this constant with a calculation of the order's amount
   // Calculate the order total on the server to prevent
@@ -42,7 +52,7 @@ const calculateOrderAmount = async (items = []) => {
     if (confirmedItems[item.id]) {
       let price = confirmedItems[item.id].price;
       if (typeof price == "undefined") continue;
-      total += confirmedItems[item.id].price * 100 * item.quantity;
+      total += confirmedItems[item.id].price * 1 * item.quantity;
       confirmedItemsArray.push({ ...item, price });
     }
   }
@@ -106,6 +116,9 @@ const generateResponse = async ({intent, confirmedItems, orderAmount, request}) 
     let savedOrder = await order.save();
     console.log(`id - ${savedOrder._id}`);
     console.log(savedOrder)
+
+
+    updateSoldItems(confirmedItems);
     return {
       success: true,
       orderId: savedOrder._id,
