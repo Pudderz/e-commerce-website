@@ -69,12 +69,12 @@ export const StoreItems = ({ items }) => {
                   <span
                     style={{ color: "#e81c1c", textDecoration: "line-through" }}
                   >
-                    £{item.price}
+                    £{(item.discountedFrom/100).toFixed(2)}
                   </span>
-                  <span>£{item.discountedPrice}</span>
+                  <span>£{(item.price/100).toFixed(2)}</span>
                 </div>
               ) : (
-                <p>£{item.price}</p>
+                <p>£{(item.price/100).toFixed(2)}</p>
               )}
             </>
           )}

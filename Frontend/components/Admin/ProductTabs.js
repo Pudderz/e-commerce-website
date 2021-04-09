@@ -76,16 +76,16 @@ mutation(
 
 const EDIT_PRODUCT_PRICE = gql`
   mutation(
-    $price: String!
+    $price: Int!
     $discounted: Boolean!
-    $discountedPrice: String!
+    $discountedPrice: Int!
     $id: String!
   ) {
     updateProductPrice(price: $price, id: $id, discounted: $discounted, discountedPrice: $discountedPrice) {
       productName
       price
       discounted
-      discountedPrice
+      discountedFrom
     }
   }
 `;
@@ -164,7 +164,7 @@ export const ProductTabs = (props) => {
  const onPriceSubmit = data =>{
    console.log(data);
    console.log
-   editPrice({variables: {id:props.product.id, price: data.productPrice, discounted: data.isDiscounted, discountedPrice: data.discountedPrice}})
+   editPrice({variables: {id:props.product.id, price: 100*data.productPrice, discounted: data.isDiscounted, discountedPrice: 100*data.discountedPrice}})
  }
 
 
@@ -265,7 +265,7 @@ export const ProductTabs = (props) => {
         <div>
           <form onSubmit={handleSumbitPrice(onPriceSubmit)}>
           <h3>Pricing</h3>
-          <p>Current Price: £{product.price}</p>
+          <p>Current Price: £{(product.price/100).toFixed(2)}</p>
           <FormControl
             fullWidth
             variant="outlined"
@@ -281,8 +281,9 @@ export const ProductTabs = (props) => {
               // value={values.amount}
               // onChange={handleChange('amount')}
               type="number"
+              step="0.01"
               inputRef={registerPrice}
-              defaultValue={product.price}
+              defaultValue={(product.discounted)?product.discountedFrom/100 : product.price/100}
               startAdornment={
                 <InputAdornment position="start">£</InputAdornment>
               }
@@ -321,7 +322,7 @@ export const ProductTabs = (props) => {
               label="Discounted price"
               inputRef={registerPrice}
               type="number"
-              defaultValue={product.discountedPrice}
+              defaultValue={(product.discounted)? product.price/100 : product.discountedFrom/100 }
               startAdornment={
                 <InputAdornment position="start">£</InputAdornment>
               }
