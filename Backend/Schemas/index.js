@@ -216,6 +216,29 @@ const Mutation = new GraphQLObjectType({
 
         // appends slug based on gender
         let slug = encodeURIComponent(args.productname);
+        if (args.gender === "female") {
+          slug = "f/" + slug;
+        } else if (args.gender === "male") {
+          slug = "m/" + slug;
+        } else if (args.gender == "unisex") {
+          slug = "u/" + slug;
+        } else {
+          return new Error("Please provide a valid gender");
+        }
+
+        for (let img of files) {
+          const { createReadStream, filename } = await img;
+          await new Promise((res) =>
+            createReadStream()
+              .pipe(
+                projectImages.file(filename).createWriteStream({
+                  resumable: false,
+                  gzip: true,
+                })
+              )
+              .on("finish", res)
+          );
+          fileNameArray.push(filename);
         }
 
         console.log("images uploaded");
