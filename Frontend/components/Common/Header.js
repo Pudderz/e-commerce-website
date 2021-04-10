@@ -99,30 +99,103 @@ export const Header = (props) => {
       });
   };
 
+
+  const [verified, setVerified] = useState(false);
+
+  // temp using access token. Will move to id token in future
+  const getToken = async () => {
+    // const claims = await getIdTokenClaims();
+
+    let token = localStorage.getItem("token");
+
+    if (token) {
+      const decodeToken = JSON.parse(atob(token.split(".")[1]));
+      if (decodeToken.permissions.includes("write:product")) {
+        console.log(decodeToken.permissions.includes("write:product"))
+        setVerified(true);
+      }
+
+    }
+  };
+
+
+  useEffect(() => {
+    getTrendingInfo();
+    getToken();
+  }, []);
+
+
+  
+
+
+
   return (
     <>
       <nav
-        style={{
-          position: "sticky",
-          top: "0",
-          backgroundColor: "#fff",
-          boxShadow: "rgb(0 0 0) 0px -17px 26px",
-          margin: "0",
-          zIndex: "4",
-        }}
+        className="navBar"
       >
-        <ul
-          style={{
-            display: "flex",
-            listStyle: "none",
-            justifyContent: "space-between",
-            margin: "0",
-            maxWidth: "100%",
-            boxSizing: "border-box",
-            padding: "0 20px",
-            height: "100%",
-          }}
-        >
+        <ul className="smallNav">
+          <li>
+            <Link className="link" href="/">
+              Home
+            </Link>
+          </li>
+          <li style={{ height: "fit-content", alignSelf: "center" }}>
+            <ul
+              style={{
+                display: "flex",
+                listStyle: "none",
+                justifyContent: "space-around",
+                width: "100%",
+                padding: "0",
+              }}
+            >
+              <li style={{ height: "fit-content", alignSelf: "center" }}>
+                <IconButton size="small">
+                  <SearchIcon style={{ fill: "black" }} />
+                </IconButton>
+              </li>
+              {isAuthenticated ? (
+                <li>
+                  <Tooltip title="Profile">
+                    <IconButton
+                      aria-label="profile"
+                      onClick={handleProfileClick}
+                    >
+                      {typeof user.picture ? (
+                        <Avatar
+                          src={user?.picture}
+                          alt={user?.name}
+                          style={{ height: "25px", width: "25px" }}
+                        />
+                      ) : (
+                        <AccountCircleIcon />
+                      )}
+                    </IconButton>
+                  </Tooltip>
+                </li>
+              ) : (
+                <li style={{ alignSelf: "center", height: "fit-content" }}>
+                  <LoginButton />
+                </li>
+              )}
+
+              <li>
+                <Tooltip title="Basket">
+                  <IconButton aria-label="cart" onClick={handleBasketClick}>
+                    <Badge
+                      badgeContent={props?.cartState?.length}
+                      color="primary"
+                    >
+                      <ShoppingBasketIcon />
+                    </Badge>
+                  </IconButton>
+                </Tooltip>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <ul className="largeNav">
           <li>
             <div
               style={{
@@ -182,19 +255,20 @@ export const Header = (props) => {
                     }}
                   >
                     <div>
+                      <a href="">Men's Homepage</a>
                       <a href="">Featured</a>
                       <a href="">New Releases</a>
                     </div>
                     <div>
-                      <a href="">All Shoes</a>
-                      <a href="">Running</a>
-                      <a href="">Casual</a>
-                      <a href="">Hiking</a>
+                      <a href="">All Men's Shoes</a>
+                      <a href="">Men's Running</a>
+                      <a href="">Men's Casual</a>
+                      <a href="">Men's Hiking</a>
                     </div>
                     <div>
                       <h5 style={{ margin: "0" }}>Trending</h5>
                       <ul style={{ listStyle: "none", padding: "0" }}>
-                        {femaleTrendingData.map((product) => (
+                        {maleTrendingData.map((product) => (
                           <li key={product._id}>
                             <Link href={`/product/${product.slug}`}>
                               {product.productName}
@@ -238,19 +312,20 @@ export const Header = (props) => {
                     }}
                   >
                     <div>
+                      <a href="">Women's Homepage</a>
                       <a href="">Featured</a>
                       <a href="">New Releases</a>
                     </div>
                     <div>
-                      <a href="">All Shoes</a>
-                      <a href="">Running</a>
-                      <a href="">Casual</a>
-                      <a href="">Hiking</a>
+                      <a href="">All Women's Shoes</a>
+                      <a href="">Women's Running</a>
+                      <a href="">Women's Casual</a>
+                      <a href="">Women's Hiking</a>
                     </div>
                     <div>
                       <h5 style={{ margin: "0" }}>Trending</h5>
                       <ul style={{ listStyle: "none", padding: "0" }}>
-                        {maleTrendingData.map((product) => (
+                        {femaleTrendingData.map((product) => (
                           <li key={product._id}>
                             <Link href={`/product/${product.slug}`}>
                               {product.productName}
@@ -338,8 +413,10 @@ export const Header = (props) => {
                   </div>
                 </div>
               </div>
-              <div className="dropdown">
-              <div
+              
+              {verified && (
+                <div className="dropdown">
+                <div
                   className="headerButton"
                   style={{
                     display: "flex",
@@ -382,6 +459,8 @@ export const Header = (props) => {
                   </div>
                 </div>
               </div>
+              )}
+              
             </div>
           </li>
           <li style={{ height: "fit-content", alignSelf: "center" }}>
@@ -438,27 +517,6 @@ export const Header = (props) => {
                     </IconButton>
                   </Tooltip>
 
-                  <Popover
-                    open={openProfile}
-                    anchorEl={anchorProfileEl}
-                    onClose={handleProfileClose}
-                    anchorOrigin={{
-                      vertical: "bottom",
-                      horizontal: "center",
-                    }}
-                    transformOrigin={{
-                      vertical: "top",
-                      horizontal: "center",
-                    }}
-                  >
-                    <div style={{ padding: "5px" }}>
-                      <p>Contents</p>
-                      <Link className="link" href="/profile">
-                        Profile
-                      </Link>
-                      <LogoutButton />
-                    </div>
-                  </Popover>
                 </li>
               ) : (
                 <li style={{ alignSelf: "center", height: "fit-content" }}>
@@ -478,7 +536,34 @@ export const Header = (props) => {
                   </IconButton>
                 </Tooltip>
 
-                <Popover
+               
+              </li>
+            </ul>
+          </li>
+        </ul>
+
+        <Popover
+          open={openProfile}
+          anchorEl={anchorProfileEl}
+          onClose={handleProfileClose}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "center",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "center",
+          }}
+        >
+          <div style={{ padding: "5px" }}>
+            <p>Contents</p>
+            <Link className="link" href="/profile">
+              Profile
+            </Link>
+            <LogoutButton />
+          </div>
+        </Popover>
+        <Popover
                   open={openBasket}
                   anchorEl={anchorBasketEl}
                   onClose={handleBasketClose}
@@ -677,10 +762,6 @@ export const Header = (props) => {
                     </div>
                   </div>
                 </Popover>
-              </li>
-            </ul>
-          </li>
-        </ul>
       </nav>
       {/* blur background when access menu */}
       <div className={`backdrop ${menuOpen && "menuOpen"}`}></div>

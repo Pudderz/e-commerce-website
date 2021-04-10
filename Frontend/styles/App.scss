@@ -26,13 +26,13 @@ body {
 
 .row {
   display: flex;
-  
+
   gap: 30px;
   justify-content: space-between;
 }
 
-.shippingForm{
-  margin:auto;
+.shippingForm {
+  margin: auto;
 }
 
 .inputContainer {
@@ -503,7 +503,7 @@ button.buttonOutlined {
   @media (max-width: 1000px) {
     display: grid;
     justify-content: inherit;
-    .imageCategoryContainer{
+    .imageCategoryContainer {
       width: 100%;
     }
   }
@@ -532,20 +532,19 @@ button.headerButton {
   -ms-border-radius: 0;
   -o-border-radius: 0;
   width: 100px;
-  &:hover{
+  &:hover {
     border-bottom: 4px solid black;
   }
 }
-
 
 .dropdown-content {
   display: none;
   position: absolute;
   background-color: #f9f9f9;
   min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 3;
-  left:0;
+  left: 0;
   height: 100%;
   max-height: 0px;
   transition: all 4.15s ease-out;
@@ -555,55 +554,111 @@ button.headerButton {
   -o-transition: all 4.15s ease-out;
   opacity: 0;
   text-align: start;
-  a{
-    display:block
+  a {
+    display: block;
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }
 
-
-
-.dropdown{
-  &:hover{
+.dropdown {
+  &:hover {
     .headerButton {
       border-bottom: 4px solid black;
     }
-    .dropdown-content{
+    .dropdown-content {
       display: block;
       background-color: #fff;
       width: 100%;
       max-height: fit-content;
-       opacity: 1;
-       height: auto;
-
-}
+      opacity: 1;
+      height: auto;
+    }
   }
-  
 }
 
-.backdrop{
-  background-color: hsla(0,0,7%, 0.36);
+.backdrop {
+  background-color: hsla(0, 0, 7%, 0.36);
   opacity: 0;
-  height:100%;
-  position:fixed;
+  height: 100%;
+  position: fixed;
   z-index: 2;
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   //visibility: 0;
   width: 100%;
   pointer-events: none;
-  transition: opacity .25s,visibility 0s linear .25s;
-  -webkit-transition: opacity .25s,visibility 0s linear .25s;
-  -moz-transition: opacity .25s,visibility 0s linear .25s;
-  -ms-transition: opacity .25s,visibility 0s linear .25s;
-  -o-transition: opacity .25s,visibility 0s linear .25s;
+  transition: opacity 0.25s, visibility 0s linear 0.25s;
+  -webkit-transition: opacity 0.25s, visibility 0s linear 0.25s;
+  -moz-transition: opacity 0.25s, visibility 0s linear 0.25s;
+  -ms-transition: opacity 0.25s, visibility 0s linear 0.25s;
+  -o-transition: opacity 0.25s, visibility 0s linear 0.25s;
 
-
-
-    &.menuOpen{
+  &.menuOpen {
     // visibility: 1;a
     opacity: 1;
-    
-    
   }
+}
 
+.timeForUpgradeButtons {
+  display: flex;
+  justify-content: space-between;
+  max-width: 1300px;
+  margin: auto;
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  gap: 20px;
+  @media (max-width: 900px) {
+    flex-direction: column;
+    justify-content: center;
+    button {
+      margin: auto;
+      max-width: 100%;
+    }
+  }
+}
+
+.largeNav {
+  display: flex;
+  list-style: none;
+  justify-content: space-between;
+  margin: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 0 20px;
+  height: 100%;
+  @media (max-width: 900px) {
+    display: none;
+  }
+}
+
+.smallNav {
+  display: flex;
+  list-style: none;
+  justify-content: space-between;
+  margin: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 0 20px;
+  height: 100%;
+  @media (min-width: 900px) {
+    display: none;
+  }
+}
+
+.navBar {
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+  box-shadow: rgb(0, 0, 0) 0px -17px 26px;
+  margin: 0;
+  z-index: 4;
+  min-height: 52px;
+}
+
+.wrapper169 {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9, for an aspect ratio of 1:1 change to this value to 100% */
 }
