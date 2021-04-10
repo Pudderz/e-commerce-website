@@ -1,10 +1,9 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { Box, Tab, Tabs, Typography } from "@material-ui/core";
-import React, { useEffect, useState, useRef } from "react";
-import { LoginButton } from "../../components/Authentication/LoginButton";
+import { Box, Tab, Tabs } from "@material-ui/core";
+import React, { useState } from "react";
 import { LogoutButton } from "../../components/Authentication/LogoutButton";
-import UserOrders from "../../components/profilePage/userOrders";
-import UserReviews from "../../components/profilePage/userReviews";
+import UserOrders from "../../components/profilePage/UserOrders";
+import UserReviews from "../../components/profilePage/UserReviews";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
