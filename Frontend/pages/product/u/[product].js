@@ -12,14 +12,15 @@ import { useRouter } from "next/router";
 import DefaultErrorPage from "next/error";
 import SelectSmallSize from "../../../components/ProductPages/SelectSizeSmall";
 import { initializeApollo } from "../../../lib/apolloClient";
-import { LOAD_ALL_PRODUCTS, LOAD_PRODUCT_BY_SLUG } from "../../../GraphQL/Queries";
-import {addCartItem, removeCartItem} from "../../../Redux/actions/actions";
-import { connect } from 'react-redux';
-
-
+import {
+  LOAD_ALL_PRODUCTS,
+  LOAD_PRODUCT_BY_SLUG,
+} from "../../../GraphQL/Queries";
+import { addCartItem, removeCartItem } from "../../../Redux/actions/actions";
+import { connect } from "react-redux";
 
 export const ProductPage = (props) => {
-  console.log(props)
+  console.log(props);
 
   const router = useRouter();
 
@@ -36,10 +37,17 @@ export const ProductPage = (props) => {
   const { enqueueSnackbar } = useSnackbar();
   const sizeId = useRef();
 
+  const addedToHistoryRef = useRef(false);
   useEffect(() => {
-    setProduct(props);
-  }, [props]);
+    setProduct(props.props);
+  }, [props.props]);
 
+  useEffect(() => {
+    if (props.props && !addedToHistoryRef.current) {
+      addToHistory(props.props);
+      addedToHistoryRef.current = true;
+    }
+  }, [props.props]);
 
   useEffect(() => {
     return () => {
@@ -48,16 +56,15 @@ export const ProductPage = (props) => {
   }, []);
 
   const handleAddToCart = (item, quantity = 1) => {
-    console.log(item)
+    console.log(item);
     console.log(sizeId.current, size);
     if (size !== "") {
-        
       //Work out maxStock
       let minSize = 3.5;
       let maxStock = 1;
-      maxStock = (size-minSize)*2
-      console.log(item.stock[maxStock])
-      console.log(item.price)
+      maxStock = (size - minSize) * 2;
+      console.log(item.stock[maxStock]);
+      console.log(item.price);
       //dispatch
       props.addCartItem({
         id: item.id,
@@ -66,10 +73,9 @@ export const ProductPage = (props) => {
         price: item.price,
         quantity: 1,
         images: item.images,
-        size : size,
+        size: size,
         maxStock: item.stock[maxStock],
-      })
-
+      });
     } else {
       enqueueSnackbar("Please Select a size", {
         variant: "error",
@@ -101,16 +107,14 @@ export const ProductPage = (props) => {
           <h1>{product.name}</h1>
           {/* +Review bar */}
 
-          <h2>£{(props?.price/100).toFixed(2)}</h2>
-          <p style={{ color: "green" }}>
-            In Stock
-          </p>
+          <h2>£{(props?.price / 100).toFixed(2)}</h2>
+          <p style={{ color: "green" }}>In Stock</p>
 
           <label htmlFor="sizes" style={{ fontWeight: "bold" }}>
             Select size
           </label>
           <SelectSize
-            availableSizes={props?.stock} 
+            availableSizes={props?.stock}
             // productVariants={product.variants}
             changeSize={changeSize}
             size={size}
@@ -199,37 +203,32 @@ export const ProductPage = (props) => {
   );
 };
 
-
-
 const mapStateToProps = (state, ownProps) => ({
   // ... computed data from state and optionally ownProps
-  state:{...state},
-  props:{...ownProps},
-})
+  state: { ...state },
+  props: { ...ownProps },
+});
 
 const mapDispatchToProps = {
   addCartItem,
   removeCartItem,
   // ... normally is an object full of action creators
-}
+};
 
-
-
-export default connect(mapStateToProps, mapDispatchToProps)(ProductPage)
+export default connect(mapStateToProps, mapDispatchToProps)(ProductPage);
 // export default Basket;
-
-
-
-
 
 export async function getStaticProps({ params }) {
   console.log(`params`);
-  console.log(params)
+  console.log(params);
   const apolloClient = initializeApollo();
 
   const { data } = await apolloClient.query({
     query: LOAD_PRODUCT_BY_SLUG,
-    variables: { slug: `u/${encodeURIComponent(params.product)}`, gender: "unisex" },
+    variables: {
+      slug: `u/${encodeURIComponent(params.product)}`,
+      gender: "unisex",
+    },
   });
 
   const result = data?.getProductBySlug;
@@ -243,6 +242,7 @@ export async function getStaticProps({ params }) {
       stock: result?.stock,
       description: result?.description || "",
       variants: result?.stock || [],
+      slug: `u/${encodeURIComponent(params.product)}`,
     },
     // revalidate: 120,
   };
@@ -253,32 +253,29 @@ export async function getStaticPaths() {
 
   const apolloClient = initializeApollo();
 
-
   const { data } = await apolloClient.query({
-    query: LOAD_ALL_PRODUCTS,  variables: {unisex: true}});
+    query: LOAD_ALL_PRODUCTS,
+    variables: { unisex: true },
+  });
 
-    
-    if(data?.getAllProducts){
-      data?.getAllProducts?.forEach((product)=>{
-        products.push({slug: product.slug, gender: product.gender})
-      })
-    }
-  
-  products = products.filter(product => product.slug !== null)
-  console.log('[product] paths')
-  console.log(products)
+  if (data?.getAllProducts) {
+    data?.getAllProducts?.forEach((product) => {
+      products.push({ slug: product.slug, gender: product.gender });
+    });
+  }
+
+  products = products.filter((product) => product.slug !== null);
+  console.log("[product] paths");
+  console.log(products);
   return {
     paths:
       products?.map((product) => {
-        
-        if(product && product?.slug && product?.gender ==="unisex"){
-          let slug = product.slug.replace('u/','');
+        if (product && product?.slug && product?.gender === "unisex") {
+          let slug = product.slug.replace("u/", "");
           console.log(slug);
           console.log("unisex slug - ", product.slug);
           return `/product/u/${slug}`;
-
         }
-        
       }) ?? [],
     fallback: true,
   };

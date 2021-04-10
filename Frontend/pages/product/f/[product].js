@@ -37,15 +37,18 @@ export const ProductPage = (props) => {
   const { enqueueSnackbar } = useSnackbar();
   const sizeId = useRef();
 
+  const addedToHistoryRef = useRef(false)
   useEffect(() => {
-    setProduct(props);
-  }, [props]);
+    setProduct(props.props);
+  }, [props.props]);
 
   useEffect(() => {
-    return () => {
-      addToHistory(product);
-    };
-  }, []);
+    if(props.props && !addedToHistoryRef.current){
+      addToHistory(props.props);
+      addedToHistoryRef.current = true;
+    }
+
+  }, [props.props]);
 
   const handleAddToCart = (item, quantity = 1) => {
     console.log(item);
@@ -231,6 +234,7 @@ export async function getStaticProps({ params }) {
       stock: result?.stock,
       description: result?.description || "",
       variants: result?.stock || [],
+      slug:  `f/${encodeURIComponent(params.product)}`,
     },
     // revalidate: 120,
   };

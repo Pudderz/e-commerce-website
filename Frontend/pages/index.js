@@ -12,7 +12,6 @@ import casualBackground from "../images/casualBackground2.jpg";
 const axios = require("axios").default;
 
 export const FrontPage = ({ products }) => {
-
   console.log(products);
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -37,12 +36,14 @@ export const FrontPage = ({ products }) => {
             left: "10%",
             fontSize: "40px",
             zIndex: "1",
-            textAlign:'start'
+            textAlign: "start",
           }}
         >
-          <h3 style={{margin:'0'}}>E-Commerce Site</h3>
-          <p style={{margin:'0'}}>view our great deals</p>
-          <Button className="buttonOutlined light" variant="outlined">Save Now</Button>
+          <h3 style={{ margin: "0" }}>E-Commerce Site</h3>
+          <p style={{ margin: "0" }}>view our great deals</p>
+          <Button className="buttonOutlined light" variant="outlined">
+            Save Now
+          </Button>
         </div>
         {/* <img src={webBanner} alt="" height="100%"/> */}
         <div
@@ -111,25 +112,28 @@ export const FrontPage = ({ products }) => {
               width: "100%",
             }}
           >
-            <Button className="buttonOutlined dark">Shop Women</Button>
-            <Button className="buttonOutlined dark">Shop Men</Button>
-            <Button className="buttonOutlined dark">Shop Sales</Button>
+            <Link href="/women">
+              <Button className="buttonOutlined dark">Shop Women</Button>
+            </Link>
+            <Link href="/men">
+              <Button className="buttonOutlined dark">Shop Men</Button>
+            </Link>
+            <Link href="/discounts">
+              <Button className="buttonOutlined dark">Shop Sales</Button>
+            </Link>
           </div>
         </div>
       </div>
 
-      <MostPopular popularProducts={products} header={"Most Popular"}/>
+      <MostPopular popularProducts={products} header={"Most Popular"} />
 
       <Categories />
 
       <RecentProducts />
 
-       <Button
-       className="buttonOutlined dark"
-       >
-         <Link href="/store" >View More...</Link>
-         </Button>     
-      
+      <Button className="buttonOutlined dark">
+        <Link href="/store">View More...</Link>
+      </Button>
 
       <RecentlyViewed />
     </div>
@@ -145,8 +149,7 @@ export async function getStaticProps({ params }) {
   } catch (err) {
     console.log(err);
   } finally {
-
-    console.log(data)
+    console.log(data);
 
     console.log("products");
     return {
