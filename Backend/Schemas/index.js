@@ -46,6 +46,7 @@ const RootQuery = new GraphQLObjectType({
         skip: { type: GraphQLInt },
         stockSize: { type: new GraphQLList(GraphQLFloat) },
         sortBy: { type: GraphQLString },
+        shoeSizes:{ type: new GraphQLList(GraphQLFloat) },
       },
       resolve: async (parent, args, context) => {
         await context();
@@ -83,12 +84,13 @@ const RootQuery = new GraphQLObjectType({
           if (args.male) filterGender.push("male");
           if (args.female) filterGender.push("female");
           if (args.unisex) filterGender.push("unisex");
-          if (filterGender.length === 1) {
+          if (filterGender.length <3 && filterGender.length > 0) {
+            console.log(filterGender);
             searchParameters.gender = filterGender ;
           }
         }
 
-        if (args.stockSize) {
+        if (args.stockSize && args.stockSize.length >0) {
           searchParameters.stock = {
             $elemMatch: { stock: { $gt: 0 }, shoeSize: [...args.stockSize] },
           };

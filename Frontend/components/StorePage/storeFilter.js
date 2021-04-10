@@ -1,14 +1,26 @@
 import { Button, Checkbox, FormControlLabel } from '@material-ui/core'
-import React from 'react';
+import React, {useState} from 'react';
 import {useForm} from 'react-hook-form';
+import { FilterSize } from './FilterSize';
 
 export const StoreFilter = ({handleFormChange}) => {
     const {register, handleSubmit} = useForm();
     
+    const [sizes, setSizes] = useState([]);
+
+    const handleSizeChange = (size)=>{
+      if(sizes.includes(size*10)){
+        sizes.splice(sizes.indexOf(size*10), 1);
+        setSizes([...sizes]);
+      }else{
+        sizes.push(size*10);
+        setSizes([...sizes]);
+      }
+    }
 
     const onSubmit = (data)=>{
       console.log(data)
-      handleFormChange(data);
+      handleFormChange(data, sizes);
     }
     return (
         <form style={{ width: "300px", height: "100%" }} onSubmit={handleSubmit(onSubmit)}>
@@ -88,8 +100,10 @@ export const StoreFilter = ({handleFormChange}) => {
                 />
               </li>
 
-              <li>
+              <li >
                 <Button style={{ width: "100%" }}>Size</Button>
+
+                <FilterSize changeSize={(size)=>handleSizeChange(size)} sizes={sizes}/>
                 {/* <SelectSize availableSizes={[2,4,5]}></SelectSize> */}
               </li>
               <li>
