@@ -1,18 +1,8 @@
-import { useLazyQuery, useMutation } from "@apollo/client";
-import { useAuth0 } from "@auth0/auth0-react";
-import {
-  Avatar,
-  Button,
-  IconButton,
-  Modal,
-  TextField,
-} from "@material-ui/core";
-import Rating from "@material-ui/lab/Rating";
+import { useLazyQuery } from "@apollo/client";
 import Link from "next/link";
-import React, { useEffect, useState, useRef } from "react";
-import { DELETE_USER_REVIEW, EDIT_USER_REVIEW } from "../../GraphQL/Mutations";
+import React, { useEffect} from "react";
 import { LOAD_USER_ORDERS} from "../../GraphQL/Queries";
-import CloseIcon from "@material-ui/icons/Close";
+
 export const UserOrders = () => {
 
   // useLazyQuery so query can be sent with jwt token
