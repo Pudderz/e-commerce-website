@@ -8,6 +8,7 @@ import { Button, IconButton } from "@material-ui/core";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import casualBackground from "../images/casualBackground2.jpg";
+import Image from "next/image";
 
 const axios = require("axios").default;
 
@@ -22,10 +23,11 @@ export const FrontPage = ({ products }) => {
       <div
         style={{
           backgroundColor: "grey",
-          height: "min(90vh, 750px)",
+          maxHeight: "min(90vh, 750px)",
           width: "100%",
           backgroundColor: "#111111",
           position: "relative",
+          paddingBottom:'min(56.25%, 750px)'
         }}
       >
         <div
@@ -34,36 +36,31 @@ export const FrontPage = ({ products }) => {
             color: "white",
             top: "33%",
             left: "10%",
-            fontSize: "40px",
+            fontSize:  "min(40px,4vw)",
             zIndex: "1",
             textAlign: "start",
           }}
         >
           <h3 style={{ margin: "0" }}>E-Commerce Site</h3>
-          <p style={{ margin: "0" }}>view our great deals</p>
-          <Button className="buttonOutlined light" variant="outlined">
+          <p style={{ margin: "0 0 10px" }}>view our great deals</p>
+          <Button className="buttonOutlined light" variant="outlined"
+          style={{fontSize:  "min(20px,4vw)"}}
+          >
             Save Now
           </Button>
         </div>
-        {/* <img src={webBanner} alt="" height="100%"/> */}
         <div
           style={{
             clipPath: "circle(50% at 70% 50%)",
             height: "100%",
+            position:'absolute',
+            width:'100%',
           }}
         >
-          <img
-            src={casualBackground}
-            alt="hikingShoes"
-            height="100%"
-            style={{
-              position: "absolute",
-              top: "0",
-              bottom: "0",
-              width: "100%",
-              objectFit: "cover",
-              left: "0",
-            }}
+          <Image 
+          src={casualBackground}
+          layout="fill"
+          objectFit="cover"
           />
         </div>
       </div>
@@ -104,13 +101,8 @@ export const FrontPage = ({ products }) => {
         >
           <h2 style={{ margin: "0", fontSize: "40px" }}>Time For An Upgrade</h2>
           <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              maxWidth: "1300px",
-              margin: "auto",
-              width: "100%",
-            }}
+          className="timeForUpgradeButtons"
+  
           >
             <Link href="/women">
               <Button className="buttonOutlined dark">Shop Women</Button>
