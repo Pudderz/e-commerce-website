@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import ShoppingBasketIcon from "@material-ui/icons/ShoppingBasket";
 import { Avatar, Badge, Button, IconButton, Tooltip } from "@material-ui/core";
@@ -11,6 +11,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
 import { connect } from "react-redux";
+import MenuIcon from '@material-ui/icons/Menu';
 import {
   addCartItem,
   removeCartItem,
@@ -27,8 +28,22 @@ export const Header = (props) => {
   const [maleTrendingData, setMaleTrendingData] = useState([]);
   const [femaleTrendingData, setFemaleTrendingData] = useState([]);
   const router = useRouter();
-
+  const [menuState, setShowMenu] = useState({
+    showing: "",
+    hamburger: "",
+  });
   const { user, isAuthenticated } = useAuth0();
+
+  const menuShowingRef = useRef(false);
+
+  const displayMenu = () => {
+    menuShowingRef.current = menuState.showing === "none";
+
+    setShowMenu({
+      showing: menuState.showing === "" ? "showing" : "",
+      hamburger: menuState.showing === "" ? "change" : "",
+    });
+  };
 
   const handleProfileClick = (event) => {
     setAnchorProfileEl(event.currentTarget);
@@ -99,7 +114,6 @@ export const Header = (props) => {
       });
   };
 
-
   const [verified, setVerified] = useState(false);
 
   // temp using access token. Will move to id token in future
@@ -111,29 +125,20 @@ export const Header = (props) => {
     if (token) {
       const decodeToken = JSON.parse(atob(token.split(".")[1]));
       if (decodeToken.permissions.includes("write:product")) {
-        console.log(decodeToken.permissions.includes("write:product"))
+        console.log(decodeToken.permissions.includes("write:product"));
         setVerified(true);
       }
-
     }
   };
-
 
   useEffect(() => {
     getTrendingInfo();
     getToken();
   }, []);
 
-
-  
-
-
-
   return (
     <>
-      <nav
-        className="navBar"
-      >
+      <nav className="navBar">
         <ul className="smallNav">
           <li>
             <Link className="link" href="/">
@@ -191,6 +196,15 @@ export const Header = (props) => {
                     </Badge>
                   </IconButton>
                 </Tooltip>
+              </li>
+              <li style={{ height: "fit-content", alignSelf: "center" }}>
+                <IconButton
+                onClick={displayMenu}
+                onKeyDown={displayMenu}
+                >
+                <MenuIcon/> 
+                </IconButton>
+               
               </li>
             </ul>
           </li>
@@ -255,7 +269,7 @@ export const Header = (props) => {
                     }}
                   >
                     <div>
-                      <a href="">Men's Homepage</a>
+                      <Link href="/men">Men's Homepage</Link>
                       <a href="">Featured</a>
                       <a href="">New Releases</a>
                     </div>
@@ -413,54 +427,55 @@ export const Header = (props) => {
                   </div>
                 </div>
               </div>
-              
+
               {verified && (
                 <div className="dropdown">
-                <div
-                  className="headerButton"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    height: "100%",
-                  }}
-                >
-                  <Link href="/admin">
-                    <a
-                      className="MuiButton-root"
-                      style={{
-                        textTransform: "none",
-                        backgroundColor: "transparent",
-                      }}
-                    >
-                      Admin
-                    </a>
-                  </Link>
-                </div>
-                <div className="dropdown-content">
                   <div
+                    className="headerButton"
                     style={{
                       display: "flex",
-                      justifyContent: "space-between",
-                      maxWidth: "min(100%,900px)",
-                      margin: "auto",
-                      padding: "40px 0",
+                      alignItems: "center",
+                      height: "100%",
                     }}
                   >
-                    <div>
-                      <Link href="/admin/orders">All Orders</Link>
+                    <Link href="/admin">
+                      <a
+                        className="MuiButton-root"
+                        style={{
+                          textTransform: "none",
+                          backgroundColor: "transparent",
+                        }}
+                      >
+                        Admin
+                      </a>
+                    </Link>
+                  </div>
+                  <div className="dropdown-content">
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        maxWidth: "min(100%,900px)",
+                        margin: "auto",
+                        padding: "40px 0",
+                      }}
+                    >
+                      <div>
+                        <Link href="/admin/orders">All Orders</Link>
+                      </div>
+                      <div>
+                        <Link href="/admin/createProducts">
+                          Create a product
+                        </Link>
+                      </div>
+                      <div>
+                        <Link href="/admin/allProducts">All Products</Link>
+                      </div>
+                      <div></div>
                     </div>
-                    <div>
-                      <Link href="/admin/createProducts">Create a product</Link>
-                    </div>
-                    <div>
-                      <Link href="/admin/allProducts">All Products</Link>
-                    </div>
-                    <div></div>
                   </div>
                 </div>
-              </div>
               )}
-              
             </div>
           </li>
           <li style={{ height: "fit-content", alignSelf: "center" }}>
@@ -516,7 +531,6 @@ export const Header = (props) => {
                       )}
                     </IconButton>
                   </Tooltip>
-
                 </li>
               ) : (
                 <li style={{ alignSelf: "center", height: "fit-content" }}>
@@ -535,8 +549,6 @@ export const Header = (props) => {
                     </Badge>
                   </IconButton>
                 </Tooltip>
-
-               
               </li>
             </ul>
           </li>
@@ -564,205 +576,208 @@ export const Header = (props) => {
           </div>
         </Popover>
         <Popover
-                  open={openBasket}
-                  anchorEl={anchorBasketEl}
-                  onClose={handleBasketClose}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "center",
-                  }}
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "center",
-                  }}
-                >
-                  <div style={{ padding: "10px" }}>
-                    <div
-                      style={{
-                        position: "sticky",
-                        top: "0px",
-                        backgroundColor: "#fff",
-                        zIndex: "5",
-                      }}
-                    >
-                      <h1>Shopping Cart</h1>
-                      <hr />
-                    </div>
+          open={openBasket}
+          anchorEl={anchorBasketEl}
+          onClose={handleBasketClose}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "center",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "center",
+          }}
+        >
+          <div style={{ padding: "10px" }}>
+            <div
+              style={{
+                position: "sticky",
+                top: "0px",
+                backgroundColor: "#fff",
+                zIndex: "5",
+              }}
+            >
+              <h1>Shopping Cart</h1>
+              <hr />
+            </div>
 
-                    <ul
-                      style={{
-                        listStyle: "none",
-                        display: "grid",
-                        gap: "50px",
-                        padding: "0",
-                        maxWidth: "100%",
-                      }}
-                    >
-                      {props?.cartState?.length === 0 ? (
-                        <div>
-                          <h3>Your Basket is empty</h3>
-                          <p>
-                            Continue shopping on the{" "}
-                            <Link href="/">homepage</Link>, browse our
-                            discounts, or visit your Wish List
-                          </p>
-                        </div>
-                      ) : (
-                        <div>
-                          {props?.cartState?.map((item) => (
-                            <li key={`${item.id}${item.size}`}>
-                              <div
-                                style={{
-                                  display: "flex",
-                                  justifyContent: "flex-start",
-                                  gap: "20px",
-                                }}
-                              >
-                                <div
-                                  style={{
-                                    backgroundColor: "blue",
-                                    height: "100px",
-                                    width: "100px",
-                                    position: "relative",
-                                    overflow: "hidden",
-                                  }}
-                                >
-                                  <Link
-                                    href={`/product/${item.slug}`}
-                                    onClick={handleBasketClose}
-                                  >
-                                    <img
-                                      src={`${process.env.GOOGLE_CLOUD_PUBLIC_URL}${item?.images[0]}`}
-                                      width="100"
-                                      alt=""
-                                      style={{
-                                        position: "absolute",
-                                        top: "0",
-                                        left: "0",
-                                        bottom: "0",
-                                        objectFit: "cover",
-                                        right: "0",
-                                      }}
-                                    />
-                                  </Link>
-                                </div>
-
-                                <div style={{ display: "grid" }}>
-                                  <h3
-                                    style={{
-                                      margin: "0",
-                                      width: "fit-content",
-                                    }}
-                                  >
-                                    {item.name}
-                                  </h3>
-                                  <p
-                                    style={{
-                                      margin: "0",
-                                      width: "fit-content",
-                                    }}
-                                  >
-                                    UK {item?.size} £{item?.price}.00
-                                  </p>
-                                  <p
-                                    style={{
-                                      margin: "0",
-                                      width: "fit-content",
-                                    }}
-                                  >
-                                    Quantity: {item.quantity}
-                                  </p>
-                                  <div style={{ width: "fit-content" }}>
-                                    <Tooltip title="Add 1">
-                                      <Button
-                                        onClick={() =>
-                                          updateItemQty(
-                                            item.name,
-                                            item.size,
-                                            item.quantity + 1
-                                          )
-                                        }
-                                      >
-                                        +
-                                      </Button>
-                                    </Tooltip>
-                                    <Tooltip title="Remove 1">
-                                      <Button
-                                        onClick={() =>
-                                          updateItemQty(
-                                            item.name,
-                                            item.size,
-                                            item.quantity - 1
-                                          )
-                                        }
-                                      >
-                                        -
-                                      </Button>
-                                    </Tooltip>
-                                    <Tooltip title="Remove Item">
-                                      <IconButton
-                                        onClick={() =>
-                                          removeItem(item.name, item.size)
-                                        }
-                                      >
-                                        <DeleteIcon fontSize="small" />
-                                      </IconButton>
-                                    </Tooltip>
-                                  </div>
-                                </div>
-                              </div>
-                              {/* <hr style={{margin:'0 0 5px'}}/> */}
-                            </li>
-                          ))}
-                        </div>
-                      )}
-                    </ul>
-                    <div
-                      style={{
-                        position: "sticky",
-                        bottom: "0",
-                        backgroundColor: "#fff",
-                      }}
-                    >
-                      <hr />
+            <ul
+              style={{
+                listStyle: "none",
+                display: "grid",
+                gap: "50px",
+                padding: "0",
+                maxWidth: "100%",
+              }}
+            >
+              {props?.cartState?.length === 0 ? (
+                <div>
+                  <h3>Your Basket is empty</h3>
+                  <p>
+                    Continue shopping on the <Link href="/">homepage</Link>,
+                    browse our discounts, or visit your Wish List
+                  </p>
+                </div>
+              ) : (
+                <div>
+                  {props?.cartState?.map((item) => (
+                    <li key={`${item.id}${item.size}`}>
                       <div
                         style={{
-                          margin: "auto",
-                          padding: " 5px 0 10px",
-                          width: "fit-content",
-                          boxSizing: "border-box",
-                          textAlign: "center",
+                          display: "flex",
+                          justifyContent: "flex-start",
+                          gap: "20px",
                         }}
                       >
-                        <p style={{ margin: "5px 0" }}>
-                          {/* Subtotal({cart?.total_items || 0} item
-                          {cart?.total_items > 1 && "s"}):{" "}
-                          {cart?.subtotal?.formatted_with_symbol} */}
-                        </p>
                         <div
                           style={{
-                            display: "flex",
-                            justifyContent: "space-around",
-                            gap: "20px",
+                            backgroundColor: "blue",
+                            height: "100px",
+                            width: "100px",
+                            position: "relative",
+                            overflow: "hidden",
                           }}
                         >
                           <Link
-                            href="/basket"
+                            href={`/product/${item.slug}`}
                             onClick={handleBasketClose}
-                            style={{ padding: "0 20px 0 0" }}
                           >
-                            Go To Basket
-                          </Link>
-
-                          <Link href="/checkout" onClick={handleBasketClose}>
-                            Go To Checkout
+                            <img
+                              src={`${process.env.GOOGLE_CLOUD_PUBLIC_URL}${item?.images[0]}`}
+                              width="100"
+                              alt=""
+                              style={{
+                                position: "absolute",
+                                top: "0",
+                                left: "0",
+                                bottom: "0",
+                                objectFit: "cover",
+                                right: "0",
+                              }}
+                            />
                           </Link>
                         </div>
+
+                        <div style={{ display: "grid" }}>
+                          <h3
+                            style={{
+                              margin: "0",
+                              width: "fit-content",
+                            }}
+                          >
+                            {item.name}
+                          </h3>
+                          <p
+                            style={{
+                              margin: "0",
+                              width: "fit-content",
+                            }}
+                          >
+                            UK {item?.size} £{item?.price}.00
+                          </p>
+                          <p
+                            style={{
+                              margin: "0",
+                              width: "fit-content",
+                            }}
+                          >
+                            Quantity: {item.quantity}
+                          </p>
+                          <div style={{ width: "fit-content" }}>
+                            <Tooltip title="Add 1">
+                              <Button
+                                onClick={() =>
+                                  updateItemQty(
+                                    item.name,
+                                    item.size,
+                                    item.quantity + 1
+                                  )
+                                }
+                              >
+                                +
+                              </Button>
+                            </Tooltip>
+                            <Tooltip title="Remove 1">
+                              <Button
+                                onClick={() =>
+                                  updateItemQty(
+                                    item.name,
+                                    item.size,
+                                    item.quantity - 1
+                                  )
+                                }
+                              >
+                                -
+                              </Button>
+                            </Tooltip>
+                            <Tooltip title="Remove Item">
+                              <IconButton
+                                onClick={() => removeItem(item.name, item.size)}
+                              >
+                                <DeleteIcon fontSize="small" />
+                              </IconButton>
+                            </Tooltip>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                </Popover>
+                      {/* <hr style={{margin:'0 0 5px'}}/> */}
+                    </li>
+                  ))}
+                </div>
+              )}
+            </ul>
+            <div
+              style={{
+                position: "sticky",
+                bottom: "0",
+                backgroundColor: "#fff",
+              }}
+            >
+              <hr />
+              <div
+                style={{
+                  margin: "auto",
+                  padding: " 5px 0 10px",
+                  width: "fit-content",
+                  boxSizing: "border-box",
+                  textAlign: "center",
+                }}
+              >
+                <p style={{ margin: "5px 0" }}>
+                  {/* Subtotal({cart?.total_items || 0} item
+                          {cart?.total_items > 1 && "s"}):{" "}
+                          {cart?.subtotal?.formatted_with_symbol} */}
+                </p>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-around",
+                    gap: "20px",
+                  }}
+                >
+                  <Link
+                    href="/basket"
+                    onClick={handleBasketClose}
+                    style={{ padding: "0 20px 0 0" }}
+                  >
+                    Go To Basket
+                  </Link>
+
+                  <Link href="/checkout" onClick={handleBasketClose}>
+                    Go To Checkout
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Popover>
       </nav>
+      <div id="overlay" className={`${menuState.showing}`}>
+        <Link href="/">Home</Link>
+        <Link href="/store">Store</Link>
+        <Link href="/men">Mens</Link>
+        <Link href="/women">Womens</Link>
+      </div>
       {/* blur background when access menu */}
       <div className={`backdrop ${menuOpen && "menuOpen"}`}></div>
     </>
