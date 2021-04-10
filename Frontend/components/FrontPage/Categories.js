@@ -6,7 +6,7 @@ import hikingImage from "../../images/hikingShoes.jpg";
 import Image from "next/image";
 
 // ToDo: change this in to media quieries and classnames
-export const Categories = () => {
+export const Categories = ({header}) => {
 
   return (
     <div
@@ -15,7 +15,7 @@ export const Categories = () => {
         width: "100%",
       }}
     >
-      <h3 style={{ textAlign: "start", padding: "0 20px" }}>Categories</h3>
+      <h3 style={{ textAlign: "start", padding: "0 20px" }}>{header || "Categories"}</h3>
       <div className="categoryContainer">
         <div
           className="imageCategoryContainer"

@@ -27,11 +27,8 @@ export const Women = ({ products }) => {
         variables={{ discounted: true, female: true }}
       />
 
-      <div>
-        <h3>Women Categorys</h3>
-        <hr />
-        <Categories />
-      </div>
+        <Categories header={"Women Categories"} />
+
     </div>
   );
 };

@@ -21,7 +21,7 @@ export const Men = ({products}) => {
         <RecentProducts header={"Men discounts"} variables={{discounted: true, male:true}}/>
 
       <hr/>
-        <Categories />
+        <Categories header ={"Men Categories"}/>
       
     </div>
   );
