@@ -31,6 +31,7 @@ export const StoreFilter = ({handleFormChange}) => {
                 <Button style={{ width: "100%" }}>Gender</Button>
                 <hr/>
                 <FormControlLabel
+                style={{width:'100%'}}
                   control={
                     <Checkbox
                       inputRef={register}
@@ -41,6 +42,7 @@ export const StoreFilter = ({handleFormChange}) => {
                   label="Male"
                 />
                 <FormControlLabel
+                style={{width:'100%'}}
                   control={
                     <Checkbox
                       inputRef={register}
@@ -51,6 +53,7 @@ export const StoreFilter = ({handleFormChange}) => {
                   label="Female"
                 />
                 <FormControlLabel
+                style={{width:'100%'}}
                   control={
                     <Checkbox
                       inputRef={register}
@@ -65,16 +68,7 @@ export const StoreFilter = ({handleFormChange}) => {
               <li>
                 <Button style={{ width: "100%" }}>Shop By Price</Button>
                 <FormControlLabel
-                  control={
-                    <Checkbox
-                      inputRef={register}
-                      name="under50"
-                      color="primary"
-                    />
-                  }
-                  label="Under £50"
-                />
-                <FormControlLabel
+                style={{width:'100%'}}
                   control={
                     <Checkbox
                       inputRef={register}
@@ -84,11 +78,34 @@ export const StoreFilter = ({handleFormChange}) => {
                   }
                   label="Under £100"
                 />
+                <FormControlLabel
+                style={{width:'100%'}}
+                  control={
+                    <Checkbox
+                      inputRef={register}
+                      name="between100And150"
+                      color="primary"
+                    />
+                  }
+                  label="£100-£150"
+                />
+                <FormControlLabel
+                style={{width:'100%'}}
+                  control={
+                    <Checkbox
+                      inputRef={register}
+                      name="over150"
+                      color="primary"
+                    />
+                  }
+                  label="£150+"
+                />
               </li>
 
               <li>
                 <Button style={{ width: "100%"}}>On Sale</Button>
                 <FormControlLabel
+                style={{width:'100%'}}
                   control={
                     <Checkbox
                       inputRef={register}
