@@ -9,13 +9,24 @@ import StoreFilter from "../components/StorePage/storeFilter";
 import StoreItems from "../components/StorePage/StoreItems";
 
 export const StorePage = () => {
+  const [search, setSearch] = useState("");
 
   const [fetchProducts, { data, error, loading }] = useLazyQuery(
     LOAD_ALL_PRODUCTS
   );
+  // useEffect(() => {
+  //   window.scrollTo(0, 0);
+  //   fetchProducts();
+  // }, []);
+
+
   useEffect(() => {
     window.scrollTo(0, 0);
-    fetchProducts();
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchParam = urlParams.get('search');
+    const sortBy = localStorage.getItem(sortBy);
+    setSearch(search);
+    fetchProducts({variables:{search: searchParam, sortBy}});
   }, []);
 
   useEffect(() => {
@@ -23,8 +34,8 @@ export const StorePage = () => {
   }, [data]);
 
 
-  const handleFormChange = (data)=>{
-
+  const handleFormChange = (data, sizes)=>{
+    console.log('form submitted')
     let filterBy = {};
     for(const [key, value] of Object.entries(data)){
       console.log([key,value])
@@ -33,11 +44,12 @@ export const StorePage = () => {
       }
       if(key == "sortBy"){
         filterBy[key] = value;
+        localStorage.setItem("sortBy", value)
       }
     }
 
     console.log(filterBy)
-    fetchProducts({variables:{...filterBy}})
+    fetchProducts({variables:{...filterBy, stockSize: sizes}})
   }
 
   return (

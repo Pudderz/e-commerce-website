@@ -74,7 +74,7 @@ export const Header = (props) => {
     ev.preventDefault();
     console.log(search);
     router.push({
-      pathname: "/search",
+      pathname: "/store",
       query: { search },
     });
   };
