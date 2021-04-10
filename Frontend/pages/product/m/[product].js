@@ -103,7 +103,7 @@ export const ProductPage = (props) => {
           <h1>{product.name}</h1>
           {/* +Review bar */}
 
-          <h2>{`£${props?.price}.00`}</h2>
+          <h2>£{(props?.price/100).toFixed(2)}</h2>
           <p style={{ color: "green" }}>
             In Stock
           </p>
@@ -231,7 +231,7 @@ export async function getStaticProps({ params }) {
 
   const { data } = await apolloClient.query({
     query: LOAD_PRODUCT_BY_SLUG,
-    variables: { slug: `m/${params.product}`, gender: "male" },
+    variables: { slug: `m/${encodeURIComponent(params.product)}`, gender: "male" },
   });
 
   const result = data?.getProductBySlug;
@@ -240,9 +240,9 @@ export async function getStaticProps({ params }) {
     props: {
       name: result?.productName || "",
       id: result?._id || "",
-      images: result?.images,
-      price: result?.price,
-      stock: result?.stock,
+      images: result?.images || [],
+      price: result?.price || "",
+      stock: result?.stock ,
       description: result?.description || "",
       variants: result?.stock || [],
     },

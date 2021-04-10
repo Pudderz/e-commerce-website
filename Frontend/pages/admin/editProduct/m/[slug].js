@@ -38,7 +38,7 @@ export async function getStaticProps({ params }) {
 
   const { data } = await apolloClient.query({
     query: LOAD_PRODUCT_BY_SLUG,
-    variables: { slug: `m/${params.slug}` },
+    variables: { slug: `m/${encodeURIComponent(params.slug)}` },
   });
 
   const result = data?.getProductBySlug;
