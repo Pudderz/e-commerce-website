@@ -200,7 +200,7 @@ a.link {
   text-decoration: none;
   position: absolute;
   top: 40%;
-  z-index: 3;
+  z-index: 1;
   width: 100%;
   text-align: center;
   color: white;
@@ -502,6 +502,10 @@ button.buttonOutlined {
   box-sizing: border-box;
   @media (max-width: 1000px) {
     display: grid;
+    justify-content: inherit;
+    .imageCategoryContainer{
+      width: 100%;
+    }
   }
 }
 

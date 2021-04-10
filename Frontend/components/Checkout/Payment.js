@@ -265,6 +265,8 @@ export const Payment = ({ cartInfo, items, price }) => {
               <CardElement options={CARD_OPTIONS} onChange={handleChange} />
               <p>Example card - 4242 4242 4242 4242</p>
               <p>04/24 242 42424</p>
+              <p>Example 3d secure card - 4000 0025 0000 3155</p>
+              <p>04/24 242 42424</p>
             </label>
 
             <Button
