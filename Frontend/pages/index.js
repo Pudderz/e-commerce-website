@@ -70,36 +70,28 @@ export const FrontPage = ({ products }) => {
           width: "100%",
           display: "flex",
           justifyContent: "space-between",
+          alignItems:'center'
         }}
       >
-        <IconButton>
+        <IconButton style={{height:'fit-content'}}>
           <ArrowBackIosIcon />
         </IconButton>
-        <p style={{ fontSize: "20px", margin: "0", alignSelf: "center" }}>
+        <p style={{ fontSize:  "min(20px,4vw)", margin: "0", alignSelf: "center" }}>
           30 Days return policy. Learn More
         </p>
-        <IconButton>
+        <IconButton style={{height:'fit-content'}}>
           <ArrowForwardIosIcon />
         </IconButton>
       </div>
 
       <div
-        style={{
-          backgroundColor: "#f5f8f8",
-          padding: "75px 0",
-          display: "flex",
-        }}
+      className="timeForUpgrade"
       >
         <div
-          style={{
-            alignSelf: "center",
-            width: "100%",
-            display: "flex",
-            flexFlow: "column",
-            gap: "50px",
-          }}
+          
+      
         >
-          <h2 style={{ margin: "0", fontSize: "40px" }}>Time For An Upgrade</h2>
+          <h2 style={{ margin: "0", fontSize:  "clamp(20px,6vw,40px )", }}>Time For An Upgrade</h2>
           <div
           className="timeForUpgradeButtons"
   

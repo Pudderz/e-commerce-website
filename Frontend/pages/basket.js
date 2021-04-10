@@ -302,7 +302,7 @@ export const Basket = (props) => {
                   </div>
                 </td>
                 <td>
-                  <p>£{item.price * item.quantity}.00</p>
+                  <p>£{((item.price * item.quantity)/100).toFixed(2)}</p>
                 </td>
                 <td>
                   <Tooltip title="Remove Item">
@@ -324,7 +324,7 @@ export const Basket = (props) => {
           position: "sticky",
           bottom: "0px",
           boxShadow: "0 2px 2px -1px rgba(0, 0, 0, 0.4)",
-          zIndex: "3",
+          zIndex: "1",
           backgroundColor: "#fff",
           padding: "0 0 20px",
         }}
@@ -332,7 +332,7 @@ export const Basket = (props) => {
         <hr />
         <p>
           Subtotal({cartInfo.totalItems || 0} items):{" "}
-          {cartInfo.totalPrice}
+          {(cartInfo.totalPrice/100).toFixed(2)}
         </p>
         <Link href="/checkout">Proceed to checkout</Link>
       </div>
