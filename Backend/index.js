@@ -12,6 +12,7 @@ const {
   getPopularProducts,
   getPopularMaleProducts,
   getPopularFemaleProducts,
+  getHeaderProducts
 } = require("./analytics/trending");
 const { checkKeyFile } = require("./analytics/key");
 require("dotenv").config();
@@ -59,6 +60,10 @@ app.use("/trendingFemale", async (req, res) => {
   getPopularFemaleProducts(res);
 });
 
+app.use("/trendingHeader",  (req, res) => {
+  checkKeyFile();
+  getHeaderProducts(res);
+});
 
 app.use("/verifyCart", (req, res) => verifyCart(req, res));
 

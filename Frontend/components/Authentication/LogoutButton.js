@@ -4,10 +4,15 @@ import { Button } from '@material-ui/core';
 export const LogoutButton = () => {
 
     const {logout} = useAuth0();
+
+    const handleLogout=(parameters)=>{
+        localStorage.setItem("token","");
+        logout(parameters)
+    }
     return (
         <div>
            <Button
-           onClick={()=>logout({returnTo:window.location.origin})}
+           onClick={()=>handleLogout({returnTo:window.location.origin})}
            >Log out</Button> 
         </div>
     )

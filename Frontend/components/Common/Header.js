@@ -24,7 +24,8 @@ export const Header = (props) => {
   const [anchorProfileEl, setAnchorProfileEl] = useState(null);
   const [search, setSearch] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
-
+  const [maleTrendingData, setMaleTrendingData] = useState([]);
+  const [femaleTrendingData, setFemaleTrendingData] = useState([]);
   const router = useRouter();
 
   const { user, isAuthenticated } = useAuth0();
@@ -81,6 +82,21 @@ export const Header = (props) => {
 
   const handleSearchChange = (ev) => {
     setSearch(ev.target.value);
+  };
+
+  const getTrendingInfo = () => {
+    fetch(`${process.env.BACKEND_SERVER}/trendingHeader`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        if (data.maleData) setMaleTrendingData(data.maleData);
+        if (data.femaleData) setFemaleTrendingData(data.femaleData);
+      });
   };
 
   return (
@@ -176,7 +192,16 @@ export const Header = (props) => {
                       <a href="">Hiking</a>
                     </div>
                     <div>
-                      <a href="">Trending</a>
+                      <h5 style={{ margin: "0" }}>Trending</h5>
+                      <ul style={{ listStyle: "none", padding: "0" }}>
+                        {femaleTrendingData.map((product) => (
+                          <li key={product._id}>
+                            <Link href={`/product/${product.slug}`}>
+                              {product.productName}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
                   </div>
                 </div>
@@ -223,7 +248,16 @@ export const Header = (props) => {
                       <a href="">Hiking</a>
                     </div>
                     <div>
-                      <a href="">Trending</a>
+                      <h5 style={{ margin: "0" }}>Trending</h5>
+                      <ul style={{ listStyle: "none", padding: "0" }}>
+                        {maleTrendingData.map((product) => (
+                          <li key={product._id}>
+                            <Link href={`/product/${product.slug}`}>
+                              {product.productName}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
                   </div>
                 </div>
