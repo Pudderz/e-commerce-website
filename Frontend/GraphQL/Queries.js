@@ -89,8 +89,9 @@ export const LOAD_ALL_PRODUCTS = gql`
     $male: Boolean
     $female: Boolean
     $unisex: Boolean
-    $under50: Boolean
     $under100: Boolean
+    $between100And150: Boolean
+    $over150: Boolean
     $discounted: Boolean
     $search: String
     $limit:Int
@@ -101,8 +102,9 @@ export const LOAD_ALL_PRODUCTS = gql`
       male: $male
       female: $female
       unisex: $unisex
-      under50: $under50
       under100: $under100
+      between100And150: $between100And150
+      over150: $over150
       discounted: $discounted
       search: $search
       limit:$limit

@@ -26,7 +26,6 @@ const { GraphQLFloat } = require("graphql");
 
 const files = [];
 
-
 const RootQuery = new GraphQLObjectType({
   name: "RootQueryType",
   fields: {
@@ -38,24 +37,83 @@ const RootQuery = new GraphQLObjectType({
         male: { type: GraphQLBoolean },
         female: { type: GraphQLBoolean },
         unisex: { type: GraphQLBoolean },
-        under50: { type: GraphQLBoolean },
         under100: { type: GraphQLBoolean },
+        between100And150: { type: GraphQLBoolean },
+        over150: { type: GraphQLBoolean },
         discounted: { type: GraphQLBoolean },
         search: { type: GraphQLString },
         limit: { type: GraphQLInt },
         skip: { type: GraphQLInt },
         stockSize: { type: new GraphQLList(GraphQLFloat) },
         sortBy: { type: GraphQLString },
-        shoeSizes:{ type: new GraphQLList(GraphQLFloat) },
+        shoeSizes: { type: new GraphQLList(GraphQLFloat) },
       },
       resolve: async (parent, args, context) => {
         await context();
         let sortBy = {};
+
+        // work out search parameters
+
         let searchParameters = {};
 
+        //searchBar
         if (args.search) {
           searchParameters.productName = { $regex: args.search, $options: "i" };
         }
+
+        //filterBy gender
+        if (args.male || args.female || args.unisex) {
+          const filterGender = [];
+          if (args.male) filterGender.push("male");
+          if (args.female) filterGender.push("female");
+          if (args.unisex) filterGender.push("unisex");
+          if (filterGender.length < 3 && filterGender.length > 0) {
+            console.log(filterGender);
+            searchParameters.gender = filterGender;
+          }
+        }
+
+        // filter by shoe size
+        if (args.stockSize && args.stockSize.length > 0) {
+          searchParameters.stock = {
+            $elemMatch: { stock: { $gt: 0 }, shoeSize: [...args.stockSize] },
+          };
+        }
+
+        // filter by discounted products
+        if (args.discounted) {
+          searchParameters.discounted = true;
+        }
+
+        // filter by categories
+        if (typeof args.category !== "undefined") {
+          searchParameters.categories = args.category;
+        }
+
+        // filter by prices
+
+        if (
+          (args.under100 || args.between100And150 || args.over150) &&
+          !(args.under100 && args.between100And150 && args.over150)
+        ) {
+          if(args.under100 && args.over150){
+            searchParameters.$or = [{price: {$lt:10000}},{price: {$gt: 15000}}]
+          }else if(args.between100And150 && args.over150){
+            searchParameters.price = {$gt:10000};
+          }else if(args.between100And150 && args.under100){
+            searchParameters.price = {$lte:15000};
+          }else if(args.under100){
+            searchParameters.price = {$lte:10000};
+          }else if(args.between100And150){
+            searchParameters.$and = [{price: {$lte:15000}},{price: {$gt: 10000}}]
+          }else if(args.over150){
+            searchParameters.price = {$gt:15000};
+          }
+
+
+        }
+
+        // Sort by Section
 
         if (args.sortBy) {
           switch (args.sortBy) {
@@ -77,29 +135,6 @@ const RootQuery = new GraphQLObjectType({
           }
         } else {
           sortBy.datePosted = "desc";
-        }
-
-        if (args.male || args.female || args.unisex) {
-          const filterGender = [];
-          if (args.male) filterGender.push("male");
-          if (args.female) filterGender.push("female");
-          if (args.unisex) filterGender.push("unisex");
-          if (filterGender.length <3 && filterGender.length > 0) {
-            console.log(filterGender);
-            searchParameters.gender = filterGender ;
-          }
-        }
-
-        if (args.stockSize && args.stockSize.length >0) {
-          searchParameters.stock = {
-            $elemMatch: { stock: { $gt: 0 }, shoeSize: [...args.stockSize] },
-          };
-        }
-        if (args.discounted) {
-          searchParameters.discounted = true;
-        }
-        if (typeof args.category !== "undefined") {
-          searchParameters.categories = args.category;
         }
 
         if (args.limit) {
@@ -233,7 +268,9 @@ const Mutation = new GraphQLObjectType({
         if (error) return new Error("You do not have a valid token");
 
         // Checks if name already exists in mongoDB product collection
-        const productCheck = await Product.find({ productName: args.productname });
+        const productCheck = await Product.find({
+          productName: args.productname,
+        });
         console.log(productCheck.length);
         if (productCheck.length > 0)
           return new Error("The name you have choosen already exists");
@@ -303,8 +340,8 @@ const Mutation = new GraphQLObjectType({
           datePosted: time,
           gender: args.gender,
           averageRating: 0,
-          discounted:false,
-          discountedFrom: args.price *100,
+          discounted: false,
+          discountedFrom: args.price * 100,
         });
 
         return product.save();
