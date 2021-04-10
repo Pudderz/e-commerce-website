@@ -108,9 +108,29 @@ export const RecentProducts = ({variables, header}) => {
                   />
                   <div style={{ margin: "auto", width: "200px", textAlign:'start' }}>
                     <h4 style={{ margin: "0px", fontWeight:'500' }}>{item.name || item.productName}</h4>
-                    <p style={{ margin: "auto" }}>
+                    {/* <p style={{ margin: "auto" }}>
                       £{(item.price/100).toFixed(2)}
-                    </p>
+                    </p> */}
+                    {item.discounted ? (
+                <div
+                  style={{
+                    display: "flex",
+                    // justifyContent: "space-around",
+                    maxWidth: "200px",
+                    margin: "0 auto",
+                    gap:'10px'
+                  }}
+                >
+                  <span
+                    style={{ color: "#e81c1c", textDecoration: "line-through" }}
+                  >
+                    £{(item.discountedFrom/100).toFixed(2)}
+                  </span>
+                  <span>£{(item.price/100).toFixed(2)}</span>
+                </div>
+              ) : (
+                <p>£{(item.price/100).toFixed(2)}</p>
+              )}
                   </div>
                 </>
               )}

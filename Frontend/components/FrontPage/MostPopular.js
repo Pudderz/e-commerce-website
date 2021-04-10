@@ -6,19 +6,16 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import { ItemImage } from "../Common/ItemImage";
 
-
-export const MostPopular = ({popularProducts, header}) => {
+export const MostPopular = ({ popularProducts, header }) => {
   const [products, setProducts] = useState(Array.from({ length: 4 }, () => 0));
   const [shouldShrink, setShouldShrink] = useState(false);
   // Currently fetches 4 most recent products
   // ToDO:
   // implement google analytics to work out the most popular product pages for this component
 
-
-useEffect(() => {
-  setProducts(popularProducts)
-}, [popularProducts])
- 
+  useEffect(() => {
+    setProducts(popularProducts);
+  }, [popularProducts]);
 
   const handleMinimize = () => {
     setShouldShrink(!shouldShrink);
@@ -86,15 +83,49 @@ useEffect(() => {
                   <ItemImage
                     id={item.id || item._id}
                     name={item.name || item.productName}
-                    firstImage={item?.media?.source || `${process.env.GOOGLE_CLOUD_PUBLIC_URL}${item.images?.[0]}`}
-                    secondImage={item.assets?.[1]?.url || `${process.env.GOOGLE_CLOUD_PUBLIC_URL}${item.images?.[1]}`}
+                    firstImage={
+                      item?.media?.source ||
+                      `${process.env.GOOGLE_CLOUD_PUBLIC_URL}${item.images?.[0]}`
+                    }
+                    secondImage={
+                      item.assets?.[1]?.url ||
+                      `${process.env.GOOGLE_CLOUD_PUBLIC_URL}${item.images?.[1]}`
+                    }
                     link={item.permalink || item.slug}
                   />
-                  <div style={{ margin: "auto", width: "200px", textAlign:'start' }}>
-                    <h4 style={{ margin: "0px", fontWeight:'500' }}>{item.name || item.productName}</h4>
-                    <p style={{ margin: "auto" }}>
-                      £{item.price}.00
-                    </p>
+                  <div
+                    style={{
+                      margin: "auto",
+                      width: "200px",
+                      textAlign: "start",
+                    }}
+                  >
+                    <h4 style={{ margin: "0px", fontWeight: "500" }}>
+                      {item.name || item.productName}
+                    </h4>
+                    {item.discounted ? (
+                      <div
+                        style={{
+                          display: "flex",
+                          // justifyContent: "space-around",
+                          maxWidth: "200px",
+                          margin: "0 auto",
+                          gap: "10px",
+                        }}
+                      >
+                        <span
+                          style={{
+                            color: "#e81c1c",
+                            textDecoration: "line-through",
+                          }}
+                        >
+                          £{(item.discountedFrom / 100).toFixed(2)}
+                        </span>
+                        <span>£{(item.price / 100).toFixed(2)}</span>
+                      </div>
+                    ) : (
+                      <p>£{(item.price / 100).toFixed(2)}</p>
+                    )}
                   </div>
                 </>
               )}
