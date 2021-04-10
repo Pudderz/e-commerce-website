@@ -23,12 +23,7 @@ export const Footer = () => {
             Sign Up For Our Newsletter
           </h3>
           <div
-            style={{
-              display: "flex",
-              gap: "5px",
-              margin: "auto",
-              width: "fit-content",
-            }}
+          className="signUpButtons"
           >
             <TextField
               type="email"
