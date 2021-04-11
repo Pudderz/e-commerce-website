@@ -25,8 +25,8 @@ export const StorePage = () => {
     const variables = {};
     const searchParam = urlParams.get("search");
     if (searchParam) variables.search = searchParam;
-    const discounted = urlParams.get("search");
-    if (discounted) variables.discounted = discounted;
+    const discounted = urlParams.get("discounted");
+    if (discounted) variables.discounted = JSON.parse(discounted);
     const sizes = urlParams.get("sizes");
     console.log([...decodeURIComponent(sizes)])
     if (sizes) variables.stockSize = decodeURIComponent(sizes).split(',').map(x=>+x);
@@ -54,23 +54,31 @@ export const StorePage = () => {
     if (unisex) variables.unisex = JSON.parse(unisex);
 
     
-    const sortBy = localStorage.getItem("sortBy");
+    const sortByStorage = localStorage.getItem("sortBy");
+    const sortBy = urlParams.get("sortBy");
     if (sortBy){
       variables.sortBy = sortBy;
-      console.log(sortBy);
-    } 
+      setDefaultSort(sortBy);
+
+    } else if(sortByStorage){
+      variables.sortBy = sortByStorage;
+      console.log(sortByStorage);
+      setDefaultSort(sortByStorage);
+    }
+
     console.log(variables);
 
-    setDefaultSort(sortBy);
+    
     setSearch(search);
     fetchProducts({ variables: variables });
-  }, []);
+  }, [router.query]);
 
   useEffect(() => {
     console.log(data);
   }, [data]);
 
   const handleFormChange = (data, sizes) => {
+    
     console.log("form submitted");
     let filterBy = {};
     let filterUrlQuery = [];
@@ -89,10 +97,17 @@ export const StorePage = () => {
     if(sizes.length>0){
       filterUrlQuery.push(`sizes=${encodeURIComponent(sizes)}`)
     }
+
+    const urlParams = new URLSearchParams(window?.location?.search);
+    const searchParam = urlParams.get("search");
+    if (searchParam){
+      filterBy["search"] = encodeURIComponent(searchParam);
+      filterUrlQuery.push(`search=${encodeURIComponent(searchParam)}`)
+    }
     console.log(filterUrlQuery.join("&"));
     router.replace(`/store?${filterUrlQuery.join("&")}`, undefined,{shallow: true})
     console.log(filterBy);
-    fetchProducts({ variables: { ...filterBy, stockSize: sizes } });
+    // fetchProducts({ variables: { ...filterBy, stockSize: sizes } });
 
   };
 
