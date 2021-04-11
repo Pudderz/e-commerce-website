@@ -121,7 +121,7 @@ export const Payment = ({ cartInfo, items, price }) => {
         // The card action has been handled
         // The PaymentIntent can be confirmed again on the server
         let token = null;
-        token = await getAccessTokenSilently();
+        token = (isAuthenticated)? await getAccessTokenSilently(): '';
 
         const serverResponse = await fetch(
           `${process.env.BACKEND_SERVER}/pay`,
@@ -168,7 +168,8 @@ export const Payment = ({ cartInfo, items, price }) => {
 
       // get access token for saving future order if payment is successful
       let token;
-      token = await getAccessTokenSilently();
+      
+      token = (isAuthenticated)? await getAccessTokenSilently(): '';
       console.log(token);
       const res = await fetch(`${process.env.BACKEND_SERVER}/pay`, {
         method: "POST",

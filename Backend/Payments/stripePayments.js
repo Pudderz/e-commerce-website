@@ -6,16 +6,13 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const isTokenValid = require("../Authentication/validate");
 const jwt_decode = require("jwt-decode");
 
-
-const updateSoldItems = async (items)=>{
-  console.log(items)
-  for (const item of items){
-    const sold = (sold == null)? 0: item.sold;
-    await Product.findByIdAndUpdate(item.id,
-        {sold: sold + 1}
-      ) 
+const updateSoldItems = async (items) => {
+  console.log(items);
+  for (const item of items) {
+    const sold = item.sold == null ? 0 : item.sold;
+    await Product.findByIdAndUpdate(item.id, { sold: sold + 1 });
   }
-}
+};
 
 const calculateOrderAmount = async (items = []) => {
   // Replace this constant with a calculation of the order's amount
@@ -60,63 +57,73 @@ const calculateOrderAmount = async (items = []) => {
   return [confirmedItemsArray, total];
 };
 
-
-const generateResponse = async ({intent, confirmedItems, orderAmount, request}) => {
-  console.log('intent');
+const generateResponse = async ({
+  intent,
+  confirmedItems,
+  orderAmount,
+  request,
+}) => {
+  console.log("intent");
   // console.log(intent);
   // Note that if your API version is before 2019-02-11, 'requires_action'
   // appears as 'requires_source_action'.
   if (
-    intent.status === 'requires_action' &&
-    intent.next_action.type === 'use_stripe_sdk'
+    intent.status === "requires_action" &&
+    intent.next_action.type === "use_stripe_sdk"
   ) {
     // Tell the client to handle the action
     return {
       requires_action: true,
-      payment_intent_client_secret: intent.client_secret
+      payment_intent_client_secret: intent.client_secret,
     };
-  } else if (intent.status === 'succeeded') {
+  } else if (intent.status === "succeeded") {
     // The payment didn’t need any additional actions and completed!
     // Handle post-payment fulfillment
     items = [];
-    confirmedItems.forEach((item)=>{
+    confirmedItems.forEach((item) => {
       items.push(item.id);
-    })
+    });
 
     //work out subId
-    const token = request.headers.authorization;
-    console.log(token);
-    let subId = "guest"
-    let decoded = { sub: null, permissions: [] };
-    if (token) {
-      decoded = jwt_decode(token);
+    let subId = "guest";
+
+    try {
+      const token = JSON.parse(request.headers.authorization);
+
+      let decoded = { sub: null, permissions: [] };
+
+      if (token !== null) {
+        console.log("token exists");
+        decoded = jwt_decode(token);
+        const { error } = await isTokenValid(token);
+        if (!error && decoded.sub) {
+          subId = decoded.sub;
+        }
+      }
+      console.log("finished token");
+    }catch(err){
+      console.log(err.message);
     }
-    const { error } = await isTokenValid(token);
 
-
-    let shippingDetails = request.body.shipping_details;
+    let shippingDetails = JSON.parse(request.body.shipping_details);
     console.log(shippingDetails);
 
-    if (!error && decoded.sub){
-      subId = decoded.sub;
-    }; 
     let order = new Order({
-      subId:subId,
+      subId: subId,
       date: Date(),
       price: orderAmount,
       items: items,
-      shippingAddress:{
-        name:shippingDetails.name,
+      shippingAddress: {
+        name: shippingDetails.name,
         ...shippingDetails.address,
       },
-      status: 'Paid',
+      status: "Paid",
       orderNotes: shippingDetails.orderNotes,
     });
 
     let savedOrder = await order.save();
     console.log(`id - ${savedOrder._id}`);
-    console.log(savedOrder)
-
+    console.log(savedOrder);
 
     updateSoldItems(confirmedItems);
     return {
@@ -126,17 +133,20 @@ const generateResponse = async ({intent, confirmedItems, orderAmount, request}) 
   } else {
     // Invalid status
     return {
-      error: 'Invalid PaymentIntent status'
-    }
+      error: "Invalid PaymentIntent status",
+    };
   }
 };
 
-const payServerSide = async (request, response)=>{
-
+const payServerSide = async (request, response) => {
   const items = request.body.items;
   const [confirmedItems, orderAmount] = await calculateOrderAmount(items);
+
+  // TODO: check if confirmed items and items are the same
+  // If not respond back telling user to please verify the new amount of items
+  // as our stocks has changed
   console.log(orderAmount);
-  if(orderAmount === 0){
+  if (orderAmount === 0) {
     return response.send({ error: "No items found please try again" });
   }
 
@@ -147,9 +157,9 @@ const payServerSide = async (request, response)=>{
       intent = await stripe.paymentIntents.create({
         payment_method: request.body.payment_method_id,
         amount: orderAmount,
-        currency: 'gbp',
-        confirmation_method: 'manual',
-        confirm: true
+        currency: "gbp",
+        confirmation_method: "manual",
+        confirm: true,
       });
     } else if (request.body.payment_intent_id) {
       intent = await stripe.paymentIntents.confirm(
@@ -157,18 +167,22 @@ const payServerSide = async (request, response)=>{
       );
     }
     // Send the response to the client
-    const res = await generateResponse({intent, confirmedItems, orderAmount, request})
+    console.log("generating response");
+    const res = await generateResponse({
+      intent,
+      confirmedItems,
+      orderAmount,
+      request,
+    });
     response.send(res);
   } catch (e) {
     // Display error on client
     console.log(e.message);
     return response.send({ error: e.message });
   }
-}
+};
 
-
-
-const verifyCart = async (request, response)=>{
+const verifyCart = async (request, response) => {
   console.log("creating payment intent");
   const items = request.body;
   // Create a PaymentIntent with the order amount and currency
@@ -178,6 +192,5 @@ const verifyCart = async (request, response)=>{
     amount: orderAmount,
     confirmedItems: confirmedItems,
   });
-
-}
+};
 module.exports = { verifyCart, payServerSide };
