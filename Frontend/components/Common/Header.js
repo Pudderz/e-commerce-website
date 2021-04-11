@@ -32,7 +32,7 @@ export const Header = (props) => {
     showing: "",
     hamburger: "",
   });
-  const { user, isAuthenticated } = useAuth0();
+  const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
 
   const menuShowingRef = useRef(false);
 
@@ -120,8 +120,7 @@ export const Header = (props) => {
   const getToken = async () => {
     // const claims = await getIdTokenClaims();
 
-    let token = localStorage.getItem("token");
-
+    const token = await getAccessTokenSilently();
     if (token) {
       const decodeToken = JSON.parse(atob(token.split(".")[1]));
       if (decodeToken.permissions.includes("write:product")) {

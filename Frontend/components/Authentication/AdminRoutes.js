@@ -8,7 +8,7 @@ const Redirecting = () => {
 
 const AuthenticatedRoute = ({ children }) => {
   const router = useRouter();
-
+  const { getAccessTokenSilently, isAuthenticated } = useAuth0();
 //   const { user, getIdTokenClaims } = useAuth0();
 
   const [verified, setVerified] = useState(false);
@@ -18,10 +18,10 @@ const AuthenticatedRoute = ({ children }) => {
   const getToken = async () => {
     // const claims = await getIdTokenClaims();
 
-    let token = localStorage.getItem("token");
+    let token = await getAccessTokenSilently();
 
     if (token) {
-      const decodeToken = JSON.parse(atob(token.split(".")[1]));
+      const decodeToken = atob(token.split(".")[1]);
       if (decodeToken.permissions.includes("write:product")) {
         setVerified(true);
       }
