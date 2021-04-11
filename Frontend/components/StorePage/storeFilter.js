@@ -132,7 +132,42 @@ export const StoreFilter = ({handleFormChange}) => {
                   <option value="sold" key="sold">BestSellers</option>
                 </select>
               </li>
-              
+              <li>
+                <Button style={{ width: "100%" }}>Shop By Price</Button>
+                <FormControlLabel
+                style={{width:'100%'}}
+                  control={
+                    <Checkbox
+                      inputRef={register}
+                      name="running"
+                      color="primary"
+                    />
+                  }
+                  label="Running"
+                />
+                <FormControlLabel
+                style={{width:'100%'}}
+                  control={
+                    <Checkbox
+                      inputRef={register}
+                      name="casual"
+                      color="primary"
+                    />
+                  }
+                  label="Casual"
+                />
+                <FormControlLabel
+                style={{width:'100%'}}
+                  control={
+                    <Checkbox
+                      inputRef={register}
+                      name="hiking"
+                      color="primary"
+                    />
+                  }
+                  label="Hiking"
+                />
+              </li>
             </ul>
             <Button variant="contained" color="primary" type="submit">Submit</Button>
           </form>

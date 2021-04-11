@@ -41,6 +41,9 @@ const RootQuery = new GraphQLObjectType({
         between100And150: { type: GraphQLBoolean },
         over150: { type: GraphQLBoolean },
         discounted: { type: GraphQLBoolean },
+        casual: { type: GraphQLBoolean },
+        hiking: { type: GraphQLBoolean },
+        running: { type: GraphQLBoolean },
         search: { type: GraphQLString },
         limit: { type: GraphQLInt },
         skip: { type: GraphQLInt },
@@ -72,6 +75,20 @@ const RootQuery = new GraphQLObjectType({
             searchParameters.gender = filterGender;
           }
         }
+
+        //filterBy category
+
+        if (args.hiking || args.running || args.casual) {
+          const filterCategory = [];
+          if (args.hiking) filterCategory.push("hiking");
+          if (args.running) filterCategory.push("running");
+          if (args.casual) filterCategory.push("casual");
+          if (filterCategory.length < 3 && filterCategory.length > 0) {
+            console.log(filterCategory);
+            searchParameters.categories = {$in: filterCategory};
+          }
+        }
+
 
         // filter by shoe size
         if (args.stockSize && args.stockSize.length > 0) {
@@ -109,9 +126,9 @@ const RootQuery = new GraphQLObjectType({
           }else if(args.over150){
             searchParameters.price = {$gt:15000};
           }
-
-
         }
+
+
 
         // Sort by Section
 

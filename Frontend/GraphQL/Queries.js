@@ -93,6 +93,9 @@ export const LOAD_ALL_PRODUCTS = gql`
     $between100And150: Boolean
     $over150: Boolean
     $discounted: Boolean
+    $running: Boolean
+    $casual: Boolean
+    $hiking: Boolean
     $search: String
     $limit:Int
     $stockSize:[Float]
@@ -110,6 +113,9 @@ export const LOAD_ALL_PRODUCTS = gql`
       limit:$limit
       stockSize: $stockSize
       sortBy: $sortBy
+      running: $running
+      hiking: $hiking
+      casual: $casual
     ){
       images
       productName
