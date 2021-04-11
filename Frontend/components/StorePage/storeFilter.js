@@ -1,9 +1,9 @@
 import { Button, Checkbox, FormControlLabel } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { FilterSize } from "./FilterSize";
 
-export const StoreFilter = ({ handleFormChange }) => {
+export const StoreFilter = ({ handleFormChange, defaultSortBy, handleSort }) => {
   const { register, handleSubmit } = useForm();
 
   const [sizes, setSizes] = useState([]);
@@ -22,6 +22,31 @@ export const StoreFilter = ({ handleFormChange }) => {
     console.log(data);
     handleFormChange(data, sizes);
   };
+
+
+  const [sortBy, setSortBy] = useState();
+
+  useEffect(() => {
+    console.log(defaultSortBy);
+    console.log(sortBy);
+    // if(defaultSortBy){
+    //   setSortBy(defaultSortBy);
+    // }
+    
+    console.log(sortBy);
+  }, [defaultSortBy]);
+
+useEffect(() => {
+  
+  console.log(sortBy);
+}, [sortBy])
+
+const handleSortByChange = (e)=> {
+  console.log(e.target);
+  handleSort(e.target.value)
+}
+
+
 
   const [priceVisibility, setPriceVisbility] = useState(true);
 
@@ -120,7 +145,7 @@ export const StoreFilter = ({ handleFormChange }) => {
           >
             Shop By Categories
           </Button>
-          <hr/>
+          <hr />
           <div style={{ display: categoriesVisibility ? "contents" : "none" }}>
             <FormControlLabel
               style={{ width: "100%" }}
@@ -149,7 +174,7 @@ export const StoreFilter = ({ handleFormChange }) => {
           <Button style={{ width: "100%" }} onClick={handleSaleVisibility}>
             On Sale
           </Button>
-          <hr/>
+          <hr />
           <div style={{ display: saleVisibility ? "contents" : "none" }}>
             <FormControlLabel
               style={{ width: "100%" }}
@@ -169,7 +194,7 @@ export const StoreFilter = ({ handleFormChange }) => {
           <Button style={{ width: "100%" }} onClick={handleSizeVisibility}>
             Size
           </Button>
-          <hr/>
+          <hr />
           <div style={{ display: sizeVisibility ? "contents" : "none" }}>
             <FilterSize
               changeSize={(size) => handleSizeChange(size)}
@@ -181,7 +206,13 @@ export const StoreFilter = ({ handleFormChange }) => {
         </li>
         <li>
           <label htmlFor="sortBy"></label>
-          <select name="sortBy" ref={register}>
+          <select
+            name="sortBy"
+            ref={register}
+            onChange={handleSortByChange}
+            value={defaultSortBy}
+            // defaultValue={defaultSortBy}
+          >
             <option value="" key="date">
               Newest
             </option>
