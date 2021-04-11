@@ -14,7 +14,7 @@ export const Footer = () => {
           width: "100%",
           display: "flex",
           flexFlow: "column",
-          margin:'50px 0 0',
+          margin: "50px 0 0",
           justifyContent: "space-around",
         }}
       >
@@ -22,9 +22,7 @@ export const Footer = () => {
           <h3 style={{ color: "#fff", fontSize: "30px" }}>
             Sign Up For Our Newsletter
           </h3>
-          <div
-          className="signUpButtons"
-          >
+          <div className="signUpButtons">
             <TextField
               type="email"
               placeholder="Email"
@@ -33,13 +31,27 @@ export const Footer = () => {
             ></TextField>
             <Button id="emailSignUpButton">Sign Up</Button>
           </div>
-          <div style={{margin:'50px auto', display:'flex', gap:'20px', justifyContent:'center'}}>
-          {/* <h4 style={{ color: "#fff", fontSize: "30px", margin:'0' }}>
+          <div
+            style={{
+              margin: "50px auto",
+              display: "flex",
+              gap: "20px",
+              justifyContent: "center",
+            }}
+          >
+            {/* <h4 style={{ color: "#fff", fontSize: "30px", margin:'0' }}>
             or Connect with us
           </h4> */}
-            <InstagramIcon fontSize="large" style={{color:'white'}}/>
-            <TwitterIcon fontSize="large" style={{color:'white'}}/>
-            <FacebookIcon fontSize="large" style={{color:'white'}}/>
+
+            <a href="">
+              <InstagramIcon fontSize="large" style={{ color: "white" }} />
+            </a>
+            <a href="">
+              <TwitterIcon fontSize="large" style={{ color: "white" }} />
+            </a>
+            <a href="">
+              <FacebookIcon fontSize="large" style={{ color: "white" }} />
+            </a>
           </div>
         </div>
       </div>
@@ -48,40 +60,65 @@ export const Footer = () => {
         style={{
           maxWidth: "100%",
           position: "sticky",
-          padding: "50px 0",
+          padding: "50px 0 0",
           top: "100%",
-          backgroundColor: "#111111",
-          color: "white",
-          height: "400px",
+          backgroundColor:'rgb(17,17,17)',
+           color: "#fefefe",
+          minHeight: "400px",
         }}
       >
-        <hr style={{ maxWidth: "1300px", margin: "24px auto 0" }} />
-
         <div
           className="flexFooter"
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            width: "100%",
-            maxWidth: "1300px",
-            margin: "auto",
-            padding: "10px",
-            flexWrap: "wrap",
-            boxSizing: "border-box",
-          }}
+        
         >
-          <Link className="link" href="/">
-            Home
-          </Link>
-          <Link className="link" href="/store">
-            About
-          </Link>
-          <Link className="link" href="/findastore">
-            Find a Store
-          </Link>
-          <Link className="link" href="/store">
-            Products
-          </Link>
+          <div
+          
+          >
+            <h3>Pages</h3>
+            <Link className="link" href="/">
+              Home
+            </Link>
+            <Link className="link" href="/store">
+              Store page
+            </Link>
+            <Link className="link" href="/men">
+              Men HomePage
+            </Link>
+            <Link className="link" href="/women">
+              Women Homepage
+            </Link>
+            <Link className="link" href="/discount">
+              Discount page
+            </Link>
+          
+          </div>
+          <div
+           
+          >
+            <h3>External Pages</h3>
+            <a href="https://github.com/Pudderz">Github</a>
+            <a href="www.matthewpudney.co.uk" >Portfolio</a>
+          </div>
+
+          <div
+          
+          >
+            <h3>Contact Me</h3>
+            <p style={{margin:'0'}}>mpudney2@gmail.com</p>
+          </div>
+        </div>
+        <div
+        className="subFooter"
+      
+        >
+          <p>E-Commerce Site</p>
+          <div
+            
+          >
+            <p>Terms & Conditions</p>
+            <p>Security policy</p>
+            <p>Return policy</p>
+          </div>
         </div>
       </footer>
     </>
