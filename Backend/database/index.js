@@ -6,7 +6,9 @@ const uri = `mongodb+srv://dbAdmin:${process.env.MONGODB_PASSWORD}@cluster0.s5qs
 let db = null;
 
 const startDatabase = () => {
-  if (db !== null) return db;
+  console.log('conection ', mongoose.connection.readyState)
+  if(mongoose.connection.readyState === 1) return
+  // if (db !== null) return db;
 
   console.log("connecting to the database");
   db = mongoose.connect(
@@ -28,6 +30,8 @@ const startDatabase = () => {
 };
 
 mongoose.connection.on("error", (err) => {
+  console.log("mongoose connection error")
+  console.log(err)
   db = null;
 });
 
