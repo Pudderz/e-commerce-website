@@ -46,7 +46,8 @@ export const FrontPage = ({ products }) => {
           <Button className="buttonOutlined light" variant="outlined"
           style={{fontSize:  "min(20px,4vw)"}}
           >
-            Save Now
+            <Link href="/store">Save Now</Link>
+            
           </Button>
         </div>
         <div

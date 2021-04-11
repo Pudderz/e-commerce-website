@@ -352,7 +352,7 @@ export const Header = (props) => {
                   >
                     <div>
                       <Link href="/women">Women's Homepage</Link>
-                      <Link href="/store?female=true&sortBy=sold">All Women's Shoes</Link>
+                      <Link href="/store?female=true&sortBy=sold">Featured</Link>
                       <Link href="/store?female=true">All Women's Shoes</Link>
                     </div>
                     <div>
