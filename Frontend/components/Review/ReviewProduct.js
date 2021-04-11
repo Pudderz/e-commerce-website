@@ -5,6 +5,7 @@ import { WriteAReview } from "./WriteAReview";
 import { useLazyQuery } from "@apollo/client";
 import { LOAD_REVIEWS } from "../../GraphQL/Queries";
 import { useAuth0 } from "@auth0/auth0-react";
+import { LoginButton } from "../Authentication/LoginButton";
 
 export const ReviewProduct = ({ productId, productName, product }) => {
   const [showForm, setShowForm] = useState(false);
