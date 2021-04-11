@@ -120,19 +120,27 @@ export const Header = (props) => {
   const getToken = async () => {
     // const claims = await getIdTokenClaims();
 
-    const token = await getAccessTokenSilently();
+    const token = (isAuthenticated)? await getAccessTokenSilently(): "";
+    console.log(user)
     if (token) {
       const decodeToken = JSON.parse(atob(token.split(".")[1]));
       if (decodeToken.permissions.includes("write:product")) {
         console.log(decodeToken.permissions.includes("write:product"));
         setVerified(true);
+      }else if(verified){
+        setVerified(false);
       }
     }
   };
 
+
+  useEffect(() => {
+    
+    getToken()
+  }, [getAccessTokenSilently, isAuthenticated])
   useEffect(() => {
     getTrendingInfo();
-    getToken();
+    // getToken();
   }, []);
 
   return (

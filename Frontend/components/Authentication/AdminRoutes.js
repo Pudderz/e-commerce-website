@@ -18,7 +18,9 @@ const AuthenticatedRoute = ({ children }) => {
   const getToken = async () => {
     // const claims = await getIdTokenClaims();
 
-    let token = await getAccessTokenSilently();
+    let token;
+    
+    if(isAuthenticated) token = await getAccessTokenSilently();
 
     if (token) {
       const decodeToken = atob(token.split(".")[1]);
