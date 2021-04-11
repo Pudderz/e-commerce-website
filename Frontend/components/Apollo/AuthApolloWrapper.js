@@ -21,9 +21,10 @@ const AuthApolloWrapper = ({ children }) => {
 
 
     useEffect(() => {
+
     (async () => {
       try {
-        const accessToken = await getAccessTokenSilently();
+        const accessToken = (isAuthenticated)? await getAccessTokenSilently(): "";
 
         setToken(accessToken);
       } catch (err) {
@@ -35,11 +36,14 @@ const AuthApolloWrapper = ({ children }) => {
 
   const authLink = new ApolloLink((operation, forward) => {
     // add the authorization to the headers
-    operation.setContext({
+    if(token){
+      operation.setContext({
       headers: {
-        Authorization: token ? `Bearer ${token}` : null,
+        Authorization: `Bearer ${token}`,
       },
     });
+    }
+    
 
     return forward(operation);
   });
