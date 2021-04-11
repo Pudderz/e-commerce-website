@@ -6,7 +6,12 @@ import { useRouter } from 'next/router';
 // Requestd scopes does nothing atm
 const requestedScopes = [
   'write:review',
-  'read:review',
+  'write:product',
+  'edit:stock',
+  'edit:review',
+  'view:ownOrder',
+  'delete:ownReview',
+  'read:allOrders'
 ];
 
 export const Auth0 = (props) => {
