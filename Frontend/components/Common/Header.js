@@ -23,7 +23,7 @@ import { Filters } from "../StorePage/Filters";
 export const Header = (props) => {
   const [anchorBasketEl, setAnchorBasketEl] = useState(null);
   const [anchorProfileEl, setAnchorProfileEl] = useState(null);
-  const [search, setSearch] = useState(null);
+  const [search, setSearch] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
   const [maleTrendingData, setMaleTrendingData] = useState([]);
   const [femaleTrendingData, setFemaleTrendingData] = useState([]);
@@ -89,10 +89,21 @@ export const Header = (props) => {
   const handleSearch = (ev) => {
     ev.preventDefault();
     console.log(search);
-    router.push({
-      pathname: "/store",
-      query: { search },
-    });
+
+    console.log(router.pathname);
+    if(router.pathname ==="/store"){
+      const urlParams = new URLSearchParams(window.location.search);
+      
+        urlParams.set("search", encodeURIComponent(search));
+      console.log(urlParams.toString())
+      router.replace(`/store?${urlParams.toString()}`, undefined, {shallow: true})
+    }else{
+      router.push({
+        pathname: "/store",
+        query: { search },
+      });
+    }
+    setSearch("");
   };
 
   const handleSearchChange = (ev) => {
@@ -143,11 +154,18 @@ export const Header = (props) => {
     // getToken();
   }, []);
 
+// close popups on page transition
+  useEffect(()=>{
+    setAnchorBasketEl(null);
+    setAnchorProfileEl(null);
+  },[router.pathname])
+
   return (
     <>
       <nav className="navBar">
         <ul className="smallNav">
-          <li>
+          <li style={{display: 'flex',
+    alignItems: 'center'}}>
             <Link className="link" href="/">
               Home
             </Link>
@@ -277,14 +295,14 @@ export const Header = (props) => {
                   >
                     <div>
                       <Link href="/men">Men's Homepage</Link>
-                      <a href="">Featured</a>
-                      <a href="">New Releases</a>
+                      <Link href="/store?male=true&sortBy=sold">Featured</Link>
+                      <Link href="/store?male=true">New Releases</Link>
                     </div>
                     <div>
-                      <a href="">All Men's Shoes</a>
-                      <a href="">Men's Running</a>
-                      <a href="">Men's Casual</a>
-                      <a href="">Men's Hiking</a>
+                    <Link href="/store?male=true">All Men's Shoes</Link>
+                    <Link href="/store?male=true&running=true">Men's Running</Link>
+                    <Link href="/store?male=true&casual=true">Men's Casual</Link>
+                    <Link href="/store?male=true&hiking=true">Men's Hiking</Link>
                     </div>
                     <div>
                       <h5 style={{ margin: "0" }}>Trending</h5>
@@ -333,15 +351,15 @@ export const Header = (props) => {
                     }}
                   >
                     <div>
-                      <a href="">Women's Homepage</a>
-                      <a href="">Featured</a>
-                      <a href="">New Releases</a>
+                      <Link href="/women">Women's Homepage</Link>
+                      <Link href="/store?female=true&sortBy=sold">All Women's Shoes</Link>
+                      <Link href="/store?female=true">All Women's Shoes</Link>
                     </div>
                     <div>
-                      <a href="">All Women's Shoes</a>
-                      <a href="">Women's Running</a>
-                      <a href="">Women's Casual</a>
-                      <a href="">Women's Hiking</a>
+                    <Link href="/store?female=true">All Women's Shoes</Link>
+                    <Link href="/store?female=true&running=true">Women's Running</Link>
+                    <Link href="/store?female=true&casual=true">Women's Casual</Link>
+                    <Link href="/store?female=true&hiking=true">Women's Hiking</Link>
                     </div>
                     <div>
                       <h5 style={{ margin: "0" }}>Trending</h5>
@@ -419,17 +437,17 @@ export const Header = (props) => {
                     }}
                   >
                     <div>
-                      <a href="">Featured</a>
-                      <a href="">Shop All Sale</a>
+                    <Link href="/discounts">Discount HomePage</Link>
+                    <Link href="/store?discounted=true">Shop All Discounts</Link>
                     </div>
                     <div>
-                      <a href="">Shop for Men</a>
-                      <a href="">Shop for Women</a>
+                      <Link href="/store?discounted=true&male=true">Discounts for Men</Link>
+                    <Link href="/store?discounted=true&female=true">Discounts for Women</Link>
                     </div>
                     <div>
-                      <a href="">Running</a>
-                      <a href="">Hiking</a>
-                      <a href="">Casual</a>
+                    <Link href="/store?discounted=true&running=true">Running</Link>
+                    <Link href="/store?discounted=true&hiking=true">Hiking</Link>
+                    <Link href="/store?discounted=true&casual=true">Casual</Link>
                     </div>
                   </div>
                 </div>
