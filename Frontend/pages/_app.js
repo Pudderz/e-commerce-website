@@ -6,57 +6,14 @@ import { Footer } from "../components/Common/Footer";
 import { Auth0 } from "../components/Authentication/Auth0";
 import { SnackbarProvider } from "notistack";
 import { Button } from "@material-ui/core";
-import {
-  ApolloClient,
-  InMemoryCache,
-  ApolloProvider,
-  HttpLink,
-  ApolloLink,
-  concat,
-  from,
-} from "@apollo/client";
-import { onError } from "@apollo/client/link/error";
 import { useRouter } from "next/router";
 import * as gtag from "../utils/analytics";
-import { AuthContextProvider } from "../context/AuthContext";
 import "../styles/productPages.scss";
-import { createUploadLink } from "apollo-upload-client";
 import store from "../Redux/store";
 import { Provider } from "react-redux";
 import { loadState, saveState } from "../lib/localStorage";
+import AuthApolloWrapper from "../components/Apollo/AuthApolloWrapper";
 
-const errorLink = onError(({ graphqlErrors, networkError }) => {
-  if (graphqlErrors) {
-    graphqlErrors.map(({ message, location, path }) => {
-      console.log(`Graphlql Error ${message}`);
-    });
-  }
-});
-
-// const link = from([
-//   errorLink,
-//   new HttpLink({uri:`${process.env.BACKEND_SERVER}/graphql`}),
-// ])
-
-const link = createUploadLink({ uri: `${process.env.BACKEND_SERVER}/graphql` });
-
-const authMiddleware = new ApolloLink((operation, forward) => {
-  // add the authorization to the headers
-  operation.setContext({
-    headers: {
-      Authorization: localStorage?.getItem("token")
-        ? `Bearer ${localStorage.getItem("token")}`
-        : null,
-    },
-  });
-
-  return forward(operation);
-});
-
-const client = new ApolloClient({
-  cache: new InMemoryCache(),
-  link: concat(authMiddleware, link),
-});
 
 function App({ Component, pageProps }) {
   // SnackBar Setup
@@ -71,7 +28,6 @@ function App({ Component, pageProps }) {
   useEffect(() => {
     console.log('grabbing state');
     let state = loadState();
-    console.log(state);
     if(state !== undefined){
       store.dispatch({
         type:"UPDATE_CART",
@@ -86,9 +42,6 @@ function App({ Component, pageProps }) {
       console.log(store.getState());
       saveState(store.getState())
     });
-
-    return () => {  
-    }
 
   }, [])
 
@@ -109,8 +62,7 @@ function App({ Component, pageProps }) {
     <div className="App">
       <Provider store={store}>
         <Auth0>
-          <ApolloProvider client={client}>
-            <AuthContextProvider>
+          <AuthApolloWrapper>
               <SnackbarProvider
                 maxSnack={3}
                 ref={notistackRef}
@@ -128,8 +80,7 @@ function App({ Component, pageProps }) {
                     <Component {...pageProps} />
                   </div>
               </SnackbarProvider>
-            </AuthContextProvider>
-          </ApolloProvider>
+            </AuthApolloWrapper>
         </Auth0>
       </Provider>
       <Footer />
