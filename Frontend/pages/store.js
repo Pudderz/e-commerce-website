@@ -52,6 +52,12 @@ export const StorePage = () => {
     fetchProducts({variables:{...filterBy, stockSize: sizes}})
   }
 
+
+
+  const [filterVisible, setFilterVisible] = useState(true);
+  const handleFilterVisibility = ()=>{
+    setFilterVisible((prevState)=>!prevState);
+  }
   return (
     <div>
 
@@ -59,11 +65,13 @@ export const StorePage = () => {
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <h3>Store</h3>
           <div style={{ display: "flex" }}>
-            <Button>Hide Filters</Button>
+            <Button onClick={handleFilterVisibility}>{(filterVisible)?  "Hide Filters": "Show Filters"}</Button>
           </div>
         </div>
-        <div style={{ display: "flex" }}>
-          <StoreFilter handleFormChange={handleFormChange}/>
+        <div className="storeContainer" style={{ display: "flex" }}>
+          <div style={{display:(filterVisible)? "contents": "none"}}>
+            <StoreFilter handleFormChange={handleFormChange}/>
+          </div>
           <StoreItems items ={data?.getAllProducts}/>
         </div>
 

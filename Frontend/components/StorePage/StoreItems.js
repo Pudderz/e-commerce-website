@@ -13,6 +13,7 @@ export const StoreItems = ({ items }) => {
         margin: "0 auto",
         justifyContent: "center",
         padding: "0",
+        height:'fit-content'
       }}
     >
       {items?.map((item, index) => (
@@ -24,6 +25,7 @@ export const StoreItems = ({ items }) => {
             flexGrow: "1",
             maxWidth: "300px",
             boxSizing: "border-box",
+            height:'fit-content'
           }}
         >
           {typeof item !== "object" ? (

@@ -755,3 +755,50 @@ button.headerButton {
   }
   
 }
+
+
+.storeContainer{
+  display: flex;
+  form{
+    width: 300px;
+    height: 100%;
+  }
+  @media (max-width: 1100px) {
+    flex-direction: column;
+    form{
+      width: 100%;
+      ul{
+        
+        li.sizeSelection{
+          width: 100%;
+          .selectSize{
+            width: 100%;
+          }
+        }
+      }
+      .smallFilter{
+        width: 50%;
+        min-width: 200px;
+        flex-grow: 1;
+        display: inline-block;
+        vertical-align: top;
+      }
+
+      .formSubmit{
+        position: sticky;
+        padding: 20px 0;
+        bottom: 0px;
+        left: 0;
+        right: 0;
+        background-color: #fff;
+        box-shadow: rgb(0, 0, 0, 0.1) 0px -10px 10px;
+        button{
+          margin: auto;
+          display: block;
+        }
+      }
+    }
+  }
+
+}
+

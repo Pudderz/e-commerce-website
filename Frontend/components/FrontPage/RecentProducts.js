@@ -129,7 +129,7 @@ export const RecentProducts = ({variables, header}) => {
                   <span>£{(item.price/100).toFixed(2)}</span>
                 </div>
               ) : (
-                <p>£{(item.price/100).toFixed(2)}</p>
+                <p style={{margin:'0'}}>£{(item.price/100).toFixed(2)}</p>
               )}
                   </div>
                 </>
