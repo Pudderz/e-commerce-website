@@ -10,7 +10,7 @@ export const StoreItems = ({ items }) => {
         flexFlow: "wrap",
         listStyle: "none",
         gap: "20px",
-        margin: "auto",
+        margin: "0 auto",
         justifyContent: "center",
         padding: "0",
       }}

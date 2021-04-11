@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getHistory } from "../../lib/localStorage";
 import Link from "next/link";
+import { ItemImage } from "./ItemImage";
 
 export const RecentlyViewed = () => {
   const [history, setHistory] = useState([]);
@@ -35,20 +36,13 @@ export const RecentlyViewed = () => {
               width: "fit-content",
             }}
           >
-            <Link href={`/product/${item?.slug}`}>
-              <img
-                src={`${process.env.GOOGLE_CLOUD_PUBLIC_URL}${item.images?.[0]}`}
-                alt={item?.name || item.productName}
-                style={{
-                  maxWidth: "100%",
-                  height: "100%",
-                  maxHeight: "200px",
-                  objectFit: "cover",
-                  minWidth: "160px",
-                  cursor:'pointer'
-                }}
-              /></Link>
-              {/* //`${process.env.GOOGLE_CLOUD_PUBLIC_URL}${item.images?.[1]}` */}
+            <ItemImage
+              id={item.id || item._id}
+              name={item.name || item.productName}
+              firstImage={`${process.env.GOOGLE_CLOUD_PUBLIC_URL}${item.images?.[0]}`}
+              secondImage={`${process.env.GOOGLE_CLOUD_PUBLIC_URL}${item.images?.[1]}`}
+              link={ item.slug}
+            />
           </li>
         ))}
       </ul>
