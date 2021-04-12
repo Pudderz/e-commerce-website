@@ -89,32 +89,42 @@ export const RecentProducts = ({variables, header}) => {
             >
               {typeof item !== "object" ? (
                 <>
-                  <Typography variant="h4">
-                    <Skeleton style={{ margin: "11px auto" }} />
-                  </Typography>
+                  <div style={{
+                    maxWidth:'200px',
+                    minWidth:'150px',
+                    flexGrow:'1'
+                  }}>
+                  <Skeleton
+                     variant="rect"
+                    // height={200}
+                    width={200}
+                    style={{ margin: "0px auto",
+                    maxWidth:'200px',
+                    minWidth:'150px',
+                    width:'100%',
+                    paddingBottom:'100%',
+                  }}
+                  >
+          
+                  </Skeleton>
                   <Skeleton
                     variant="rect"
-                    height={300}
-                    width={225}
-                    style={{ margin: "0px auto" }}
+                    height={25}
+                    width={200}
+                    style={{ margin: "13px auto", maxWidth:'200px',
+                    minWidth:'150px', width:'100%'  }}
                   ></Skeleton>
+                  </div>
+                  
 
-                  <Skeleton
-                    height={25}
-                    style={{ margin: "20px auto 0" }}
-                  ></Skeleton>
-                  <Skeleton
-                    height={25}
-                    style={{ margin: "10px auto 0" }}
-                  ></Skeleton>
                 </>
               ) : (
                 <>
                   <ItemImage
                      id={item.id || item._id}
                      name={item.name || item.productName}
-                     firstImage={item?.media?.source || `${process.env.GOOGLE_CLOUD_PUBLIC_URL}${item.images?.[0]}`}
-                     secondImage={item.assets?.[1]?.url || `${process.env.GOOGLE_CLOUD_PUBLIC_URL}${item.images?.[1]}`}
+                     firstImage={`${process.env.GOOGLE_CLOUD_PUBLIC_URL}${item.images?.[0]}`}
+                     secondImage={`${process.env.GOOGLE_CLOUD_PUBLIC_URL}${item.images?.[1]}`}
                      link={item.permalink || item.slug}
                   />
                   <div style={{ margin: "auto", width: "200px", textAlign:'start' }}>

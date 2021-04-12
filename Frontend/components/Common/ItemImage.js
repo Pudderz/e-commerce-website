@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React, { useState, useEffect, useRef } from "react";
-import Image from 'next/image';
-import Skeleton from '@material-ui/lab/Skeleton';
+import Image from "next/image";
+import Skeleton from "@material-ui/lab/Skeleton";
 
 export const ItemImage = ({ firstImage, secondImage, name, id, link }) => {
   const [hover, setHover] = useState(false);
@@ -17,7 +17,7 @@ export const ItemImage = ({ firstImage, secondImage, name, id, link }) => {
   return (
     <Link href={`/product/${link}`}>
       <div
-      className={"itemImageContainer"}
+        className={"itemImageContainer"}
         onPointerEnter={() => setHover(true)}
         onPointerLeave={() => setHover(false)}
         style={{
@@ -27,27 +27,39 @@ export const ItemImage = ({ firstImage, secondImage, name, id, link }) => {
           margin: "auto",
         }}
       >
-      {!loaded && (
-        <Skeleton variant="rect" width={200} height={200} style={{position:'absolute', zIndex:'2'}} />
-      )} 
+        
+        {/* <div className="mainImage"> */}
+{!loaded && (
+          <Skeleton className="mainImage" variant="rect" style={{position:'absolute'}}>
+            <Image
+              src={firstImage}
+              alt={name}
+              onLoad={handleLoad}
+              className={`mainImage ${hover ? "active" : ""}`}
+              height={200}
+              width={200}
+              style={{display:(loaded)?'none':'block'}}
+            />
+          </Skeleton>
+        )}
         <Image
-        // ref={image}
+          // ref={image}
           src={firstImage}
           alt={name}
           onLoad={handleLoad}
-          className={`mainImage ${hover? "active": ""}`}
+          className={`mainImage ${hover ? "active" : ""}`}
           height={200}
           width={200}
-         
         />
         <Image
           src={secondImage}
           alt={name}
-          className={`secondaryImage ${hover? "active": ""}`}
+          className={`secondaryImage ${hover ? "active" : ""}`}
           height={200}
           width={200}
-         
         />
+      {/* </div> */}
+        
       </div>
     </Link>
   );
