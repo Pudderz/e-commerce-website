@@ -60,3 +60,56 @@ export const EDIT_USER_REVIEW = gql`
     }
   }
 `
+
+
+
+export const EDIT_PRODUCT_STOCK = gql`
+  mutation($stock: [Int!], $id: String!) {
+    updateProductStock(stock: $stock, id: $id) {
+      stock
+    }
+  }
+`;
+
+export const EDIT_PRODUCT_IMAGE_ORDER = gql`
+  mutation($images: [String!], $id: String!) {
+    updateProductImageOrder(images: $images, id: $id) {
+      images
+    }
+  }
+`;
+
+export const EDIT_PRODUCT_IMAGES = gql`
+  mutation($stock: [Int!], $id: String!) {
+    updateProductStock(stock: $stock, id: $id) {
+      stock
+    }
+  }
+`;
+
+export const EDIT_PRODUCT_DESCRIPTION = gql`
+mutation(
+  $description: String!
+  $id: String!
+){
+  updateProductDescription(description: $description, id: $id){
+    stock
+  }
+}
+`;
+
+export const EDIT_PRODUCT_PRICE = gql`
+  mutation(
+    $price: Int!
+    $discounted: Boolean!
+    $discountedPrice: Int!
+    $id: String!
+  ) {
+    updateProductPrice(price: $price, id: $id, discounted: $discounted, discountedPrice: $discountedPrice) {
+      productName
+      price
+      discounted
+      discountedFrom
+    }
+  }
+`;

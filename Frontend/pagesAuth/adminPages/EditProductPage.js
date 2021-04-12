@@ -1,5 +1,5 @@
 import React from "react";
-import { ProductTabs } from "../../components/Admin/ProductTabs";
+import AdminEditProductTabs  from "../../components/Admin/AdminEditProductTabs";
 import { RecentlyViewed } from "../../components/Common/RecentlyViewed";
 
 export const EditProductPage = (props) => {
@@ -7,7 +7,7 @@ export const EditProductPage = (props) => {
   return (
     <div style={{ padding: "0 20px" }}>
 
-      <ProductTabs product={props} />
+      <AdminEditProductTabs product={props} />
       <RecentlyViewed />
     </div>
   );

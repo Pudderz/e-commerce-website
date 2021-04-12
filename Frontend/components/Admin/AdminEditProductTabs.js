@@ -20,6 +20,13 @@ import { ProductImages } from "./ProductImages";
 import ViewReviews from "./ViewReviews";
 import { gql, useMutation } from "@apollo/client";
 import { useForm } from "react-hook-form";
+import {
+  EDIT_PRODUCT_STOCK,
+  EDIT_PRODUCT_IMAGE_ORDER,
+  EDIT_PRODUCT_DESCRIPTION,
+  EDIT_PRODUCT_PRICE
+} from '../../GraphQL/Mutations';
+import TabPanel from "../Common/TabPanel";
 
 const ALL_SIZES = [
   3.5,
@@ -39,79 +46,7 @@ const ALL_SIZES = [
   10.5,
 ];
 
-const EDIT_PRODUCT_STOCK = gql`
-  mutation($stock: [Int!], $id: String!) {
-    updateProductStock(stock: $stock, id: $id) {
-      stock
-    }
-  }
-`;
-
-const EDIT_PRODUCT_IMAGE_ORDER = gql`
-  mutation($images: [String!], $id: String!) {
-    updateProductImageOrder(images: $images, id: $id) {
-      images
-    }
-  }
-`;
-
-const EDIT_PRODUCT_IMAGES = gql`
-  mutation($stock: [Int!], $id: String!) {
-    updateProductStock(stock: $stock, id: $id) {
-      stock
-    }
-  }
-`;
-
-const EDIT_PRODUCT_DESCRIPTION = gql`
-mutation(
-  $description: String!
-  $id: String!
-){
-  updateProductDescription(description: $description, id: $id){
-    stock
-  }
-}
-`;
-
-const EDIT_PRODUCT_PRICE = gql`
-  mutation(
-    $price: Int!
-    $discounted: Boolean!
-    $discountedPrice: Int!
-    $id: String!
-  ) {
-    updateProductPrice(price: $price, id: $id, discounted: $discounted, discountedPrice: $discountedPrice) {
-      productName
-      price
-      discounted
-      discountedFrom
-    }
-  }
-`;
-
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
- 
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`full-width-tabpanel-${index}`}
-      aria-labelledby={`full-width-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box p={3}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
-
-export const ProductTabs = (props) => {
+export const AdminEditProductTabs = (props) => {
 
    const [editStock, {data: stockData}] = useMutation(EDIT_PRODUCT_STOCK)
   // const [editImageOrder, {data: imageOrder}] = useMutation(EDIT_PRODUCT_IMAGE_ORDER)
@@ -346,3 +281,6 @@ export const ProductTabs = (props) => {
     </div>
   );
 };
+
+
+export default AdminEditProductTabs;
