@@ -1,8 +1,6 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { Button, Typography } from "@material-ui/core";
-// import hikingBackground from "../images/hikingBackground.jpg";
-// import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import { ItemImage } from "../Common/ItemImage";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
@@ -37,6 +35,19 @@ export const RecentProducts = ({variables, header}) => {
     console.log(products);
     return () => {};
   }, [products]);
+
+
+
+  // if(loading){
+  //   return(
+  //     <div>Loading</div>
+  //   )
+  // }
+  if(products.length === 0 && !loading && data){
+    return (
+      <div></div>
+    )
+  }
 
   return (
     <div>
