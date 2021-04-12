@@ -696,40 +696,67 @@ button.headerButton {
     border-style: none;
   }
 
- 
+  .overlay-content {
+    // display: none;
+    position: relative;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    height: auto;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 3;
+    left: 0;
+    // height: 100%;
+    max-height: 0px;
+    transition: all 4.15s ease-out;
+    -webkit-transition: all 4.15s ease-out;
+    -moz-transition: all 4.15s ease-out;
+    -ms-transition: all 4.15s ease-out;
+    -o-transition: all 4.15s ease-out;
+    opacity: 0;
+    text-align: start;
+    a {
+      display: block;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+  
   
   #overlay {
     display: none;
     position: fixed;
     width: 100%;
+    background-color: #f9f9f9;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     height: 0%;
     top: 0%;
     right: 0%;
-    background-color: #1b1f25;
+    // background-color: #1b1f25;
     z-index: 3;
     box-sizing: border-box;
     overflow-x: hidden;
     overflow: hidden;
-
-    transition: 0.3s;
-    -webkit-transition: 0.3s;
-    -moz-transition: 0.3s;
-    -ms-transition: 0.3s;
-    -o-transition: 0.3s;
     a,button{
       margin: auto;
       color: gray;
       text-transform: none;
       font-size: 2em;
       &:hover {
-        color: white;
+        color: #1f2021;
       }
     }
-  }
+    transition: 0.2s;
+    -webkit-transition: 0.2s;
+    -moz-transition: 0.2s;
+    -ms-transition: 0.2s;
+    -o-transition: 0.2s;
+}
   #overlay.showing {
-    padding-top: 20%;
-    padding-bottom: 20%;
-    height: 100%;
+    padding-top: 60px;
+    padding-bottom: 60px;
+
+    height: auto;
   }
   
   @media (max-width: 950px) {
@@ -865,3 +892,27 @@ button.headerButton {
     }
   }
 }
+
+
+button.logoutButton{
+  text-transform: capitalize;
+  width: 100%;
+  &.start{
+    span{
+      justify-content: flex-start;
+    }
+  }
+  
+}
+
+
+
+.dropdownFlexContainer{
+  display: flex;
+  justify-content: space-between;
+  max-width: 900px;
+  margin: auto;
+  padding: 40px 0;
+}
+
+
