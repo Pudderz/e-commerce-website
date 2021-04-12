@@ -4,7 +4,7 @@ import {
   LOAD_ALL_PRODUCTS,
   LOAD_PRODUCT_BY_SLUG,
 } from "../../../GraphQL/Queries";
-import { ProductPageContent } from "../../../components/ProductPages/ProductPageContent";
+import ProductPageContent from "../../../components/ProductPages/ProductPageContent";
 
 export const UnisexProductPage = (props) => <ProductPageContent {...props} />;
 

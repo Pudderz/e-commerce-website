@@ -98,7 +98,7 @@ export const ProductPageContent = (props) => {
         <ProductImages images={props.assets || props.images} />
 
         <div className="itemDescription">
-          <h1>{product.name}</h1>
+          <h1>{product?.name}</h1>
 
           <h2>£{(props?.price/100).toFixed(2)}</h2>
           <p style={{ color: "green" }}>In Stock</p>
@@ -141,7 +141,7 @@ export const ProductPageContent = (props) => {
 
         <div style={{ display: "flex" }}>
           <img src={props.assets?.[0].url} height="60px" alt={product?.name} />
-          <h4 style={{ margin: "1em" }}>{product.name}</h4>
+          <h4 style={{ margin: "1em" }}>{product?.name}</h4>
           <p>{product?.price?.formatted_with_symbol}</p>
         </div>
 
@@ -155,7 +155,7 @@ export const ProductPageContent = (props) => {
         >
           <SelectSmallSize
             availableSizes={props?.stock}
-            productVariants={product.variants}
+            productVariants={product?.variants}
             changeSize={changeSize}
             size={size}
           />

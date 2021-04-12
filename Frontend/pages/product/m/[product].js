@@ -1,10 +1,11 @@
 import React from "react";
 import { initializeApollo } from "../../../lib/apolloClient";
 import { LOAD_ALL_PRODUCTS, LOAD_PRODUCT_BY_SLUG } from "../../../GraphQL/Queries";
-import { ProductPageContent } from "../../../components/ProductPages/ProductPageContent";
+import  ProductPageContent  from "../../../components/ProductPages/ProductPageContent";
 
 
 export const MaleProductPage = (props) => {
+  console.log(props)
   return (
     <ProductPageContent {...props}/>
   );
