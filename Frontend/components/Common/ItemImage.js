@@ -27,10 +27,13 @@ export const ItemImage = ({ firstImage, secondImage, name, id, link }) => {
           margin: "auto",
         }}
       >
-        
         {/* <div className="mainImage"> */}
-{!loaded && (
-          <Skeleton className="mainImage" variant="rect" style={{position:'absolute'}}>
+        {!loaded && (
+          <Skeleton
+            className="mainImage"
+            variant="rect"
+            style={{ position: "absolute" }}
+          >
             <Image
               src={firstImage}
               alt={name}
@@ -38,7 +41,7 @@ export const ItemImage = ({ firstImage, secondImage, name, id, link }) => {
               className={`mainImage ${hover ? "active" : ""}`}
               height={200}
               width={200}
-              style={{display:(loaded)?'none':'block'}}
+              style={{ display: loaded ? "none" : "block" }}
             />
           </Skeleton>
         )}
@@ -58,8 +61,7 @@ export const ItemImage = ({ firstImage, secondImage, name, id, link }) => {
           height={200}
           width={200}
         />
-      {/* </div> */}
-        
+        {/* </div> */}
       </div>
     </Link>
   );
