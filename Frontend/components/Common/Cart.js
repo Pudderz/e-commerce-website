@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import PropTypes from 'prop-types'
+import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
 
 
 export const Cart = ({cart, emptyCart, updateCartQty,  removeItemFromCart}) => {

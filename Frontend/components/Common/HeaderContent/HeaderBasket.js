@@ -2,7 +2,7 @@ import { Button, IconButton, Tooltip } from '@material-ui/core';
 import Link from 'next/link';
 import React from 'react'
 import DeleteIcon from "@material-ui/icons/Delete";
-
+import Image from 'next/image';
 
 export const HeaderBasket = ({updateItemQty, cart=[], closeBasket, removeItem}) => {
 
@@ -26,15 +26,7 @@ export const HeaderBasket = ({updateItemQty, cart=[], closeBasket, removeItem}) 
               <hr />
             </div>
 
-            <ul
-              style={{
-                listStyle: "none",
-                display: "grid",
-                gap: "50px",
-                padding: "0",
-                maxWidth: "100%",
-              }}
-            >
+            
               {cart?.length === 0 ? (
                 <div>
                   <h3>Your Basket is empty</h3>
@@ -44,7 +36,14 @@ export const HeaderBasket = ({updateItemQty, cart=[], closeBasket, removeItem}) 
                   </p>
                 </div>
               ) : (
-                <div>
+                <ul
+                style={{
+                  listStyle: "none",
+                  display: "grid",
+                  padding: "0",
+                  maxWidth: "100%",
+                }}
+                >
                   {cart?.map((item) => (
                     <li key={`${item.id}${item.size}`}>
                       <div
@@ -56,7 +55,7 @@ export const HeaderBasket = ({updateItemQty, cart=[], closeBasket, removeItem}) 
                       >
                         <div
                           style={{
-                            backgroundColor: "blue",
+                            backgroundColor: "gray",
                             height: "100px",
                             width: "100px",
                             position: "relative",
@@ -67,18 +66,11 @@ export const HeaderBasket = ({updateItemQty, cart=[], closeBasket, removeItem}) 
                             href={`/product/${item.slug}`}
                             onClick={handleBasketClose}
                           >
-                            <img
+                            <Image
                               src={`${process.env.GOOGLE_CLOUD_PUBLIC_URL}${item?.images[0]}`}
-                              width="100"
-                              alt=""
-                              style={{
-                                position: "absolute",
-                                top: "0",
-                                left: "0",
-                                bottom: "0",
-                                objectFit: "cover",
-                                right: "0",
-                              }}
+                              width={100}
+                              height={100}
+                              alt={item.name}
                             />
                           </Link>
                         </div>
@@ -148,9 +140,8 @@ export const HeaderBasket = ({updateItemQty, cart=[], closeBasket, removeItem}) 
                     
                     </li>
                   ))}
-                </div>
+                </ul>
               )}
-            </ul>
             <div
               style={{
                 position: "sticky",
@@ -197,3 +188,6 @@ export const HeaderBasket = ({updateItemQty, cart=[], closeBasket, removeItem}) 
           </div>
     )
 }
+
+
+export default HeaderBasket;
