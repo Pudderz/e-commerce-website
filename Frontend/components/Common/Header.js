@@ -133,7 +133,7 @@ export const Header = (props) => {
         <SmallHeader
           isAuthenticated={isAuthenticated}
           handleBasketClick={handleBasketClick}
-          cartLength={props?.cartState?.cartLength}
+          cartLength={props?.cartInfo?.totalItems}
           displayMenu={displayMenu}
           handleProfileClick={handleProfileClick}
           user={user}
@@ -147,7 +147,7 @@ export const Header = (props) => {
           femaleTrendingData={femaleTrendingData}
           verified={verified}
           isAuthenticated={isAuthenticated}
-          cartLength={props?.cartState?.cartLength}
+          cartLength={props?.cartInfo?.totalItems}
           user={user}
         />
 
