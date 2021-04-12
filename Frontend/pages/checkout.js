@@ -157,7 +157,7 @@ export const Checkout = (props) => {
                             width: "fit-content",
                           }}
                         >
-                          £{item.price}.00
+                          £{(price/100).toFixed(2)}
                         </p>
 
                         <p
