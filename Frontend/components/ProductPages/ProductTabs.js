@@ -6,26 +6,7 @@ import { SizeGuide } from "./SizeGuide";
 import { DeliveryAndReturns } from "./DeliveryAndReturns";
 import { Tab, Tabs } from "@material-ui/core";
 import ReactMarkdown from "react-markdown";
-
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`full-width-tabpanel-${index}`}
-      aria-labelledby={`full-width-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box p={3}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
+import TabPanel from "../Common/TabPanel";
 
 export const ProductTabs = (props) => {
   const [value, setValue] = useState(0);

@@ -2,24 +2,10 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { Box, Tab, Tabs } from "@material-ui/core";
 import React, { useState } from "react";
 import { LogoutButton } from "../../components/Authentication/LogoutButton";
+import TabPanel from "../../components/Common/TabPanel";
 import UserOrders from "../../components/profilePage/userOrders";
 import UserReviews from "../../components/profilePage/UserReviews";
 
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`full-width-tabpanel-${index}`}
-      aria-labelledby={`full-width-tab-${index}`}
-      {...other}
-    >
-      {value === index && <Box p={3}>{children}</Box>}
-    </div>
-  );
-}
 
 export const Profile = () => {
   const { user } = useAuth0();
