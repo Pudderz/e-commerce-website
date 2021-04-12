@@ -14,7 +14,7 @@ import { useRouter } from "next/router";
 import { HeaderBasket } from "./HeaderContent/HeaderBasket";
 import { ProfileHeader } from "./HeaderContent/ProfileHeader";
 import SmallHeader from "./HeaderContent/smallHeader";
-import { LargeHeader } from "./HeaderContent/largeHeader";
+import { LargeHeader } from "./HeaderContent/LargeHeader";
 
 export const Header = (props) => {
   const [anchorBasketEl, setAnchorBasketEl] = useState(null);
