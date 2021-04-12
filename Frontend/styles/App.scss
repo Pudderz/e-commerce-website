@@ -215,7 +215,7 @@ a.link {
 
 .tableHeader {
   position: sticky;
-  top: 69px;
+  top: 52px;
   box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
   z-index: 3;
   background-color: #eee;
@@ -912,7 +912,8 @@ button.logoutButton{
   justify-content: space-between;
   max-width: 900px;
   margin: auto;
-  padding: 40px 0;
+  padding: 40px 20px;
+  box-sizing: border-box;
 }
 
 

@@ -34,6 +34,7 @@ export const RecentlyViewed = () => {
               boxSizing: "border-box",
               maxHeight: "100%",
               width: "fit-content",
+              minWidth:'100px'
             }}
           >
             <ItemImage

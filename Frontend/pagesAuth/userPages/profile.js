@@ -59,7 +59,10 @@ export const Profile = () => {
               <p style={{ color: "green" }}>Email verified</p>
             )}
             <h3>Name: {user?.nickname}</h3>
-            <LogoutButton />
+            <div style={{width:'150px'}}>
+            <LogoutButton textStart={true}/>
+            </div>
+            
           </div>
 
           <div style={{ backgroundColor: "#fff", margin: "40px auto" }}>

@@ -111,7 +111,7 @@ export const StorePage = () => {
 
   };
 
-  const [filterVisible, setFilterVisible] = useState(true);
+  const [filterVisible, setFilterVisible] = useState(false);
   const handleFilterVisibility = () => {
     setFilterVisible((prevState) => !prevState);
   };
