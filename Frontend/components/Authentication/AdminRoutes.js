@@ -9,7 +9,7 @@ const Redirecting = () => {
 const AuthenticatedRoute = ({ children }) => {
   const router = useRouter();
   const { getAccessTokenSilently, isAuthenticated } = useAuth0();
-//   const { user, getIdTokenClaims } = useAuth0();
+  //   const { user, getIdTokenClaims } = useAuth0();
 
   const [verified, setVerified] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -19,19 +19,18 @@ const AuthenticatedRoute = ({ children }) => {
     // const claims = await getIdTokenClaims();
 
     let token;
-    
-    if(isAuthenticated) token = await getAccessTokenSilently();
+    try {
+      if (isAuthenticated) token = await getAccessTokenSilently();
 
-    if (token) {
-      const decodeToken = atob(token.split(".")[1]);
-      if (decodeToken.permissions.includes("write:product")) {
-        setVerified(true);
+      if (token) {
+        const decodeToken = JSON.parse(atob(token.split(".")[1]));
+        if (decodeToken?.permissions?.includes("write:product")) {
+          setVerified(true);
+        }
       }
-
+    } finally {
+      setLoading(false);
     }
-    // console.log(JSON.parse(atob(claims.__raw.split(".")[1])));
-    // console.log(user);
-    setLoading(false);
   };
 
   useEffect(() => {
