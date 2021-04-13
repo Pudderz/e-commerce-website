@@ -9,9 +9,6 @@ import { ItemImage } from "../Common/ItemImage";
 export const MostPopular = ({ popularProducts, header }) => {
   const [products, setProducts] = useState(Array.from({ length: 4 }, () => 0));
   const [shouldShrink, setShouldShrink] = useState(false);
-  // Currently fetches 4 most recent products
-  // ToDO:
-  // implement google analytics to work out the most popular product pages for this component
 
   useEffect(() => {
     setProducts(popularProducts);

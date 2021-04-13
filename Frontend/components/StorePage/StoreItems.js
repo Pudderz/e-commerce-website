@@ -56,28 +56,40 @@ export const StoreItems = ({ items }) => {
                 secondImage={`${process.env.GOOGLE_CLOUD_PUBLIC_URL}${item?.images[1]}`}
                 link={item.slug}
               />
-              <h4 style={{ margin: "10px auto 0" }}>{item.productName}</h4>
-              <p>rating: {item.averageRating}/5</p>
-
-              {item.discounted ? (
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-around",
-                    maxWidth: "200px",
-                    margin: "0 auto",
-                  }}
-                >
-                  <span
-                    style={{ color: "#e81c1c", textDecoration: "line-through" }}
+              <div
+                    style={{
+                      margin: "auto",
+                      width: "200px",
+                      textAlign: "start",
+                    }}
                   >
-                    £{(item.discountedFrom/100).toFixed(2)}
-                  </span>
-                  <span>£{(item.price/100).toFixed(2)}</span>
-                </div>
-              ) : (
-                <p>£{(item.price/100).toFixed(2)}</p>
-              )}
+                    <h4 style={{ margin: "0px", fontWeight: "500" }}>
+                      {item.name || item.productName}
+                    </h4>
+                    {item.discounted ? (
+                      <div
+                        style={{
+                          display: "flex",
+                          // justifyContent: "space-around",
+                          maxWidth: "200px",
+                          margin: "0 auto",
+                          gap: "10px",
+                        }}
+                      >
+                        <span
+                          style={{
+                            color: "#e81c1c",
+                            textDecoration: "line-through",
+                          }}
+                        >
+                          £{(item.discountedFrom / 100).toFixed(2)}
+                        </span>
+                        <span>£{(item.price / 100).toFixed(2)}</span>
+                      </div>
+                    ) : (
+                      <p style={{margin:'0'}}>£{(item.price / 100).toFixed(2)}</p>
+                    )}
+                  </div>
             </>
           )}
 
