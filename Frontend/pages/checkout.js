@@ -51,7 +51,6 @@ export const Checkout = (props) => {
           <Link href="/basket">Cart</Link>
           <Typography>Checkout</Typography>
         </Breadcrumbs>
-        <Link href="/basket">Go Back To Basket</Link>
       </div>
       
       <div
