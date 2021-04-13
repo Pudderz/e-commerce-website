@@ -13,7 +13,7 @@ import {
 import { useRouter } from "next/router";
 import { HeaderBasket } from "./HeaderContent/HeaderBasket";
 import { ProfileHeader } from "./HeaderContent/ProfileHeader";
-import SmallHeader from "./HeaderContent/smallHeader";
+import SmallHeader from "./HeaderContent/SmallHeader";
 import { LargeHeader } from "./HeaderContent/LargeHeader";
 
 export const Header = (props) => {
