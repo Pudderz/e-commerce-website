@@ -77,6 +77,7 @@ const generateResponse = async ({
       payment_intent_client_secret: intent.client_secret,
     };
   } else if (intent.status === "succeeded") {
+    console.log("payment succeeded")
     // The payment didn’t need any additional actions and completed!
     // Handle post-payment fulfillment
     items = [];
@@ -88,7 +89,7 @@ const generateResponse = async ({
     let subId = "guest";
 
     try {
-      const token = JSON.parse(request.headers.authorization);
+      const token = request.headers.authorization;
 
       let decoded = { sub: null, permissions: [] };
 
@@ -96,6 +97,7 @@ const generateResponse = async ({
         console.log("token exists");
         decoded = jwt_decode(token);
         const { error } = await isTokenValid(token);
+        
         if (!error && decoded.sub) {
           subId = decoded.sub;
         }
@@ -104,8 +106,8 @@ const generateResponse = async ({
     }catch(err){
       console.log(err.message);
     }
-
-    let shippingDetails = JSON.parse(request.body.shipping_details);
+    console.log(request.body.shipping_details);
+    let shippingDetails = request.body.shipping_details;
     console.log(shippingDetails);
 
     let order = new Order({
