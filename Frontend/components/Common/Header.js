@@ -125,6 +125,10 @@ export const Header = (props) => {
   useEffect(() => {
     setAnchorBasketEl(null);
     setAnchorProfileEl(null);
+    setShowMenu({
+      showing: "",
+      hamburger: "",
+    });
   }, [router.pathname]);
 
   return (
@@ -201,7 +205,7 @@ export const Header = (props) => {
           }}
         >
           <div style={{ width: "100%", textAlign: "start" }}>
-            <Button
+            {/* <Button
               endIcon={<MenuIcon />}
               style={{
                 width: "100%",
@@ -210,10 +214,9 @@ export const Header = (props) => {
               }}
             >
               Home
-            </Button>
-            <div>
-              <Link href="/">Home</Link>
-            </div>
+            </Button> */}
+            <Link href="/">Home</Link>
+            <div></div>
           </div>
           <div style={{ width: "100%", textAlign: "start" }}>
             <Link href="/store">Store</Link>
@@ -224,6 +227,13 @@ export const Header = (props) => {
           <div style={{ width: "100%", textAlign: "start" }}>
             <Link href="/women">Womens</Link>
           </div>
+          {verified && (
+            <>
+              <div style={{ width: "100%", textAlign: "start" }}>
+                <Link href="/admin">Admin</Link>
+              </div>
+            </>
+          )}
         </div>
       </div>
 
