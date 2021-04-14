@@ -36,7 +36,7 @@ export const Filters = ({onClick}) => {
         <ul style={{listStyle:'none', display:'flex', gap:'10px', padding:'0px'}}>
           {categories?.map((category, index) => (
             <li key={index} style={{textAlign:'start',backgroundColor:'#eee', padding:'5px', width:'fit-content', borderRadius:'5px' }}>
-              <Link href={`/category/${category.slug}`} onClick={handleClick}>{category.name}</Link>
+              <Link href={`/store?${category.slug}=true`} onClick={handleClick}>{category.name}</Link>
             </li>
           ))}
         </ul>

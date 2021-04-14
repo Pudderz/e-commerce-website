@@ -4,9 +4,9 @@ import runningImage from "../../images/Running.jpg";
 import casualImage from "../../images/casual.jpg";
 import hikingImage from "../../images/hikingShoes.jpg";
 import Image from "next/image";
-
+import PropTypes from 'prop-types';
 // ToDo: change this in to media quieries and classnames
-export const Categories = ({header}) => {
+export const Categories = ({header, gender}) => {
 
   return (
     <div
@@ -26,7 +26,7 @@ export const Categories = ({header}) => {
             backgroundColor: "black",
           }}
         >
-          <Link href={`/category/running`}>
+          <Link href={`/store?running=true${gender && `&${gender}=true`}`}>
             <div style={{ textDecoration: "solid", cursor: "pointer", height: "33vh", position: "relative",width:'100%' }}>
               <Image
                 src={runningImage}
@@ -52,19 +52,11 @@ export const Categories = ({header}) => {
             minWidth: '33%',
           }}
         >
-          <Link href={`/category/casual`}>
+          <Link href={`/store?casual=true${gender && `&${gender}=true`}`}>
             <div style={{ textDecoration: "solid", cursor: "pointer", height: "33vh", minWidth:'100%', position: "relative",  }}>
-              {/* <img
-                src={casualImage}
-                alt=""
-                width="100%"
-                style={{ objectFit: "cover", height: "33vh" }}
-              /> */}
               <Image
                 src={casualImage}
                 alt=""
-                // height={6381}
-                // width={4253}
                 layout="fill"
                 objectFit="cover"
                 style={{ height: "33vh",  width:"100%" }}
@@ -82,14 +74,8 @@ export const Categories = ({header}) => {
             minWidth: '33%',
           }}
         >
-          <Link href={`/category/hiking`}>
+          <Link href={`/store?hiking=true${gender && `&${gender}=true`}`}>
             <div style={{ textDecoration: "solid", cursor: "pointer", position: "relative",  minWidth:'100%',height:'33vh'}}>
-              {/* <img
-                src={hikingImage}
-                alt=""
-                width="100%"
-                style={{ objectFit: "cover", height: "33vh" }}
-              /> */}
               <Image
                 src={hikingImage}
                 alt=""
@@ -106,4 +92,7 @@ export const Categories = ({header}) => {
       </div>
     </div>
   );
+};
+Categories.defaultProps = {
+  gender: ''
 };
