@@ -241,8 +241,8 @@ export const StoreFilter = ({
     setSizeVisbility((prevState) => !prevState);
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <ul style={{ listStyle: "none", padding: "10px", textAlign: "start" }}>
-      <li style={{marginBottom:'20px'}}>
+      <ul style={{ listStyle: "none", padding: "10px", textAlign: "start",display:'flex',flexWrap:'wrap' }}>
+      <li style={{marginBottom:'20px', width:'100%'}}>
           <label htmlFor="sortBy" style={{marginRight:'20px'}}>Sort By:</label>
           <select
             name="sortBy"
