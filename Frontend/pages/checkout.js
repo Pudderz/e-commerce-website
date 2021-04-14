@@ -1,5 +1,5 @@
 import { Breadcrumbs, Button, Typography } from "@material-ui/core";
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
@@ -7,21 +7,20 @@ import { Payment } from "../components/Checkout/Payment";
 import {
   addCartItem,
   removeCartItem,
+  emptyCart,
   addCartItemQuantity,
 } from "../Redux/actions/actions";
 import { connect } from "react-redux";
 import Image from "next/image";
 
-
 const promise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_API_KEY);
 
-
 export const Checkout = (props) => {
-  const {cart: stateCart, cartInfo} = props;
+  const { cart: stateCart, cartInfo } = props;
   const [items, setItems] = useState([]);
   const [price, setPrice] = useState(0);
 
-  const verifyCart = ()=>{
+  const verifyCart = () => {
     if (stateCart.length > 0) {
       let cart = JSON.stringify(stateCart);
       fetch(`${process.env.BACKEND_SERVER}/verifyCart`, {
@@ -33,20 +32,24 @@ export const Checkout = (props) => {
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log(data)
           setItems([...data.confirmedItems]);
           setPrice(data.amount);
         });
     }
-  }
+  };
 
   useEffect(() => {
-    console.log(cartInfo);
-    console.log(stateCart);
     verifyCart();
-  }, [stateCart]);
+  }, []);
 
- 
+  const handleChangeItems = ({ amount, items }) => {
+    setItems(data.confirmedItems);
+    setPrice(data.amount);
+  };
+
+  const handleEmptyCart = (cart)=>{
+    props.emptyCart();
+  }
 
   return (
     <>
@@ -56,12 +59,16 @@ export const Checkout = (props) => {
           <Typography>Checkout</Typography>
         </Breadcrumbs>
       </div>
-      
-      <div className="checkoutContainer"
-        
-      >
+
+      <div className="checkoutContainer">
         <Elements stripe={promise}>
-          <Payment cartInfo={stateCart} items={items} price={price} />
+          <Payment
+            cartInfo={stateCart}
+            items={items}
+            price={price}
+            changeItems={handleChangeItems}
+            emptyCart={handleEmptyCart}
+          />
         </Elements>
 
         <div
@@ -90,96 +97,52 @@ export const Checkout = (props) => {
               <div>
                 <h3>Your Basket is empty</h3>
                 <p>
-                  Continue shopping on the <a href="/">homepage</a> and browse our
-                  discounts.
+                  Continue shopping on the <a href="/">homepage</a> and browse
+                  our discounts.
                 </p>
               </div>
             ) : (
-              <div>
+              <>
                 {items.length == 0 && (
                   <div>
                     <p>Failed to verify cart</p>
                     <Button onClick={verifyCart}>Try Again</Button>
                   </div>
                 )}
-                <ul style={{padding:'0'}}>
-                {items?.map((item) => (
-                  <li key={`${item.id}${item.size}`}>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "flex-start",
-                        gap: "20px",
-                      }}
-                    >
+                <ul style={{ padding: "0" }}>
+                  {items?.map((item) => (
+                    <li key={`${item.id}${item.size}`}>
                       <div
                         style={{
-                          backgroundColor: "blue",
-                          height: "100px",
-                          width: "100px",
-                          position: "relative",
-                          overflow: "hidden",
+                          display: "flex",
+                          justifyContent: "flex-start",
+                          gap: "20px",
                         }}
                       >
                         <Link href={`/product/${item.slug}`}>
-                          <Image
-                            src={ `${process.env.GOOGLE_CLOUD_PUBLIC_URL}${item?.images[0]}`}
-                            width={100}
-                            height={100}
-                            alt=""
-                            style={{
-                              position: "absolute",
-                              top: "0",
-                              left: "0",
-                              bottom: "0",
-                              objectFit: "cover",
-                              right: "0",
-                            }}
-                          />
+                          <a>
+                            <Image
+                              src={`${process.env.GOOGLE_CLOUD_PUBLIC_URL}${item?.images[0]}`}
+                              width={100}
+                              height={100}
+                              alt={item.name}
+                              style={{ cursor: "pointer" }}
+                            />
+                          </a>
                         </Link>
-                      </div>
 
-                      <div style={{ display: "grid" }}>
-                        <h3
-                          style={{
-                            margin: "0",
-                            width: "fit-content",
-                          }}
-                        >
-                          {item.name}
-                        </h3>
-                        <p
-                          style={{
-                            margin: "0",
-                            width: "fit-content",
-                          }}
-                        >
-                          Size: UK {item?.size}
-                        </p>
-                        <p
-                          style={{
-                            margin: "0",
-                            width: "fit-content",
-                          }}
-                        >
-                          £{(price/100).toFixed(2)}
-                        </p>
+                        <div className="checkoutItemInfo">
+                          <h3>{item.name}</h3>
+                          <p>Size: UK {item?.size}</p>
+                          <p>£{(price / 100).toFixed(2)}</p>
 
-                        <p
-                          style={{
-                            margin: "0",
-                            width: "fit-content",
-                          }}
-                        >
-                          Quantity: {item.quantity}
-                        </p>
+                          <p>Quantity: {item.quantity}</p>
+                        </div>
                       </div>
-                    </div>
-                  </li>
-                ))}
+                    </li>
+                  ))}
                 </ul>
-                
-              </div>
+              </>
             )}
           </ul>
           <hr />
@@ -210,9 +173,9 @@ export const Checkout = (props) => {
             }}
           >
             <p style={{ margin: "5px" }}>
-              Subtotal({items.length  || 0} item
+              Subtotal({items.length || 0} item
               {items.length > 1 && "s"}
-              ): £{(price/100).toFixed(2)}
+              ): £{(price / 100).toFixed(2)}
             </p>
           </div>
         </div>
@@ -231,8 +194,7 @@ const mapDispatchToProps = {
   addCartItem,
   removeCartItem,
   addCartItemQuantity,
-  // ... normally is an object full of action creators
+  emptyCart
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Checkout);
-

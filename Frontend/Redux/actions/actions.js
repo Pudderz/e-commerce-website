@@ -18,3 +18,11 @@ export const removeCartItem =(item)=>{
         payload: item,
     }
 }
+
+
+export const emptyCart =(item)=>{
+    return {
+        type: "EMPTY_CART",
+        payload: item,
+    }
+}

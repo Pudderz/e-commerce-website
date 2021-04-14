@@ -13,7 +13,7 @@ import {
 import { CHECKOUT_CARD_OPTIONS, CHECKOUT_EXAMPLE_INFO } from "../../globals/globals";
 
 
-export const Payment = ({ cartInfo, items, price }) => {
+export const Payment = ({ cartInfo, items, price, changeItems,emptyCart }) => {
   const { getAccessTokenSilently, isAuthenticated } = useAuth0();
   const router = useRouter();
   const [succeeded, setSucceeded] = useState(false);
@@ -60,9 +60,6 @@ export const Payment = ({ cartInfo, items, price }) => {
       [target]: value,
     });
   };
-  useEffect(() => {
-    console.log(shippingInfo);
-  }, [shippingInfo]);
 
   // const clientSecret = useRef(null);
 
@@ -71,6 +68,9 @@ export const Payment = ({ cartInfo, items, price }) => {
       // Show error from server on payment form
       setError(`Payment failed ${response.error}`);
       setProcessing(false);
+      if(response.amount && response.confirmedItems){
+        changeItems({amount: response.amount, items:response.confirmedItems})
+      }
     } else if (response.requires_action) {
       // Use Stripe.js to handle the required card action
       const {
@@ -80,7 +80,7 @@ export const Payment = ({ cartInfo, items, price }) => {
 
       if (errorAction) {
         // Show error from Stripe.js in payment form
-        setError(`Payment failed ${errorAction}`);
+        setError(`${errorAction}`);
         setProcessing(false);
       } else {
         // The card action has been handled
@@ -115,6 +115,7 @@ export const Payment = ({ cartInfo, items, price }) => {
         handleServerResponse(await serverResponse.json());
       }
     } else {
+      emptyCart();
       console.log(response);
       setOrderId(response.orderId);
       setError(null);
@@ -132,10 +133,8 @@ export const Payment = ({ cartInfo, items, price }) => {
       // Otherwise send paymentMethod.id to your server (see Step 4)
 
       // get access token for saving future order if payment is successful
-      let token;
-      
-      token = (isAuthenticated)? await getAccessTokenSilently(): '';
-      console.log(token);
+      let token = (isAuthenticated)? await getAccessTokenSilently() : '';
+
       const res = await fetch(`${process.env.BACKEND_SERVER}/pay`, {
         method: "POST",
         headers: {
@@ -155,6 +154,7 @@ export const Payment = ({ cartInfo, items, price }) => {
             },
             orderNotes: shippingInfo.orderNotes,
           },
+          price
         }),
       });
       const paymentResponse = await res.json();
@@ -224,7 +224,7 @@ export const Payment = ({ cartInfo, items, price }) => {
           />
           <h3>Payment Detail</h3>
           <div style={{ border: "1px solid gray", padding: "10px" }}>
-            <label style={{ textAlign: "start" }}>
+            <div style={{ textAlign: "start" }}>
               <p style={{ margin: "2px 0 10px" }}>Credit/Debit card</p>
 
               <hr />
@@ -233,7 +233,7 @@ export const Payment = ({ cartInfo, items, price }) => {
               <p>04/24 242 42424</p>
               <p>Example 3d secure card - 4000 0025 0000 3155</p>
               <p>04/24 242 42424</p>
-            </label>
+            </div>
 
             <Button
               variant="contained"
@@ -241,13 +241,14 @@ export const Payment = ({ cartInfo, items, price }) => {
               type="submit"
               disabled={processing || disabled || succeeded}
               style={{
-                backgroundColor: "#111",
+                 backgroundColor: (disabled)? "#444": "#111",
                 color: "#fff",
                 padding: "5px",
                 width: "100%",
                 marginTop: "20px",
                 borderRadius: "5px",
                 fontSize: "18px",
+                cursor:'pointer'
               }}
             >
               <span id="button-text">

@@ -893,7 +893,7 @@ button.headerButton {
     }
     &>div{
       flex-wrap: wrap;
-      justify-content: start;
+      justify-content: flex-start;
       padding: 20px 0;
       p{
         margin:0;
@@ -923,6 +923,9 @@ button.logoutButton{
   box-sizing: border-box;
 }
 
+
+// Checkout page
+
 .checkoutContainer{
   margin: 30px auto;
   padding: 15px;
@@ -933,7 +936,20 @@ button.logoutButton{
   -o-border-radius: 30px;
   display: flex;
   flex-flow: wrap-reverse;
-  align-items: start;
+  align-items: flex-end;
 
 
 }
+
+
+.checkoutItemInfo{
+  display: grid;
+  *{
+    margin: 0;
+    width: fit-content;
+  }
+}
+
+// .card-error{
+//   color: rgb(207, 18, 18);
+// }

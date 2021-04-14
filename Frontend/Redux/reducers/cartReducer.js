@@ -90,7 +90,7 @@ const cartReducer = (state = initialState, { type, payload }) => {
       return { ...state, cart: payload, cart: payload.cart, cartInfo: payload.cartInfo };
 
     case "EMPTY_CART":
-      return { ...state, cart: [] };
+      return { ...state, ...initialState};
 
     default:
       return state;

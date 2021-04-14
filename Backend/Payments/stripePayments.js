@@ -144,9 +144,15 @@ const payServerSide = async (request, response) => {
   const items = request.body.items;
   const [confirmedItems, orderAmount] = await calculateOrderAmount(items);
 
-  // TODO: check if confirmed items and items are the same
-  // If not respond back telling user to please verify the new amount of items
-  // as our stocks has changed
+  //if a product goes out of stock during the cart checkout
+  if (request.body.price && request.body.price !== orderAmount) {
+    return response.send({ 
+      error: "Our stock and prices have changed please review before trying again",
+      amount: orderAmount,
+      confirmedItems: confirmedItems,
+  });
+  }
+
   console.log(orderAmount);
   if (orderAmount === 0) {
     return response.send({ error: "No items found please try again" });
