@@ -26,9 +26,10 @@ body {
 
 .row {
   display: flex;
-
+  flex-wrap: wrap;
   gap: 30px;
   justify-content: space-between;
+  margin: 30px 0;
 }
 
 .shippingForm {
@@ -36,16 +37,18 @@ body {
 }
 
 .inputContainer {
-  margin: 20px 0;
+  
   text-align: start;
-  width: 100%;
+  width: 45%;
+  flex-grow: 1;
+  min-width: 250px;
 }
 
 .inputContainer p {
   margin: 0 0 5px;
 }
 
-.inputContainer input {
+.inputContainer input, .inputContainer select {
   height: 25px;
   width: 100%;
   font-size: 18px;
@@ -911,8 +914,6 @@ button.logoutButton{
   
 }
 
-
-
 .dropdownFlexContainer{
   display: flex;
   justify-content: space-between;
@@ -922,4 +923,17 @@ button.logoutButton{
   box-sizing: border-box;
 }
 
+.checkoutContainer{
+  margin: 30px auto;
+  padding: 15px;
+  border-radius: 30px;
+  -webkit-border-radius: 30px;
+  -moz-border-radius: 30px;
+  -ms-border-radius: 30px;
+  -o-border-radius: 30px;
+  display: flex;
+  flex-flow: wrap-reverse;
+  align-items: start;
 
+
+}

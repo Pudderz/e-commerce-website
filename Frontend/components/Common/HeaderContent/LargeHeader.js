@@ -72,7 +72,7 @@ export const LargeHeader = ({
             height: "100%",
           }}
         >
-          <Link className="link" href="/">
+          <Link className="link" href="/" style={{height:'fit-content'}}>
             Home
           </Link>
           <Link className="link" href="/store">
