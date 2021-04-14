@@ -43,6 +43,13 @@ function App({ Component, pageProps }) {
       saveState(store.getState())
     });
 
+
+    // Remove the server-side injected CSS.
+    const jssStyles = document.querySelector('#jss-server-side');
+    if (jssStyles) {
+      jssStyles.parentElement.removeChild(jssStyles);
+    }
+
   }, [])
 
   // Google analytics
