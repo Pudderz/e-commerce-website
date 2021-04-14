@@ -50,7 +50,7 @@ export const Women = ({ products }) => {
         variables={{ discounted: true, female: true }}
       />
 
-        <Categories header={"Women Categories"} />
+        <Categories header={"Women Categories"} gender={"female"} />
 
     </div>
   );

@@ -44,7 +44,7 @@ export const Men = ({products}) => {
         <RecentProducts header={"Men discounts"} variables={{discounted: true, male:true}}/>
 
       <hr/>
-        <Categories header ={"Men Categories"}/>
+        <Categories header ={"Men Categories"} gender={"male"}/>
       
     </div>
   );
