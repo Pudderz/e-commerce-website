@@ -82,8 +82,8 @@ export const ProductImages = ({ images }) => {
           <>
             <Skeleton
               variant="rect"
-              width={500}
-              height={500}
+              // width={500}
+              // height={500}
               style={{ margin: "20px" }}
             >
                
