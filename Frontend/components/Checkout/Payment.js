@@ -10,43 +10,8 @@ import {
   removeCartItem,
   addCartItemQuantity,
 } from "../../Redux/actions/actions";
-const CARD_OPTIONS = {
-  iconStyle: "solid",
-  style: {
-    base: {
-      iconColor: "#222",
-      color: "#222",
-      fontWeight: 500,
-      fontFamily: "Roboto, Open Sans, Segoe UI, sans-serif",
-      fontSize: "16px",
-      fontSmoothing: "antialiased",
-      backgroundColor: "#eee",
+import { CHECKOUT_CARD_OPTIONS, CHECKOUT_EXAMPLE_INFO } from "../../globals/globals";
 
-      ":-webkit-autofill": { color: "#222" },
-      "::placeholder": { color: "#444" },
-    },
-    invalid: {
-      iconColor: "#CF061F",
-      color: "#CF061f",
-    },
-  },
-};
-
-const EXAMPLE_INFO = {
-  customer: {
-    firstname: "John",
-    lastname: "Doe",
-    email: "mpudney2@gmail.com",
-  },
-  shipping: {
-    name: "John Doe",
-    street: "123 Fake St",
-    town_city: "San Francisco",
-    county_state: "CA",
-    postal_zip_code: "94103",
-    country: "US",
-  },
-};
 
 export const Payment = ({ cartInfo, items, price }) => {
   const { getAccessTokenSilently, isAuthenticated } = useAuth0();
@@ -76,16 +41,16 @@ export const Payment = ({ cartInfo, items, price }) => {
   const importDemoShippingInfo = () => {
     setShippingInfo({
       ...shippingInfo,
-      firstName: EXAMPLE_INFO.customer.firstname,
-      lastName: EXAMPLE_INFO.customer.lastname,
-      email: EXAMPLE_INFO.customer.email,
-      town_city: EXAMPLE_INFO.shipping.town_city,
-      street: EXAMPLE_INFO.shipping.street,
+      firstName: CHECKOUT_EXAMPLE_INFO.customer.firstname,
+      lastName: CHECKOUT_EXAMPLE_INFO.customer.lastname,
+      email: CHECKOUT_EXAMPLE_INFO.customer.email,
+      town_city: CHECKOUT_EXAMPLE_INFO.shipping.town_city,
+      street: CHECKOUT_EXAMPLE_INFO.shipping.street,
       street2: "",
-      deliveryRegion: EXAMPLE_INFO.shipping.county_state,
-      postal_zip_code: EXAMPLE_INFO.shipping.postal_zip_code,
+      deliveryRegion: CHECKOUT_EXAMPLE_INFO.shipping.county_state,
+      postal_zip_code: CHECKOUT_EXAMPLE_INFO.shipping.postal_zip_code,
       phoneNumber: "",
-      deliveryCountry: EXAMPLE_INFO.shipping.country,
+      deliveryCountry: CHECKOUT_EXAMPLE_INFO.shipping.country,
     });
   };
 
@@ -263,7 +228,7 @@ export const Payment = ({ cartInfo, items, price }) => {
               <p style={{ margin: "2px 0 10px" }}>Credit/Debit card</p>
 
               <hr />
-              <CardElement options={CARD_OPTIONS} onChange={handleChange} />
+              <CardElement options={CHECKOUT_CARD_OPTIONS} onChange={handleChange} />
               <p>Example card - 4242 4242 4242 4242</p>
               <p>04/24 242 42424</p>
               <p>Example 3d secure card - 4000 0025 0000 3155</p>

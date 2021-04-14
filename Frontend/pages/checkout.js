@@ -1,6 +1,5 @@
 import { Breadcrumbs, Button, Typography } from "@material-ui/core";
-import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import React, { useContext, useState, useRef, useEffect} from "react";
+import React, { useState, useEffect} from "react";
 import Link from "next/link";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
@@ -11,6 +10,7 @@ import {
   addCartItemQuantity,
 } from "../Redux/actions/actions";
 import { connect } from "react-redux";
+import Image from "next/image";
 
 
 const promise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_API_KEY);
@@ -21,9 +21,7 @@ export const Checkout = (props) => {
   const [items, setItems] = useState([]);
   const [price, setPrice] = useState(0);
 
-  useEffect(() => {
-    console.log(cartInfo);
-    console.log(stateCart);
+  const verifyCart = ()=>{
     if (stateCart.length > 0) {
       let cart = JSON.stringify(stateCart);
       fetch(`${process.env.BACKEND_SERVER}/verifyCart`, {
@@ -36,11 +34,17 @@ export const Checkout = (props) => {
         .then((response) => response.json())
         .then((data) => {
           console.log(data)
-          setItems(data.confirmedItems);
+          setItems([...data.confirmedItems]);
           setPrice(data.amount);
         });
     }
-  }, [cartInfo]);
+  }
+
+  useEffect(() => {
+    console.log(cartInfo);
+    console.log(stateCart);
+    verifyCart();
+  }, [stateCart]);
 
  
 
@@ -53,14 +57,8 @@ export const Checkout = (props) => {
         </Breadcrumbs>
       </div>
       
-      <div
-        style={{
-          margin: "30px auto",
-          padding: "15px",
-          borderRadius: "30px",
-          display: "flex",
-          flexFlow: "wrap",
-        }}
+      <div className="checkoutContainer"
+        
       >
         <Elements stripe={promise}>
           <Payment cartInfo={stateCart} items={items} price={price} />
@@ -71,7 +69,7 @@ export const Checkout = (props) => {
             width: "40%",
             minWidth: "min(400px,100%)",
             margin: "0 auto",
-            position: "sticky",
+            // position: "sticky",
             top: "70px",
             height: "fit-content",
             overflow: "auto",
@@ -98,6 +96,13 @@ export const Checkout = (props) => {
               </div>
             ) : (
               <div>
+                {items.length == 0 && (
+                  <div>
+                    <p>Failed to verify cart</p>
+                    <Button onClick={verifyCart}>Try Again</Button>
+                  </div>
+                )}
+                <ul style={{padding:'0'}}>
                 {items?.map((item) => (
                   <li key={`${item.id}${item.size}`}>
                     <div
@@ -117,9 +122,10 @@ export const Checkout = (props) => {
                         }}
                       >
                         <Link href={`/product/${item.slug}`}>
-                          <img
+                          <Image
                             src={ `${process.env.GOOGLE_CLOUD_PUBLIC_URL}${item?.images[0]}`}
-                            width="100"
+                            width={100}
+                            height={100}
                             alt=""
                             style={{
                               position: "absolute",
@@ -171,6 +177,8 @@ export const Checkout = (props) => {
                     </div>
                   </li>
                 ))}
+                </ul>
+                
               </div>
             )}
           </ul>

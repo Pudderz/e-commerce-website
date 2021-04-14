@@ -1,4 +1,5 @@
 import React from "react";
+import { STRIPE_COUNTRY_CODES } from "../../globals/globals";
 
 
 export const ShippingForm = (props) => {
@@ -38,13 +39,18 @@ export const ShippingForm = (props) => {
         <div className="inputContainer">
           <label>
             <p>Country*</p>
-            <input
+            <select
               name="deliveryCountry"
-              
+            
               required
               onChange={handleChange}
               value={props.shippingInfo.deliveryCountry}
-            />
+              placeholder="Select a country"
+            >
+              {STRIPE_COUNTRY_CODES.map(country =>(
+                <option value={country.code} key={country.code}>{country.country}</option>
+              ))}
+            </select>
            
           </label>
         </div>
