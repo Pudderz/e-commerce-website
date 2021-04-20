@@ -24,11 +24,8 @@ const ProductType = new GraphQLObjectType({
   name: "Product",
   fields: () => ({
     _id: { type: GraphQLID },
-    // productId: { type: GraphQLString },
     productName: { type: GraphQLString },
     price: { type: GraphQLInt },
-    
-    averageRating: { type: GraphQLString },
     description: { type: GraphQLString },
     stock: { type: new GraphQLList(StockSize) },
     images: { type: new GraphQLList(GraphQLString) },
@@ -42,10 +39,22 @@ const ProductType = new GraphQLObjectType({
     numOfReviews: { 
       type: GraphQLInt ,
       resolve(parent, args){
-        Review.find({productName: parent.productName}).exec((err, results)=>{
-          if(err || results ==null) return 0;
-          return results.length
-        })
+       return Review.find({productName: parent.productName}).count();
+      }
+    
+    },
+    averageRating: { 
+      type: GraphQLInt ,
+      resolve(parent, args){
+        return Review.aggregate([{
+          $match:{ productName: parent.productName, rating: {$gte:0, $lte:5}},
+        },{
+          $group:{
+            _id:null,
+            averageReview: { $avg: "$rating" }
+          }
+        }
+      ])
       }
     
     },

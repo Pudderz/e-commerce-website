@@ -26,9 +26,9 @@ export const ReviewProduct = ({ productId, productName, product }) => {
   };
   useEffect(() => {
     console.log(productId, productName);
-    getReviews({
-      variables: { productId, productName },
-    });
+    // getReviews({
+    //   variables: { productId, productName },
+    // });
   }, [productId, productName]);
 
   useEffect(() => {

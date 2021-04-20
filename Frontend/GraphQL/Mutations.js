@@ -6,7 +6,7 @@ export const addReview = gql`
     $productName: String!
     $name: String!
     $profileImage: String!
-    $rating: String!
+    $rating: Int!
     $description: String!
     $descriptionTitle: String!
   ) {
@@ -53,7 +53,7 @@ export const EDIT_USER_REVIEW = gql`
     $id: String!
     $title: String!
     $description:String!
-    $rating: String!
+    $rating: Int!
   ) {
     editReview(id: $id, title: $title, description: $description, rating: $rating){
       productName
