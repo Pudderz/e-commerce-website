@@ -10,7 +10,6 @@ const stockSize = new Schema({
 const productSchema = new Schema({
     productName: String,
     numOfReviews: Number,
-    averageRating: String,
     description: String,
     price: Number,
     stock: [stockSize],

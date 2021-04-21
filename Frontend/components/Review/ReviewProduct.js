@@ -18,6 +18,8 @@ export const ReviewProduct = ({ productId, productName, product }) => {
     });
   };
 
+
+
   const handleWriteReview = () => {
     setShowForm(true);
   };
@@ -26,14 +28,17 @@ export const ReviewProduct = ({ productId, productName, product }) => {
   };
   useEffect(() => {
     console.log(productId, productName);
-    // getReviews({
-    //   variables: { productId, productName },
-    // });
+    getReviews({
+      variables: { productId, productName },
+    });
   }, [productId, productName]);
 
   useEffect(() => {
     console.log(product);
   }, [product]);
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
 
   return (
     <div style={{ textAlign: "start", margin: "auto" }}>

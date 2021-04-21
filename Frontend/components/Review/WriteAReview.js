@@ -2,7 +2,6 @@ import { Button, IconButton, TextField } from "@material-ui/core";
 import React, { useState, useEffect } from "react";
 import Rating from "@material-ui/lab/Rating";
 import { useAuth0 } from "@auth0/auth0-react";
-import { LoginButton } from "../Authentication/LoginButton";
 import { addReview } from "../../GraphQL/Mutations";
 import { useMutation } from "@apollo/client";
 import CloseIcon from "@material-ui/icons/Close";
@@ -31,8 +30,6 @@ export const WriteAReview = ({
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
-  console.log(user);
-
   const [
     createReview,
     { loading: mutationLoading, error: mutationError, data },
@@ -45,15 +42,6 @@ export const WriteAReview = ({
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log({
-        productId: productId,
-        productName: productName,
-        name: user?.nickname,
-        profileImage: user?.picture,
-        rating: `${value}`,
-        descriptionTitle: title,
-        description: description,
-      });
       await createReview({
         variables: {
           productId: productId,

@@ -1,6 +1,5 @@
 const Product = require("../models/products");
 const Order = require("../models/order");
-const mongoose = require("mongoose");
 const { startDatabase } = require("../database");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const isTokenValid = require("../Authentication/validate");

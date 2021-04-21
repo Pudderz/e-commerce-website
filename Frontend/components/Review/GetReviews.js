@@ -3,17 +3,21 @@ import { Avatar } from "@material-ui/core";
 import Rating from "@material-ui/lab/Rating";
 
 export const GetReviews = ({ data }) => {
+  console.log(data?.getProduct);
   return (
     <>
-      {data?.getProduct?.[0]?.numOfReviews && (
+      {!!data?.getProduct?.[0]?.numOfReviews || data?.getProduct?.[0]?.numOfReviews==0 && (
         <div>
           {data?.getProduct?.[0]?.numOfReviews} Review
-          {data?.getProduct?.[0]?.numOfReviews > 1 && "s"}
+          {data?.getProduct?.[0]?.numOfReviews !== 1 && "s"}
         </div>
       )}
-      {data?.getProduct?.[0]?.averageRating && (
-        <div>Average Rating: {data?.getProduct?.[0]?.averageRating}/5</div>
-      )}
+
+        <div>
+        <p>Average Rating: {data?.getProduct?.[0]?.averageRating/10}/5</p>
+        <Rating value={data?.getProduct?.[0]?.averageRating/10} precision={0.1} readOnly />
+        </div>
+
 
       <ol style={{ listStyle: "none", padding: "0" }}>
         {data?.getProduct?.[0]?.allProductReviews.map((review, index) => (
@@ -32,7 +36,7 @@ export const GetReviews = ({ data }) => {
             </div>
             <div style={{ display: "flex" }}>
               {/* Review stars */}
-              <Rating value={review?.rating} readOnly />
+              <Rating value={review?.rating/10} precision={0.5} readOnly />
               <h4 style={{ margin: "5px 0" }}>{review?.descriptionTitle}</h4>
             </div>
 
