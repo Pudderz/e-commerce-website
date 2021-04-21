@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { RecentlyViewed } from "../components/Common/RecentlyViewed";
 import { Button } from "@material-ui/core";
 import { useLazyQuery } from "@apollo/client";
-import { LOAD_ALL_PRODUCTS } from "../GraphQL/Queries";
-import StoreFilter from "../components/StorePage/storeFilter";
-import StoreItems from "../components/StorePage/StoreItems";
+import { LOAD_ALL_PRODUCTS } from "GraphQL/Queries";
+import StoreFilter from "components/StorePage/storeFilter";
+import StoreItems from "components/StorePage/StoreItems";
 
 export const StorePage = () => {
   const [fetchProducts, { data, error, loading }] = useLazyQuery(

@@ -1,6 +1,6 @@
 import React from "react";
-import { RecentProducts } from "../components/FrontPage/RecentProducts";
-import webBanner from "../images/WebBannerPNG.png";
+import { RecentProducts } from "components/FrontPage/RecentProducts";
+import webBanner from "images/WebBannerPNG.png";
 export const Discounts = () => {
   return (
     <div>

@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { Button } from "@material-ui/core";
 import { useAuth0 } from "@auth0/auth0-react";
 import Popover from "@material-ui/core/Popover";
 import { connect } from "react-redux";
-import MenuIcon from "@material-ui/icons/Menu";
 import {
   addCartItem,
   removeCartItem,

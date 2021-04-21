@@ -1,6 +1,6 @@
 import React from "react";
-import AdminEditProductTabs  from "../../components/Admin/AdminEditProductTabs";
-import { RecentlyViewed } from "../../components/Common/RecentlyViewed";
+import AdminEditProductTabs  from "components/Admin/AdminEditProductTabs";
+import { RecentlyViewed } from "components/Common/RecentlyViewed";
 
 export const EditProductPage = (props) => {
 

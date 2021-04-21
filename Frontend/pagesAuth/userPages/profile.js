@@ -1,10 +1,10 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { Box, Tab, Tabs } from "@material-ui/core";
 import React, { useState } from "react";
-import { LogoutButton } from "../../components/Authentication/LogoutButton";
-import TabPanel from "../../components/Common/TabPanel";
-import UserOrders from "../../components/profilePage/userOrders";
-import UserReviews from "../../components/profilePage/UserReviews";
+import { LogoutButton } from "components/Authentication/LogoutButton";
+import TabPanel from "components/Common/TabPanel";
+import UserOrders from "components/profilePage/userOrders";
+import UserReviews from "components/profilePage/UserReviews";
 
 
 export const Profile = () => {

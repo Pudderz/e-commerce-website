@@ -1,9 +1,9 @@
 import React from "react";
-import { MostPopular } from "../components/FrontPage/MostPopular";
-import webBanner from "../images/WebBannerPNG.png";
-import { Categories } from "../components/FrontPage/Categories";
-import { RecentProducts } from "../components/FrontPage/RecentProducts";
-import runningBackground from "../images/runningBackground.jpg"
+import { MostPopular } from "components/FrontPage/MostPopular";
+import webBanner from "images/WebBannerPNG.png";
+import { Categories } from "components/FrontPage/Categories";
+import { RecentProducts } from "components/FrontPage/RecentProducts";
+import runningBackground from "images/runningBackground.jpg"
 import Image from "next/image";
 const axios = require("axios").default;
 

@@ -1,7 +1,7 @@
 import { useLazyQuery} from "@apollo/client";
 import Link from "next/link";
 import React, { useEffect } from "react";
-import { LOAD_ALL_ORDERS  } from "../../GraphQL/Queries"; 
+import { LOAD_ALL_ORDERS  } from "GraphQL/Queries"; 
 
 export const Orders = () => {
   // useLazyQuery so query can be sent with jwt token

@@ -24,7 +24,7 @@ import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orien
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 import FilepondPluginDragReorder from "filepond-plugin-drag-reorder";
-import { ChangeStock } from "../../components/Admin/ChangeStock";
+import { ChangeStock } from "components/Admin/ChangeStock";
 import { useForm } from "react-hook-form";
 import { useSnackbar } from "notistack";
 

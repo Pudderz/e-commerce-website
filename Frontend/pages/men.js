@@ -1,10 +1,10 @@
 import Image from "next/image";
 import React from "react";
-import { Categories } from "../components/FrontPage/Categories";
-import { MostPopular } from "../components/FrontPage/MostPopular";
-import { RecentProducts } from "../components/FrontPage/RecentProducts";
-import casualBackground from "../images/casualBackground.jpg";
-import runningBackground from "../images/runningBackground.jpg"
+import { Categories } from "components/FrontPage/Categories";
+import { MostPopular } from "components/FrontPage/MostPopular";
+import { RecentProducts } from "components/FrontPage/RecentProducts";
+import casualBackground from "images/casualBackground.jpg";
+import runningBackground from "images/runningBackground.jpg"
 const axios = require("axios").default;
 
 export const Men = ({products}) => {

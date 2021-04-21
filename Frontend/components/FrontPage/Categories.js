@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import runningImage from "../../images/Running.jpg";
-import casualImage from "../../images/casual.jpg";
-import hikingImage from "../../images/hikingShoes.jpg";
+import runningImage from "images/Running.jpg";
+import casualImage from "images/casual.jpg";
+import hikingImage from "images/hikingShoes.jpg";
 import Image from "next/image";
 import PropTypes from 'prop-types';
 // ToDo: change this in to media quieries and classnames
