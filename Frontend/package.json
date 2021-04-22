@@ -34,12 +34,17 @@
     "notistack": "^1.0.3",
     "react": "17.0.1",
     "react-dom": "17.0.1",
+    "react-error-boundary": "^3.1.1",
     "react-filepond": "^7.1.1",
     "react-ga": "^3.3.0",
     "react-hook-form": "^6.15.5",
     "react-markdown": "^5.0.3",
     "react-redux": "^7.2.3",
     "redux": "^4.0.5",
-    "sass": "^1.32.8"
+    "sass": "^1.32.8",
+    "styled-components": "^5.2.3"
+  },
+  "devDependencies": {
+    "babel-plugin-styled-components": "^1.12.0"
   }
 }

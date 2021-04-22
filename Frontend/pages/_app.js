@@ -13,6 +13,17 @@ import store from "../Redux/store";
 import { Provider } from "react-redux";
 import { loadState, saveState } from "../lib/localStorage";
 import AuthApolloWrapper from "../components/Apollo/AuthApolloWrapper";
+import {ErrorBoundary} from 'react-error-boundary'
+
+
+function ErrorFallback({error}) {
+  return (
+    <div role="alert">
+      <p>Something went wrong:</p>
+      <pre style={{color: 'red'}}>{error.message}</pre>
+    </div>
+  )
+}
 
 
 function App({ Component, pageProps }) {
@@ -67,6 +78,7 @@ function App({ Component, pageProps }) {
 
   return (
     <div className="App">
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
       <Provider store={store}>
         <Auth0>
           <AuthApolloWrapper>
@@ -90,6 +102,7 @@ function App({ Component, pageProps }) {
             </AuthApolloWrapper>
         </Auth0>
       </Provider>
+      </ErrorBoundary>
       <Footer />
     </div>
   );
