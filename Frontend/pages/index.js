@@ -1,14 +1,15 @@
 import Link from "next/link";
 import React, { useEffect } from "react";
-import { RecentlyViewed } from "../components/Common/RecentlyViewed";
-import { MostPopular } from "../components/FrontPage/MostPopular";
-import { RecentProducts } from "../components/FrontPage/RecentProducts";
-import { Categories } from "../components/FrontPage/Categories";
+import { RecentlyViewed } from "components/Common/RecentlyViewed";
+import { MostPopular } from "components/FrontPage/MostPopular";
+import { RecentProducts } from "components/FrontPage/RecentProducts";
+import { Categories } from "components/FrontPage/Categories";
 import { Button, IconButton } from "@material-ui/core";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
-import casualBackground from "../images/casualBackground2.jpg";
+import casualBackground from "images/casualBackground2.jpg";
 import Image from "next/image";
+import TextSlider from "components/FrontPage/TextSlider";
 
 const axios = require("axios").default;
 
@@ -27,7 +28,7 @@ export const FrontPage = ({ products }) => {
           width: "100%",
           backgroundColor: "#111111",
           position: "relative",
-          paddingBottom:'min(56.25%, 750px)'
+          paddingBottom: "min(56.25%, 750px)",
         }}
       >
         <div
@@ -36,67 +37,40 @@ export const FrontPage = ({ products }) => {
             color: "white",
             top: "33%",
             left: "10%",
-            fontSize:  "min(40px,4vw)",
+            fontSize: "min(40px,4vw)",
             zIndex: "1",
             textAlign: "start",
           }}
         >
           <h3 style={{ margin: "0" }}>E-Commerce Site</h3>
           <p style={{ margin: "0 0 10px" }}>view our great deals</p>
-          <Button className="buttonOutlined light" variant="outlined"
-          style={{fontSize:  "min(20px,4vw)"}}
+          <Button
+            className="buttonOutlined light"
+            variant="outlined"
+            style={{ fontSize: "min(20px,4vw)" }}
           >
             <Link href="/store">Save Now</Link>
-            
           </Button>
         </div>
         <div
           style={{
             clipPath: "circle(50% at 70% 50%)",
             height: "100%",
-            position:'absolute',
-            width:'100%',
+            position: "absolute",
+            width: "100%",
           }}
         >
-          <Image 
-          src={casualBackground}
-          layout="fill"
-          objectFit="cover"
-          />
+          <Image src={casualBackground} layout="fill" objectFit="cover" />
         </div>
       </div>
-      <div
-        style={{
-          height: "70px",
-          width: "100%",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems:'center'
-        }}
-      >
-        <IconButton style={{height:'fit-content'}}>
-          <ArrowBackIosIcon />
-        </IconButton>
-        <p style={{ fontSize:  "min(20px,4vw)", margin: "0", alignSelf: "center" }}>
-          30 Days return policy. Learn More
-        </p>
-        <IconButton style={{height:'fit-content'}}>
-          <ArrowForwardIosIcon />
-        </IconButton>
-      </div>
+      <TextSlider />
 
-      <div
-      className="timeForUpgrade"
-      >
-        <div
-          
-      
-        >
-          <h2 style={{ margin: "0", fontSize:  "clamp(20px,6vw,40px )", }}>Time For An Upgrade</h2>
-          <div
-          className="timeForUpgradeButtons"
-  
-          >
+      <div className="timeForUpgrade">
+        <div>
+          <h2 style={{ margin: "0", fontSize: "clamp(20px,6vw,40px )" }}>
+            Time For An Upgrade
+          </h2>
+          <div className="timeForUpgradeButtons">
             <Link href="/women">
               <Button className="buttonOutlined dark">Shop Women</Button>
             </Link>

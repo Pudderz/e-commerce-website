@@ -799,6 +799,11 @@ button.headerButton {
     width: 300px;
     height: 100%;
   }
+
+  .smallFilter{
+    flex-grow: 1;
+  }
+
   @media (max-width: 1100px) {
     flex-direction: column;
     form{
@@ -950,6 +955,45 @@ button.logoutButton{
   }
 }
 
-// .card-error{
-//   color: rgb(207, 18, 18);
-// }
+.card-error{
+  color: rgb(207, 18, 18);
+}
+
+
+$slider-width: 100vw;
+$slider-height: 75px;
+
+.slider {
+  height: $slider-height;
+  // box-shadow: 3px 3px 10px rgba(0,0,0,.2);
+}
+
+
+.slides {
+  display: flex;
+  position: relative;
+  top: 0;
+  left: -$slider-width;
+  width: 8*$slider-width;
+}
+
+.slides.shifting {
+  transition: left .2s ease-out;
+}
+
+
+
+.prev {
+  background-image: url(https://cdn0.iconfinder.com/data/icons/navigation-set-arrows-part-one/32/ChevronLeft-512.png);
+  left: 20px;
+}
+
+.next {
+  background-image: url(https://cdn0.iconfinder.com/data/icons/navigation-set-arrows-part-one/32/ChevronRight-512.png);
+  right: 20px;
+}
+
+.prev:active,
+.next:active {
+  transform: scale(.8);
+}
