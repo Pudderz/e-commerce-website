@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import ShoppingBasketIcon from "@material-ui/icons/ShoppingBasket";
 import { LoginButton } from "../../Authentication/LoginButton";
 import SearchIcon from "@material-ui/icons/Search";
-import MenuIcon from "@material-ui/icons/Menu";
 import {
   Avatar,
   Badge,
@@ -15,6 +14,16 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import Link from "next/link";
 import Filters from "../../StorePage/Filters";
 import { useRouter } from "next/router";
+import {
+  CategoriesWrapper,
+  DropdownContent,
+  DropdownWrapper,
+  FlexContainer,
+  HeaderButton,
+  LargeNav,
+  NavItems,
+} from "./LargeHeader.styles";
+
 export const LargeHeader = ({
   handleMenuOpen,
   handleMenuClose,
@@ -62,7 +71,7 @@ export const LargeHeader = ({
   };
 
   return (
-    <ul className="largeNav">
+    <LargeNav>
       <li>
         <div
           style={{
@@ -72,7 +81,7 @@ export const LargeHeader = ({
             height: "100%",
           }}
         >
-          <Link className="link" href="/" style={{height:'fit-content'}}>
+          <Link className="link" href="/" style={{ height: "fit-content" }}>
             Home
           </Link>
           <Link className="link" href="/store">
@@ -89,30 +98,15 @@ export const LargeHeader = ({
             height: "100%",
           }}
         >
-          <div className="dropdown">
-            <div
-              className="headerButton"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                height: "100%",
-              }}
-            >
+          <DropdownWrapper className="dropdown">
+            <HeaderButton>
               <Link href="/men">
-                <a
-                  className="MuiButton-root"
-                  style={{
-                    textTransform: "none",
-                    backgroundColor: "transparent",
-                  }}
-                >
-                  Men
-                </a>
+                <a className="MuiButton-root">Men</a>
               </Link>
-            </div>
+            </HeaderButton>
 
-            <div className="dropdown-content">
-              <div className="dropdownFlexContainer">
+            <DropdownContent className="dropdown-content">
+              <FlexContainer>
                 <div>
                   <Link href="/men">Men's Homepage</Link>
                   <Link href="/store?male=true&sortBy=sold">Featured</Link>
@@ -138,32 +132,17 @@ export const LargeHeader = ({
                     ))}
                   </ul>
                 </div>
-              </div>
-            </div>
-          </div>
-          <div className="dropdown">
-            <div
-              className="headerButton"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                height: "100%",
-              }}
-            >
+              </FlexContainer>
+            </DropdownContent>
+          </DropdownWrapper>
+          <DropdownWrapper>
+            <HeaderButton>
               <Link href="/women">
-                <a
-                  className="MuiButton-root"
-                  style={{
-                    textTransform: "none",
-                    backgroundColor: "transparent",
-                  }}
-                >
-                  Women
-                </a>
+                <a className="MuiButton-root">Women</a>
               </Link>
-            </div>
-            <div className="dropdown-content">
-              <div className="dropdownFlexContainer">
+            </HeaderButton>
+            <DropdownContent>
+              <FlexContainer>
                 <div>
                   <Link href="/women">Women's Homepage</Link>
                   <Link href="/store?female=true&sortBy=sold">Featured</Link>
@@ -193,10 +172,10 @@ export const LargeHeader = ({
                     ))}
                   </ul>
                 </div>
-              </div>
-            </div>
-          </div>
-          <div className="dropdown">
+              </FlexContainer>
+            </DropdownContent>
+          </DropdownWrapper>
+          <DropdownWrapper>
             <Button
               className="headerButton"
               style={{
@@ -206,48 +185,23 @@ export const LargeHeader = ({
             >
               Categories
             </Button>
-            <div className="dropdown-content">
-              <div
-                className="selection"
-                style={{
-                  maxWidth: "1300px",
-                  margin: " 20px auto",
-                  width: "fit-content",
-                  maxHeight: "auto",
-                  width: "100%",
-                }}
-              >
-                <h5 style={{ margin: "5px auto", width: "fit-content" }}>
-                  Categories
-                </h5>
+            <DropdownContent>
 
+              <CategoriesWrapper>
+                <h5>Categories</h5>
                 <Filters onClick={() => {}} />
-              </div>
-            </div>
-          </div>
-          <div className="dropdown">
-            <div
-              className="headerButton"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                height: "100%",
-              }}
-            >
+              </CategoriesWrapper>
+              
+            </DropdownContent>
+          </DropdownWrapper>
+          <DropdownWrapper>
+            <HeaderButton>
               <Link href="/discounts">
-                <a
-                  className="MuiButton-root"
-                  style={{
-                    textTransform: "none",
-                    backgroundColor: "transparent",
-                  }}
-                >
-                  Sales
-                </a>
+                <a className="MuiButton-root">Sales</a>
               </Link>
-            </div>
-            <div className="dropdown-content">
-              <div className="dropdownFlexContainer">
+            </HeaderButton>
+            <DropdownContent>
+              <FlexContainer>
                 <div>
                   <Link href="/discounts">Discount HomePage</Link>
                   <Link href="/store?discounted=true">Shop All Discounts</Link>
@@ -267,35 +221,19 @@ export const LargeHeader = ({
                   <Link href="/store?discounted=true&hiking=true">Hiking</Link>
                   <Link href="/store?discounted=true&casual=true">Casual</Link>
                 </div>
-              </div>
-            </div>
-          </div>
+              </FlexContainer>
+            </DropdownContent>
+          </DropdownWrapper>
 
           {verified && (
-            <div className="dropdown">
-              <div
-                className="headerButton"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  height: "100%",
-                }}
-              >
+            <DropdownWrapper>
+              <HeaderButton>
                 <Link href="/admin">
-                  <a
-                    className="MuiButton-root"
-                    style={{
-                      textTransform: "none",
-                      backgroundColor: "transparent",
-                    }}
-                  >
-                    Admin
-                  </a>
+                  <a className="MuiButton-root">Admin</a>
                 </Link>
-              </div>
-              <div className="dropdown-content">
-                <div
-                  className="dropdownFlexContainer"
+              </HeaderButton>
+              <DropdownContent>
+                <FlexContainer
                   style={{
                     maxWidth: "min(100%,900px)",
                   }}
@@ -309,24 +247,15 @@ export const LargeHeader = ({
                   <div>
                     <Link href="/admin/allProducts">All Products</Link>
                   </div>
-                
-                </div>
-              </div>
-            </div>
+                </FlexContainer>
+              </DropdownContent>
+            </DropdownWrapper>
           )}
         </div>
       </li>
       <li style={{ height: "fit-content", alignSelf: "center" }}>
-        <ul
-          style={{
-            display: "flex",
-            listStyle: "none",
-            justifyContent: "space-around",
-            width: "100%",
-            padding: "0",
-          }}
-        >
-          <li style={{ height: "fit-content", alignSelf: "center" }}>
+        <NavItems>
+          <li>
             <form onSubmit={handleSearch}>
               <InputBase
                 autoComplete="off"
@@ -351,6 +280,7 @@ export const LargeHeader = ({
               />
             </form>
           </li>
+
           {isAuthenticated ? (
             <li>
               <Tooltip title="Profile">
@@ -368,7 +298,7 @@ export const LargeHeader = ({
               </Tooltip>
             </li>
           ) : (
-            <li style={{ alignSelf: "center", height: "fit-content" }}>
+            <li>
               <LoginButton />
             </li>
           )}
@@ -382,9 +312,9 @@ export const LargeHeader = ({
               </IconButton>
             </Tooltip>
           </li>
-        </ul>
+        </NavItems>
       </li>
-    </ul>
+    </LargeNav>
   );
 };
 

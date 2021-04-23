@@ -4,21 +4,19 @@ import { Button, TextField } from "@material-ui/core";
 import InstagramIcon from "@material-ui/icons/Instagram";
 import FacebookIcon from "@material-ui/icons/Facebook";
 import TwitterIcon from "@material-ui/icons/Twitter";
+import {
+  SignUpContainer,
+  SubFooter,
+  FooterContainer,
+  FooterContent
+} from './Footer.styles';
 export const Footer = () => {
   return (
     <>
-      <div
-        style={{
-          backgroundColor: "#314869",
-          height: "400px",
-          width: "100%",
-          display: "flex",
-          flexFlow: "column",
-          margin: "50px 0 0",
-          justifyContent: "space-around",
-        }}
-      >
-        <div style={{ alignSelf: "center", margin: "0 auto" }}>
+  
+      <SignUpContainer>
+        
+        <div>
           <h3 style={{ color: "#fff", fontSize: "30px" }}>
             Sign Up For Our Newsletter
           </h3>
@@ -39,10 +37,6 @@ export const Footer = () => {
               justifyContent: "center",
             }}
           >
-            {/* <h4 style={{ color: "#fff", fontSize: "30px", margin:'0' }}>
-            or Connect with us
-          </h4> */}
-
             <a href="">
               <InstagramIcon fontSize="large" style={{ color: "white" }} />
             </a>
@@ -54,26 +48,10 @@ export const Footer = () => {
             </a>
           </div>
         </div>
-      </div>
-      <footer
-        className="grid"
-        style={{
-          maxWidth: "100%",
-          position: "sticky",
-          padding: "50px 0 0",
-          top: "100%",
-          backgroundColor:'rgb(17,17,17)',
-           color: "#fefefe",
-          minHeight: "400px",
-        }}
-      >
-        <div
-          className="flexFooter"
-        
-        >
-          <div
-          
-          >
+      </SignUpContainer>
+      <FooterContainer>
+        <FooterContent>
+          <div>
             <h3>Pages</h3>
             <Link className="link" href="/">
               Home
@@ -90,37 +68,27 @@ export const Footer = () => {
             <Link className="link" href="/discount">
               Discount page
             </Link>
-          
           </div>
-          <div
-           
-          >
+          <div>
             <h3>External Pages</h3>
             <a href="https://github.com/Pudderz">Github</a>
-            <a href="www.matthewpudney.co.uk" >Portfolio</a>
+            <a href="www.matthewpudney.co.uk">Portfolio</a>
           </div>
 
-          <div
-          
-          >
+          <div>
             <h3>Contact Me</h3>
-            <p style={{margin:'0'}}>mpudney2@gmail.com</p>
+            <p style={{ margin: "0" }}>mpudney2@gmail.com</p>
           </div>
-        </div>
-        <div
-        className="subFooter"
-      
-        >
+        </FooterContent>
+        <SubFooter>
           <p>E-Commerce Site</p>
-          <div
-            
-          >
+          <div>
             <p>Terms & Conditions</p>
             <p>Security policy</p>
             <p>Return policy</p>
           </div>
-        </div>
-      </footer>
+        </SubFooter>
+      </FooterContainer>
     </>
   );
 };

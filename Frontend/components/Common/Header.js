@@ -7,7 +7,7 @@ import {
   addCartItem,
   removeCartItem,
   addCartItemQuantity,
-} from "../../Redux/actions/actions";
+} from "Redux/actions/actions";
 import { useRouter } from "next/router";
 import { HeaderBasket } from "./HeaderContent/HeaderBasket";
 import { ProfileHeader } from "./HeaderContent/ProfileHeader";
@@ -203,16 +203,6 @@ export const Header = (props) => {
           }}
         >
           <div style={{ width: "100%", textAlign: "start" }}>
-            {/* <Button
-              endIcon={<MenuIcon />}
-              style={{
-                width: "100%",
-                justifyContent: "space-between",
-                padding: "10px",
-              }}
-            >
-              Home
-            </Button> */}
             <Link href="/">Home</Link>
             <div></div>
           </div>

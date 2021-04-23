@@ -1,68 +1,53 @@
 import Link from "next/link";
-import React, { useState, useEffect, useRef } from "react";
-import Image from "next/image";
+import React, { useState } from "react";
 import Skeleton from "@material-ui/lab/Skeleton";
+import { ImageWrapper, MainImage, SecondaryImage } from "./ItemImage.styles";
 
 export const ItemImage = ({ firstImage, secondImage, name, id, link }) => {
   const [hover, setHover] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
-  const image = useRef();
 
   const handleLoad = () => setLoaded(true);
 
-  // useEffect(() => {
-  //   if(image.current.complete) setLoaded(true)
-  // }, [])
   return (
     <Link href={`/product/${link}`}>
-      <div
-        className={"itemImageContainer"}
-        onPointerEnter={() => setHover(true)}
-        onPointerLeave={() => setHover(false)}
-        style={{
-          position: "relative",
-          cursor: "pointer",
-          width: "fit-content",
-          margin: "auto",
-        }}
+      <ImageWrapper
+        onMouseEnter={() => setHover(true)}
+        onMouseLeave={() => setHover(false)}
       >
-        {/* <div className="mainImage"> */}
         {!loaded && (
           <Skeleton
-            className="mainImage"
             variant="rect"
             style={{ position: "absolute" }}
           >
-            <Image
+            <MainImage
               src={firstImage}
               alt={name}
               onLoad={handleLoad}
-              className={`mainImage ${hover ? "active" : ""}`}
+              className={hover ? "active" : ""}
               height={200}
               width={200}
               style={{ display: loaded ? "none" : "block" }}
             />
           </Skeleton>
         )}
-        <Image
-          // ref={image}
+        <MainImage
           src={firstImage}
           alt={name}
           onLoad={handleLoad}
-          className={`mainImage ${hover ? "active" : ""}`}
+          className={hover ? "active" : ""}
           height={200}
           width={200}
         />
-        <Image
+        <SecondaryImage
           src={secondImage}
           alt={name}
-          className={`secondaryImage ${hover ? "active" : ""}`}
+          className={hover ? "active" : ""}
           height={200}
           width={200}
         />
-        {/* </div> */}
-      </div>
+      </ImageWrapper>
     </Link>
   );
 };
