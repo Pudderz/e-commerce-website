@@ -2,7 +2,7 @@ import Image from "next/image";
 import React from "react";
 import { Categories } from "components/FrontPage/Categories";
 import { MostPopular } from "components/FrontPage/MostPopular";
-import { RecentProducts } from "components/FrontPage/RecentProducts";
+import { GetProducts } from "components/FrontPage/GetProducts";
 import casualBackground from "images/casualBackground.jpg";
 import runningBackground from "images/runningBackground.jpg"
 const axios = require("axios").default;
@@ -31,7 +31,7 @@ export const Men = ({products}) => {
         layout="fill"
         objectFit="cover"
         />
-        {/* <img src={casualBackground} alt="" style={{ maxWidth: "100vw", maxHeight:'700px', objectFit:'cover', width:'100%' }} /> */}
+     
       </div>
       </div>
       
@@ -39,9 +39,9 @@ export const Men = ({products}) => {
 
         <MostPopular popularProducts={products} header={"Trending Men's Products"}/>
 
-        <RecentProducts header={"Newest men's products"} variables={{ male:true}}/>
+        <GetProducts header={"Newest men's products"} variables={{ male:true}}/>
   
-        <RecentProducts header={"Men discounts"} variables={{discounted: true, male:true}}/>
+        <GetProducts header={"Men discounts"} variables={{discounted: true, male:true}}/>
 
       <hr/>
         <Categories header ={"Men Categories"} gender={"male"}/>

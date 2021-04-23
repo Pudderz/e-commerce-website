@@ -1,10 +1,7 @@
 body {
   text-align: center;
 }
-.leaflet-container {
-  width: 100%;
-  height: 300px;
-}
+
 
 /* Product Pages Select size component */
 .availableSize:hover {
@@ -22,37 +19,6 @@ body {
   color: #fff;
 }
 
-/* Checkout Shipping Form */
-
-.row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 30px;
-  justify-content: space-between;
-  margin: 30px 0;
-}
-
-.shippingForm {
-  margin: auto;
-}
-
-.inputContainer {
-  
-  text-align: start;
-  width: 45%;
-  flex-grow: 1;
-  min-width: 250px;
-}
-
-.inputContainer p {
-  margin: 0 0 5px;
-}
-
-.inputContainer input, .inputContainer select {
-  height: 25px;
-  width: 100%;
-  font-size: 18px;
-}
 
 /* Product Pages */
 
@@ -189,33 +155,6 @@ a.link {
       width: 50%;
     }
   }
-}
-
-.imageCategoryContainer {
-  height: 33vh;
-  position: relative;
-  background-color: black;
-
-  &:hover {
-    img {
-      opacity: 0.6;
-    }
-  }
-}
-
-.categoryText {
-  text-decoration: none;
-  position: absolute;
-  top: 40%;
-  z-index: 1;
-  width: 100%;
-  text-align: center;
-  color: white;
-  font-size: 4vh;
-  margin: auto;
-}
-
-@media (max-width: 1500px) {
 }
 
 // Basket
@@ -420,15 +359,6 @@ a.link {
 .filepond--root {
   max-height: 50em;
 }
-// @media (min-width: 50em) {
-//   .filepond--item {
-//       width: calc(33.33% - .5em);
-//   }
-// }
-
-// .filepond--item {
-//   width: calc(50% - .5em);
-// }
 
 // Header
 
@@ -449,15 +379,8 @@ a.link {
     z-index: 3;
   }
   div:not(.movingOutline) {
-    // background-color: rgb(25, 28, 29);
     border-style: none !important;
   }
-  // .MuiPaper-root.MuiDrawer-paper{
-  //    background-color: var(--secondary-background-color);
-  //   h5{
-  //     color: var(--purple-color);
-  //   }
-  // }
 }
 
 .buttonOutlined,
@@ -500,21 +423,7 @@ button.buttonOutlined {
   color: white;
 }
 
-.categoryContainer {
-  display: flex;
-  gap: 4px;
-  justify-content: space-around;
-  margin: 20px 0 50px;
-  padding: 10px 20px;
-  box-sizing: border-box;
-  @media (max-width: 1000px) {
-    display: grid;
-    justify-content: inherit;
-    .imageCategoryContainer {
-      width: 100%;
-    }
-  }
-}
+
 
 .underline {
   &:hover {
@@ -609,49 +518,6 @@ button.headerButton {
 }
 
 
-.timeForUpgrade{
-  background-color: #f5f8f8;
-  padding: 75px 0;
-  display: flex;
-  
-  & > div{
-    align-self: center;
-    width: 100%;
-    display: flex;
-    flex-flow: column;
-    gap: 50px;
-  }
-
-  @media (max-width: 500px) {
-    padding:25px 0;
-    & > div{
-      gap:10px
-    }
-    button span{
-        font-size: 17px;
-    }
-  }
-
-}
-
-.timeForUpgradeButtons {
-  display: flex;
-  justify-content: space-between;
-  max-width: 1300px;
-  margin: auto;
-  width: 100%;
-  padding: 20px;
-  box-sizing: border-box;
-  gap: 20px;
-  @media (max-width: 900px) {
-    flex-direction: column;
-    justify-content: center;
-    button {
-      margin: auto;
-      max-width: 100%;
-    }
-  }
-}
 
 .largeNav {
   display: flex;
@@ -775,22 +641,6 @@ button.headerButton {
   }
 
 
-.signUpButtons{
-  display: flex;
-  gap: 5px;
-  margin: auto;
-  width: fit-content;
-  max-width: 100%;
-  @media (max-width: 500px) {
-    flex-flow: column;
-    input, button{
-      max-width: 100%;
-      width: 100% !important;
-    }
-
-  }
-  
-}
 
 
 .storeContainer{
@@ -857,31 +707,7 @@ button.logoutButton{
   
 }
 
-// Checkout page
 
-.checkoutContainer{
-  margin: 30px auto;
-  padding: 15px;
-  border-radius: 30px;
-  -webkit-border-radius: 30px;
-  -moz-border-radius: 30px;
-  -ms-border-radius: 30px;
-  -o-border-radius: 30px;
-  display: flex;
-  flex-flow: wrap-reverse;
-  align-items: flex-end;
-
-
-}
-
-
-.checkoutItemInfo{
-  display: grid;
-  *{
-    margin: 0;
-    width: fit-content;
-  }
-}
 
 .card-error{
   color: rgb(207, 18, 18);

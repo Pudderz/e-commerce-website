@@ -113,3 +113,33 @@ export const EDIT_PRODUCT_PRICE = gql`
     }
   }
 `;
+
+export const CREATE_PRODUCT = gql`
+  mutation UploadProduct(
+    $files: [Upload!]
+    $productname: String!
+    $price: Int!
+    $stock: [Int!]
+    $description: String!
+    $categories: [String!]
+    $gender: String!
+  ) {
+    createProduct(
+      files: $files
+      productname: $productname
+      price: $price
+      stock: $stock
+      description: $description
+      categories: $categories
+      gender: $gender
+    ) {
+      productName
+      price
+      stock {
+        shoeSize
+        stock
+      }
+      description
+    }
+  }
+`;

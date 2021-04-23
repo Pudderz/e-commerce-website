@@ -12,7 +12,7 @@ import {
 } from "@material-ui/core";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import Link from "next/link";
-import Filters from "../../StorePage/Filters";
+import AllCategories from "../../StorePage/AllCategories";
 import { useRouter } from "next/router";
 import {
   CategoriesWrapper,
@@ -189,7 +189,7 @@ export const LargeHeader = ({
 
               <CategoriesWrapper>
                 <h5>Categories</h5>
-                <Filters onClick={() => {}} />
+                <AllCategories onClick={() => {}} />
               </CategoriesWrapper>
               
             </DropdownContent>

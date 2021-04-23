@@ -2,7 +2,7 @@ import React from "react";
 import { MostPopular } from "components/FrontPage/MostPopular";
 import webBanner from "images/WebBannerPNG.png";
 import { Categories } from "components/FrontPage/Categories";
-import { RecentProducts } from "components/FrontPage/RecentProducts";
+import { GetProducts } from "components/FrontPage/GetProducts";
 import runningBackground from "images/runningBackground.jpg"
 import Image from "next/image";
 const axios = require("axios").default;
@@ -40,12 +40,12 @@ export const Women = ({ products }) => {
         header={"Trending Women's Products"}
       />
 
-      <RecentProducts
+      <GetProducts
         header={"Newest Women Products"}
         variables={{ female: true }}
       />
 
-      <RecentProducts
+      <GetProducts
         header={"Women discounts"}
         variables={{ discounted: true, female: true }}
       />

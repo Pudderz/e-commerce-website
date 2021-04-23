@@ -1,12 +1,19 @@
 import { Button } from "@material-ui/core";
 import Skeleton from "@material-ui/lab/Skeleton";
 import React, { useState } from "react";
-import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
-import Image from 'next/image';
+import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
+import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
+import Image from "next/image";
+import {
+  ProductImagesWrapper,
+  ImageContainer,
+  ProductList,
+  ImageButtons,
+} from "./ProductImages.styles";
 
-export const ProductImages = ({ images }) => {
+const placeholder = Array.from({ length: 8 }, (v, i) => 0);
 
+export const ProductImages = ({ images, name }) => {
   const [main, setMain] = useState(0);
   const [loaded, setLoading] = useState(false);
 
@@ -21,75 +28,50 @@ export const ProductImages = ({ images }) => {
     }
   };
 
-  const placeholder = Array.from({ length: 8 }, (v, i) => 0);
-
   return (
-    <div className="productImages" >
-      <div >
-        <ul className="productList" style={{ listStyle: "none", maxWidth:'100%', overflow:'auto' }}>
-          {loaded === false ? (
-            <>
-              {placeholder?.map((e, index) => (
-                <li key={index}>
-                  <Skeleton>
-                    <Button>
-                      <img src="" alt="placeholder image" height="50" />
-                    </Button>
-                  </Skeleton>
-                </li>
-              ))}
-            </>
-          ) : (
-            <>
-              {images?.map((image, index) => (
-                <li key={index} >
-                  <Button onClick={() => changeMain(index)} >
-                    <Image src={image.url || `${process.env.GOOGLE_CLOUD_PUBLIC_URL}${image}`} height={50} width={50} />
-                  </Button>
-                </li>
-              ))}
-            </>
-          )}
-        </ul>
-
-        {/* All Images */}
-      </div>
-      <div className="imageContainer" >
-        <Button
-          varitan="contained"
-          onClick={() => handleNextImage(-1)}
-          style={{
-            fontSize: "25px",
-            height: "fit-content",
-            borderRadius: "50px",
-            width: "50px",
-            height: "50px",
-            alignSelf: "center",
-            left:'0'
-            // position: "absolute",
-            // backgroundColor: "white",
-            
-          }}
-        >
-          <ArrowBackIosIcon/>
-        </Button>
-        {/* Selected image in full with  buttons for nexxt and previous images*/}
-
-        {/* <Skeleton variant="rect"> */}
-
-{/* Displays skeleton till image is loaded */}
+    <ProductImagesWrapper>
+      <ProductList>
         {loaded === false ? (
           <>
-            <Skeleton
-              variant="rect"
-              // width={500}
-              // height={500}
-              style={{ margin: "20px" }}
-            >
-               
+            {placeholder?.map((e, index) => (
+              <li key={index}>
+                <Skeleton>
+                  <ImageButtons>
+                    <img src="" alt={name} height="50" />
+                  </ImageButtons>
+                </Skeleton>
+              </li>
+            ))}
+          </>
+        ) : (
+          <>
+            {images?.map((image, index) => (
+              <li key={index}>
+                <ImageButtons onClick={() => changeMain(index)}>
+                  <Image
+                    src={`${process.env.GOOGLE_CLOUD_PUBLIC_URL}${image}`}
+                    alt={name}
+                    height={50}
+                    width={50}
+                  />
+                </ImageButtons>
+              </li>
+            ))}
+          </>
+        )}
+      </ProductList>
+
+      <ImageContainer>
+        <ImageButtons style={{ left: "0" }} onClick={() => handleNextImage(-1)}>
+          <ArrowBackIosIcon />
+        </ImageButtons>
+
+        {loaded === false ? (
+          <>
+            <Skeleton variant="rect" style={{ margin: "20px" }}>
               <Image
-                src={images?.[main]?.url || `${process.env.GOOGLE_CLOUD_PUBLIC_URL}${images?.[main]}` }
-                alt=""
+                src={`${process.env.GOOGLE_CLOUD_PUBLIC_URL}${images?.[main]}`}
+                alt={name}
                 height={500}
                 width={700}
                 onLoad={() => setLoading(true)}
@@ -98,41 +80,20 @@ export const ProductImages = ({ images }) => {
           </>
         ) : (
           <>
-            {/* <Image
-              src={images?.[main]?.url}
-              alt=""
-              // layout="fill"
-              width={800}
-              height={500}
-              quality={90}
-              onLoad={() => setLoading(true)}
-            
-            /> */}
-            {/* <img src={images?.[main]?.url} height="500" alt="" /> */}
             <Image
-                src={images?.[main]?.url || `${process.env.GOOGLE_CLOUD_PUBLIC_URL}${images?.[main]}` }
-                alt=""
-                height={500}
-                width={700}
-                onLoad={() => setLoading(true)}
-              />
+              src={`${process.env.GOOGLE_CLOUD_PUBLIC_URL}${images?.[main]}`}
+              alt={name}
+              height={500}
+              width={700}
+              onLoad={() => setLoading(true)}
+            />
           </>
         )}
 
-        {/* </Skeleton> */}
-
-        <Button onClick={() => handleNextImage(1)}
-        style={{
-          height: "fit-content",
-          borderRadius: "50px",
-          width: "50px",
-          height: "50px",
-          alignSelf: "center",
-          right:'0'
-         
-        }}
-        ><ArrowForwardIosIcon/></Button>
-      </div>
-    </div>
+        <ImageButtons onClick={() => handleNextImage(1)} style={{ right: "0" }}>
+          <ArrowForwardIosIcon />
+        </ImageButtons>
+      </ImageContainer>
+    </ProductImagesWrapper>
   );
 };

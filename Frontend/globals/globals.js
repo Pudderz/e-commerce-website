@@ -95,3 +95,22 @@ export const CHECKOUT_EXAMPLE_INFO = {
     country: "US",
   },
 };
+
+
+export const CATEGORIES =[
+  {
+    name:"Hiking",
+    description:"",
+    slug:"hiking", 
+  },
+  {
+    name:"Running",
+    description:"",
+    slug:"running"
+  },
+  {
+    name:"Casual",
+    description:"",
+    slug:"casual",
+  }
+]

@@ -15,8 +15,7 @@ import {
   Select,
   TextField,
 } from "@material-ui/core";
-import React, { useState, useEffect, useRef } from "react";
-import { gql } from "@apollo/client";
+import React, { useState, useRef } from "react";
 import { useMutation } from "@apollo/client";
 import { FilePond, registerPlugin } from "react-filepond";
 import "filepond/dist/filepond.min.css";
@@ -27,6 +26,10 @@ import FilepondPluginDragReorder from "filepond-plugin-drag-reorder";
 import { ChangeStock } from "components/Admin/ChangeStock";
 import { useForm } from "react-hook-form";
 import { useSnackbar } from "notistack";
+import styled from "styled-components";
+import { ALL_SHOE_SIZES } from "../../globals/globals";
+import { CREATE_PRODUCT } from "GraphQL/Mutations";
+
 
 registerPlugin(
   FilePondPluginImageExifOrientation,
@@ -34,87 +37,48 @@ registerPlugin(
   FilepondPluginDragReorder
 );
 
-const ALL_SIZES = [
-  3.5,
-  4,
-  4.5,
-  5,
-  5.5,
-  6,
-  6.5,
-  7,
-  7.5,
-  8,
-  8.5,
-  9,
-  9.5,
-  10,
-  10.5,
-];
 
-const createProductMutation = gql`
-  mutation UploadProduct(
-    $files: [Upload!]
-    $productname: String!
-    $price: Int!
-    $stock: [Int!]
-    $description: String!
-    $categories: [String!]
-    $gender: String!
-  ) {
-    createProduct(
-      files: $files
-      productname: $productname
-      price: $price
-      stock: $stock
-      description: $description
-      categories: $categories
-      gender: $gender
-    ) {
-      productName
-      price
-      stock {
-        shoeSize
-        stock
-      }
-      description
-    }
+
+const Container = styled.div`
+  background-color: #fff;
+  max-width: 100%;
+  width: 900px;
+  margin: 20px auto;
+  padding: 10px;
+  border-radius: 10px;
+
+  & > h4 {
+    text-align: start;
+    margin: 0;
   }
 `;
 
 export const CreateProducts = () => {
-  const [stockTotal, setTotalStock] = useState(0);
   const [stockArray, setStockArray] = useState(
-    Array.from({ length: ALL_SIZES.length }, () => 0)
+    Array.from({ length: ALL_SHOE_SIZES.length }, () => 0)
   );
   const [files, setFiles] = useState([]);
   const { enqueueSnackbar } = useSnackbar();
   const form = useRef(null);
-  const [createProduct, { data, error }] = useMutation(createProductMutation);
+  const [createProduct] = useMutation(CREATE_PRODUCT);
 
   const [categories, setCategories] = useState([]);
 
   const { register, handleSubmit, reset } = useForm();
-
-  console.log(data, error);
 
   const filePond = useRef(null);
 
   const resetForm = () => {
     setFiles([]);
     setCategories([]);
-
     reset();
   };
 
   const handleFormSubmit = async (data) => {
     const fileArray = [];
-
     files.forEach((file) => {
       fileArray.push(file.file);
     });
-
-    console.log(data)
     try {
       await createProduct({
         variables: {
@@ -124,7 +88,7 @@ export const CreateProducts = () => {
           files: fileArray,
           stock: stockArray,
           categories: categories,
-          gender: data.gender
+          gender: data.gender,
         },
       });
 
@@ -140,41 +104,24 @@ export const CreateProducts = () => {
     }
   };
 
-  useEffect(() => {
-    console.log(files);
-  }, [files]);
-
-  const changeFiles = (files) => {
-    console.log(files);
-    setFiles(files);
-  };
+  const changeFiles = (files) => setFiles(files);
+ 
 
   const handleStockChange = (index, value) => {
-    let newValue = stockArray[index] + value;
+    const newValue = stockArray[index] + value;
     stockArray[index] = newValue >= 0 ? newValue : 0;
     setStockArray([...stockArray]);
   };
 
-  const handleCategoryChange = (e) => {
-    console.log(e.target.value);
-    setCategories(e.target.value);
-  };
+  const handleCategoryChange = (e) => setCategories(e.target.value);
+ 
 
   return (
     <div style={{ backgroundColor: "#efefef" }}>
       <h3>Create a Product</h3>
       <form onSubmit={handleSubmit(handleFormSubmit)} ref={form}>
-        <div
-          style={{
-            backgroundColor: "#fff",
-            maxWidth: "100%",
-            width: "900px",
-            margin: "auto",
-            padding: "10px",
-            borderRadius: "10px",
-          }}
-        >
-          <h4 style={{ textAlign: "start", margin: "0" }}>Product Details</h4>
+        <Container style={{ margin: "auto" }}>
+          <h4>Product Details</h4>
           <hr />
           <div>
             <TextField
@@ -193,13 +140,11 @@ export const CreateProducts = () => {
             variant="outlined"
             style={{ margin: "10px 0" }}
           >
-            <InputLabel htmlFor="outlined-adornment-amount">Price</InputLabel>
+            <InputLabel htmlFor="productPrice">Price</InputLabel>
             <OutlinedInput
-              id="outlined-adornment-amount"
+              id="product-price"
               inputRef={register}
               name="productPrice"
-              // value={values.amount}
-              // onChange={handleChange('amount')}
               step={"0.01"}
               type="number"
               startAdornment={
@@ -210,42 +155,26 @@ export const CreateProducts = () => {
             />
           </FormControl>
           <div style={{ display: "grid" }}>
-            {/* <h5 style={{textAlign:'start', margin:'0'}}>Gender</h5> */}
-
             <hr style={{ width: "100%" }} />
             <FormControl component="fieldset" required>
               <FormLabel component="legend" style={{ textAlign: "start" }}>
                 Gender
               </FormLabel>
 
-              <RadioGroup
-                aria-label="gender"
-                name="gender"
-                required
-              >
+              <RadioGroup aria-label="gender" name="gender" required>
                 <FormControlLabel
                   value="female"
-                  control={<Radio 
-                    inputRef={register}
-                    required
-                  />}
+                  control={<Radio inputRef={register} required />}
                   label="Female"
                 />
                 <FormControlLabel
                   value="male"
-                  
-                  control={<Radio 
-                    inputRef={register}
-                    required
-                  />}
+                  control={<Radio inputRef={register} required />}
                   label="Male"
                 />
                 <FormControlLabel
                   value="unisex"
-                  control={<Radio 
-                    inputRef={register}
-                    required
-                  />}
+                  control={<Radio inputRef={register} required />}
                   label="Unisex"
                 />
               </RadioGroup>
@@ -263,33 +192,21 @@ export const CreateProducts = () => {
             rows={4}
             style={{ margin: "10px 0" }}
           ></TextField>
-        </div>
+        </Container>
 
-        <div
-          style={{
-            backgroundColor: "#fff",
-            maxWidth: "100%",
-            width: "900px",
-            margin: "20px auto",
-            padding: "10px",
-            borderRadius: "10px",
-          }}
-        >
+        <Container>
           <FormControl style={{ width: "100%" }}>
-            <InputLabel id="demo-mutiple-checkbox-label">Categories</InputLabel>
+            <InputLabel id="categories-checkbox-label">Categories</InputLabel>
             <Select
-              labelId="demo-mutiple-name-label"
-              id="demo-mutiple-name"
+              labelId="categories-checkbox-label"
+              id="categories-checkbox"
               multiple
               inputRef={register}
               name="categories"
               value={categories}
               onChange={handleCategoryChange}
               defaultValue
-              // onChange={handleChange}
               fullWidth
-              // input={<Input />}
-              // MenuProps={MenuProps}
               required
               input={<Input />}
               renderValue={(selected) => selected.join(", ")}
@@ -308,36 +225,17 @@ export const CreateProducts = () => {
               </MenuItem>
             </Select>
           </FormControl>
-        </div>
-        <div
-          style={{
-            backgroundColor: "#fff",
-            maxWidth: "100%",
-            width: "900px",
-            padding: "10px",
-            borderRadius: "10px",
-            margin: "20px auto",
-          }}
-        >
+        </Container>
+        <Container>
           <ChangeStock
             availableSizes={[4]}
             stockArray={stockArray}
             changeStock={handleStockChange}
           />
-        </div>
+        </Container>
 
-        <div
-          style={{
-            height: "fit-content",
-            backgroundColor: "#fff",
-            maxWidth: "100%",
-            width: "900px",
-            margin: "auto",
-            padding: " 5px 10px 10px",
-            borderRadius: "20px",
-          }}
-        >
-          <h4 style={{ textAlign: "start", margin: "0" }}>Images</h4>
+        <Container style={{ padding: " 5px 10px 10px" }}>
+          <h4>Images</h4>
           <hr />
 
           <FilePond
@@ -349,7 +247,7 @@ export const CreateProducts = () => {
             onupdatefiles={changeFiles}
             labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
           />
-        </div>
+        </Container>
 
         <Button
           type="submit"

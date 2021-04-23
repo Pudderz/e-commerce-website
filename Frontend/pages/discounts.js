@@ -1,5 +1,5 @@
 import React from "react";
-import { RecentProducts } from "components/FrontPage/RecentProducts";
+import { GetProducts } from "components/FrontPage/GetProducts";
 import webBanner from "images/WebBannerPNG.png";
 export const Discounts = () => {
   return (
@@ -8,21 +8,21 @@ export const Discounts = () => {
         <img src={webBanner} alt="" />
       </div>
 
-      <RecentProducts
+      <GetProducts
         header={"Best Sellers discounts"}
         variables={{ discounted: true, sortBy: "sold" }}
       />
 
-      <RecentProducts
+      <GetProducts
         header={"Newest Discounts"}
         variables={{ discounted: true }}
       />
 
-      <RecentProducts
+      <GetProducts
         header={"Men's discounts"}
         variables={{ discounted: true, male: true }}
       />
-      <RecentProducts
+      <GetProducts
         header={"Women's discounts"}
         variables={{ discounted: true, female: true }}
       />

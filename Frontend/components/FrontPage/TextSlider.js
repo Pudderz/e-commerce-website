@@ -1,55 +1,10 @@
 import React, { useRef, useEffect } from "react";
-import styled from "styled-components";
-
-const sliderWidth = "100vw";
-const sliderHeight = "75px";
-
-const SlideContainer = styled.div`
-  display: flex;
-  position: relative;
-  top: 0;
-  left: -${sliderWidth};
-  width: 8*${sliderWidth};
-`
-
-const Slide = styled.span`
-  width: ${sliderWidth};
-  height: ${sliderHeight};
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  /* transition: all 1s; */
-  position: relative;
-  border-radius: 2px;
-  font-size: min(20px, 4vw);
-  margin: 0;
-  align-self: center;
-`;
-const Wrapper = styled.div`
-  overflow: hidden;
-  position: relative;
-  width: ${sliderWidth};
-  height: ${sliderHeight};
-  z-index: 1;
-  max-width: 100%;
-`;
-
-const Buttons = styled.a`
-  position: absolute;
-  top: 50%;
-  width: 50px;
-  height: 50px;
-  background-color: #fff;
-  border-radius: 50px;
-  margin-top: -20px;
-  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.3);
-  z-index: 2;
-  background-size: 22px;
-  background-position: center;
-  background-repeat: no-repeat;
-  cursor: pointer;
-`;
+import {
+  SlideContainer,
+  Slide,
+  Wrapper,
+  Buttons,
+} from "./TextSlider.styles";
 
 const THRESHOLD = 100;
 
@@ -209,8 +164,6 @@ export const TextSlider = () => {
             <Slide>30 Days return policy</Slide>
             <Slide>Free Delivery</Slide>
             <Slide>Up to 50% off certain products</Slide>
-            {/* <Slide>Slide 4</Slide>
-            <Slide>Slide 5</Slide> */}
           </SlideContainer>
         </Wrapper>
         <Buttons
@@ -224,13 +177,6 @@ export const TextSlider = () => {
           onClick={handlePrevious}
         ></Buttons>
 
-        {/* <IconButton style={{ height: "fit-content" }} onClick={handlePrevious}>
-    <ArrowBackIosIcon />
-    </IconButton> */}
-        {/* <a ></a> */}
-        {/* <IconButton style={{ height: "fit-content" }} onClick={handleNext} id="next" className="control next">
-        <ArrowForwardIosIcon />
-     </IconButton> */}
       </div>
     </div>
   );

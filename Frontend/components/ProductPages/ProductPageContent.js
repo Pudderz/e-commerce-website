@@ -11,16 +11,42 @@ import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import { useRouter } from "next/router";
 import DefaultErrorPage from "next/error";
 import SelectSmallSize from "../../components/ProductPages/SelectSizeSmall";
-import { initializeApollo } from "../../lib/apolloClient";
-import {
-    LOAD_ALL_PRODUCTS,
-    LOAD_PRODUCT_BY_SLUG,
-  } from "../../GraphQL/Queries";
-  import { addCartItem, removeCartItem } from "../../Redux/actions/actions";
+import { addCartItem, removeCartItem } from "../../Redux/actions/actions";
 import { connect } from "react-redux";
+import { AddToCart } from "lib/cart";
+import styled from "styled-components";
+
+const Wrapper = styled.div`
+  display: flex;
+  margin: auto;
+  width: fit-content;
+  text-align: start;
+  margin-top: 50px;
+  flex-flow: wrap;
+  max-width: 100%;
+`;
+
+const ItemHeaderInfo = styled.div`
+  max-width: 80%;
+  padding: 0 40px;
+  @media (max-width: 1200px) {
+    .selectSize {
+      width: 100%;
+    }
+    margin: auto;
+    max-width: 100%;
+    padding: 0;
+    width: 90%;
+    button {
+      width: 50%;
+    }
+  }
+`;
 
 export const ProductPageContent = (props) => {
-  console.log(props);
+  const [product, setProduct] = useState({});
+  const [size, setSize] = useState("");
+  const { enqueueSnackbar } = useSnackbar();
 
   const router = useRouter();
 
@@ -32,47 +58,23 @@ export const ProductPageContent = (props) => {
     return <DefaultErrorPage statusCode={404} />;
   }
 
-  const [product, setProduct] = useState({});
-  const [size, setSize] = useState("");
-  const { enqueueSnackbar } = useSnackbar();
-  const sizeId = useRef();
-
-  const addedToHistoryRef = useRef(false)
+  const addedToHistoryRef = useRef(false);
   useEffect(() => {
     setProduct(props.props);
   }, [props.props]);
 
   useEffect(() => {
-    if(props.props && !addedToHistoryRef.current){
+    if (props.props && !addedToHistoryRef.current) {
       addToHistory(props.props);
       addedToHistoryRef.current = true;
     }
-
   }, [props.props]);
 
   const handleAddToCart = (item, quantity = 1) => {
-    console.log(item);
-    console.log(sizeId.current, size);
-    if (size !== "") {
-      //Work out maxStock
-      let minSize = 3.5;
-      let maxStock = 1;
-      maxStock = (size - minSize) * 2;
-      console.log(item.stock[maxStock]);
-      console.log(item.price);
-      //dispatch
-      props.addCartItem({
-        id: item.id,
-        name: item.name,
-        slug: item.slug,
-        price: item.price,
-        quantity: 1,
-        images: item.images,
-        size: size,
-        maxStock: item.stock[maxStock],
-      });
-    } else {
-      enqueueSnackbar("Please Select a size", {
+    try {
+      AddToCart(item, size, quantity, props.addCartItem);
+    } catch (err) {
+      enqueueSnackbar(err.message, {
         variant: "error",
       });
     }
@@ -84,23 +86,12 @@ export const ProductPageContent = (props) => {
 
   return (
     <div style={{ padding: "0 20px" }}>
-      <div
-        style={{
-          display: "flex",
-          margin: "auto",
-          width: "fit-content",
-          textAlign: "start",
-          marginTop: "50px",
-          flexFlow: "wrap",
-          maxWidth: "100%",
-        }}
-      >
+      <Wrapper>
         <ProductImages images={props.assets || props.images} />
 
-        <div className="itemDescription">
+        <ItemHeaderInfo >
           <h1>{product?.name}</h1>
-
-          <h2>£{(props?.price/100).toFixed(2)}</h2>
+          <h2>£{(props?.price / 100).toFixed(2)}</h2>
           <p style={{ color: "green" }}>In Stock</p>
 
           <label htmlFor="sizes" style={{ fontWeight: "bold" }}>
@@ -126,13 +117,10 @@ export const ProductPageContent = (props) => {
               ADD TO BASKET
             </Button>
           </div>
-        </div>
-      </div>
+        </ItemHeaderInfo >
+      </Wrapper>
 
-      {/* sticky header for when top section is not in view (intersection observer)
-       */}
-
-      <div className="itemNav">
+      {/* <div className="itemNav">
         <Breadcrumbs aria-label="breadcrumb" style={{ margin: "1em" }}>
           <Link href="/">Home</Link>
           <Link href="/">Store</Link>
@@ -184,25 +172,22 @@ export const ProductPageContent = (props) => {
           </div>
         </div>
       </div>
-      <hr />
+      <hr /> */}
       <ProductTabs product={product} />
       <RecentlyViewed />
     </div>
   );
 };
 
+//Redux code
 const mapStateToProps = (state, ownProps) => ({
-    // ... computed data from state and optionally ownProps
-    state: { ...state },
-    props: { ...ownProps },
-  });
-  
-  const mapDispatchToProps = {
-    addCartItem,
-    removeCartItem,
-    // ... normally is an object full of action creators
-  };
-  
-  export default connect(mapStateToProps, mapDispatchToProps)(ProductPageContent);
-  // export default Basket;
-  
+  state: { ...state },
+  props: { ...ownProps },
+});
+
+const mapDispatchToProps = {
+  addCartItem,
+  removeCartItem,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProductPageContent);

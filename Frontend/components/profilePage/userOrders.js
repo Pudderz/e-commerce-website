@@ -23,7 +23,6 @@ useEffect(() => {
     console.log(data)
 }, [data])
   return (
-    <div>
       <div style={{ padding: "10px", backgroundColor: "#fff", margin: "auto" }}>
         <h3>Orders: {data?.getUserOrders?.length}</h3>
 
@@ -88,7 +87,6 @@ useEffect(() => {
           )})}
         </ul>
       </div>
-    </div>
   );
 };
 

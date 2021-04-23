@@ -1,17 +1,45 @@
 import React from "react";
 import { STRIPE_COUNTRY_CODES } from "../../globals/globals";
+import styled from "styled-components";
 
+const ShippingFormWrapper = styled.div`
+  margin: auto;
+  text-align: start;
+`;
+
+const Row = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: space-between;
+  margin: 30px 0;
+`;
+
+const InputContainer = styled.div`
+  width: 45%;
+  flex-grow: 1;
+  min-width: 250px;
+
+  p {
+    margin: 0 0 5px;
+  }
+  input,
+  select {
+    height: 25px;
+    width: 100%;
+    font-size: 18px;
+  }
+`;
 
 export const ShippingForm = (props) => {
-
   const handleChange = (e) => {
     props.changeValue(e.target.name, e.target.value);
   };
 
   return (
-    <div className="shippingForm" >
-      <div className="row">
-        <div className="inputContainer">
+    <ShippingFormWrapper>
+      <Row>
+        <InputContainer>
           <label>
             <p>First name*</p>
             <input
@@ -21,9 +49,9 @@ export const ShippingForm = (props) => {
               value={props.shippingInfo.firstName}
             />
           </label>
-        </div>
+        </InputContainer>
 
-        <div className="inputContainer">
+        <InputContainer>
           <label>
             <p>Last name*</p>
             <input
@@ -33,28 +61,28 @@ export const ShippingForm = (props) => {
               value={props.shippingInfo.lastName}
             />
           </label>
-        </div>
-      </div>
-      <div className="row">
-        <div className="inputContainer">
+        </InputContainer>
+      </Row>
+      <Row>
+        <InputContainer>
           <label>
             <p>Country*</p>
             <select
               name="deliveryCountry"
-            
               required
               onChange={handleChange}
               value={props.shippingInfo.deliveryCountry}
               placeholder="Select a country"
             >
-              {STRIPE_COUNTRY_CODES.map(country =>(
-                <option value={country.code} key={country.code}>{country.country}</option>
+              {STRIPE_COUNTRY_CODES.map((country) => (
+                <option value={country.code} key={country.code}>
+                  {country.country}
+                </option>
               ))}
             </select>
-           
           </label>
-        </div>
-        <div className="inputContainer">
+        </InputContainer>
+        <InputContainer>
           <label>
             <p>City*</p>
             <input
@@ -64,10 +92,10 @@ export const ShippingForm = (props) => {
               value={props.shippingInfo.town_city}
             />
           </label>
-        </div>
-      </div>
-      <div className="row">
-        <div className="inputContainer">
+        </InputContainer>
+      </Row>
+      <Row>
+        <InputContainer>
           <label>
             <p>Address line 1*</p>
             <input
@@ -78,8 +106,8 @@ export const ShippingForm = (props) => {
               value={props.shippingInfo.street}
             />
           </label>
-        </div>
-        <div className="inputContainer">
+        </InputContainer>
+        <InputContainer>
           <label>
             <p>Address line 2</p>
             <input
@@ -89,10 +117,10 @@ export const ShippingForm = (props) => {
               value={props.shippingInfo.street2}
             />
           </label>
-        </div>
-      </div>
-      <div className="row">
-        <div className="inputContainer">
+        </InputContainer>
+      </Row>
+      <Row>
+        <InputContainer>
           <label>
             <p>State/province/region*</p>
             <input
@@ -101,10 +129,9 @@ export const ShippingForm = (props) => {
               onChange={handleChange}
               value={props.shippingInfo.deliveryRegion}
             />
-            
           </label>
-        </div>
-        <div className="inputContainer">
+        </InputContainer>
+        <InputContainer>
           <label>
             <p>Postal code*</p>
             <input
@@ -114,10 +141,10 @@ export const ShippingForm = (props) => {
               value={props.shippingInfo.postal_zip_code}
             />
           </label>
-        </div>
-      </div>
-      <div className="row">
-        <div className="inputContainer">
+        </InputContainer>
+      </Row>
+      <Row>
+        <InputContainer>
           <label>
             <p>Email address*</p>
             <input
@@ -129,8 +156,8 @@ export const ShippingForm = (props) => {
               placeholder="email address for confirmation email"
             />
           </label>
-        </div>
-      </div>
+        </InputContainer>
+      </Row>
 
       <label>
         <p>Order notes (optional)</p>
@@ -149,7 +176,7 @@ export const ShippingForm = (props) => {
           placeholder="Order notes"
         />
       </label>
-    </div>
+    </ShippingFormWrapper>
   );
 };
 

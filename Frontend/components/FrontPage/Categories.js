@@ -1,98 +1,73 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Link from "next/link";
 import runningImage from "images/Running.jpg";
 import casualImage from "images/casual.jpg";
 import hikingImage from "images/hikingShoes.jpg";
-import Image from "next/image";
-import PropTypes from 'prop-types';
-// ToDo: change this in to media quieries and classnames
-export const Categories = ({header, gender}) => {
+import {
+  CategoryContainer,
+  Text,
+  CategoryWrapper,
+  ImageContainer,
+  CategoryImage
+} from './Categories.styles';
 
+
+export const Categories = ({ header, gender }) => {
   return (
-    <div
-      style={{
-        backgroundColor: "#fff",
-        width: "100%",
-      }}
-    >
-      <h3 style={{ textAlign: "start", padding: "0 20px" }}>{header || "Categories"}</h3>
-      <div className="categoryContainer">
-        <div
-          className="imageCategoryContainer"
-          style={{
-            height: "33vh",
-            position: "relative",
-            minWidth:'33%',
-            backgroundColor: "black",
-          }}
-        >
+    <>
+      <h3 style={{ textAlign: "start", padding: "0 20px" }}>{header}</h3>
+      <CategoryWrapper>
+        <CategoryContainer>
           <Link href={`/store?running=true${gender && `&${gender}=true`}`}>
-            <div style={{ textDecoration: "solid", cursor: "pointer", height: "33vh", position: "relative",width:'100%' }}>
-              <Image
+            <ImageContainer>
+
+              <CategoryImage
                 src={runningImage}
-                alt=""
-                // height={6381}
-                // width={4253}
+                alt="a running shoe"
                 layout="fill"
                 objectFit="cover"
-                style={{ height: "33vh",  width:"100%" }}
               />
-              <h4 className="categoryText">Running</h4>
-            </div>
+              <Text>Running</Text>
+
+            </ImageContainer>
           </Link>
-        </div>
-        <div
-          className="imageCategoryContainer"
-          style={{
-            // backgroundColor: "#ddd",
-            height: "33vh",
-            // width: "300px",
-            position: "relative",
-            backgroundColor: "black",
-            minWidth: '33%',
-          }}
-        >
+        </CategoryContainer>
+        <CategoryContainer>
           <Link href={`/store?casual=true${gender && `&${gender}=true`}`}>
-            <div style={{ textDecoration: "solid", cursor: "pointer", height: "33vh", minWidth:'100%', position: "relative",  }}>
-              <Image
+            <ImageContainer>
+
+              <CategoryImage
                 src={casualImage}
                 alt=""
                 layout="fill"
                 objectFit="cover"
-                style={{ height: "33vh",  width:"100%" }}
               />
-              <h4 className="categoryText">Casual</h4>
-            </div>
+              <Text>Casual</Text>
+
+            </ImageContainer>
           </Link>
-        </div>
-        <div
-          className="imageCategoryContainer"
-          style={{
-            height: "33vh",
-            position: "relative",
-            backgroundColor: "black",
-            minWidth: '33%',
-          }}
-        >
+        </CategoryContainer>
+
+        <CategoryContainer>
           <Link href={`/store?hiking=true${gender && `&${gender}=true`}`}>
-            <div style={{ textDecoration: "solid", cursor: "pointer", position: "relative",  minWidth:'100%',height:'33vh'}}>
-              <Image
+            <ImageContainer>
+
+              <CategoryImage
                 src={hikingImage}
-                alt=""
-                // height={6381}
-                // width={4253}
+                alt="a hiking shoe"
                 layout="fill"
                 objectFit="cover"
-                style={{ height: "33vh",  width:"100%" }}
               />
-              <h4 className="categoryText">Hiking</h4>
-            </div>
+              <Text>Hiking</Text>
+
+            </ImageContainer>
           </Link>
-        </div>
-      </div>
-    </div>
+        </CategoryContainer>
+      </CategoryWrapper>
+    </>
   );
 };
 Categories.defaultProps = {
-  gender: ''
+  gender: "",
+  header: "Categories",
 };

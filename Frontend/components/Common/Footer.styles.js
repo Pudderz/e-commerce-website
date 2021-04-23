@@ -26,35 +26,35 @@ export const FooterContainer = styled.footer`
 `;
 
 export const SubFooter = styled.div`
-    display: flex;
+  display: flex;
   justify-content: space-between;
   position: sticky;
   top: 100%;
   padding: 10px 20px;
-  background-color: rgb(8,8,8);
+  background-color: rgb(8, 8, 8);
   color: white;
-  &>div{
+  & > div {
     display: flex;
     justify-content: space-around;
     gap: 20px;
   }
 
-  @media(max-width:600px) {
+  @media (max-width: 600px) {
     flex-wrap: wrap;
-    &>p{
+    & > p {
       width: 100%;
       text-align: start;
     }
-    &>div{
+    & > div {
       flex-wrap: wrap;
       justify-content: flex-start;
       padding: 20px 0;
-      p{
-        margin:0;
+      p {
+        margin: 0;
       }
     }
   }
-`
+`;
 
 export const FooterContent = styled.div`
   display: flex;
@@ -66,18 +66,18 @@ export const FooterContent = styled.div`
   padding: 10px 30px 30px;
   flex-wrap: wrap;
   box-sizing: border-box;
-  h3{
+  h3 {
     color: white;
   }
-  a,p{
+  a,
+  p {
     color: #8e8e8e;
     width: fit-content;
-    &:hover{
+    &:hover {
       color: white;
-      
     }
   }
-  &>div{
+  & > div {
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -85,4 +85,27 @@ export const FooterContent = styled.div`
     text-align: initial;
     flex-grow: 1;
   }
-`
+`;
+
+export const SignUpInputs = styled.div`
+  display: flex;
+  gap: 5px;
+  margin: auto;
+  width: fit-content;
+  max-width: 100%;
+  @media (max-width: 500px) {
+    flex-flow: column;
+    input,
+    button {
+      max-width: 100%;
+      width: 100% !important;
+    }
+  }
+`;
+
+export const SocialLinks = styled.div`
+  margin: 50px auto;
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+`;

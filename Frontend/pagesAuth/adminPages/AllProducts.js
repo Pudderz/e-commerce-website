@@ -15,9 +15,6 @@ export const AllProducts = () => {
     getProducts();
   }, []);
 
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
 
   if (error)
     return (
@@ -36,15 +33,6 @@ export const AllProducts = () => {
   return (
     <div>
 
-      {/* <ul style={{listStyle:'none', maxWidth:'100%',width:'1100px', padding:'0', margin:'auto'}}>
-        {data?.getAllProducts.map((product, index) => (
-          <li key={index} >
-            <h4>{product.productName}</h4>
-            <p>{product.productId}</p>
-            <p>{JSON.stringify(product)}</p>      
-          </li>
-        ))}
-      </ul> */}
       <Link href="/admin/createProducts">Create a Product</Link>
       <table
         style={{
@@ -78,7 +66,7 @@ export const AllProducts = () => {
                     <img
                       src={`
                     https://storage.googleapis.com/e-commerce-image-storage-202/${item?.images?.[0]}`}
-                      alt=""
+                      alt={item.productName}
                     />
                   </div>
                   <div>

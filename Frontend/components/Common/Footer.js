@@ -8,19 +8,20 @@ import {
   SignUpContainer,
   SubFooter,
   FooterContainer,
-  FooterContent
-} from './Footer.styles';
+  FooterContent,
+  SignUpInputs,
+  SocialLinks,
+} from "./Footer.styles";
+
 export const Footer = () => {
   return (
     <>
-  
       <SignUpContainer>
-        
         <div>
           <h3 style={{ color: "#fff", fontSize: "30px" }}>
             Sign Up For Our Newsletter
           </h3>
-          <div className="signUpButtons">
+          <SignUpInputs>
             <TextField
               type="email"
               placeholder="Email"
@@ -28,15 +29,9 @@ export const Footer = () => {
               id="emailSignUpInput"
             ></TextField>
             <Button id="emailSignUpButton">Sign Up</Button>
-          </div>
-          <div
-            style={{
-              margin: "50px auto",
-              display: "flex",
-              gap: "20px",
-              justifyContent: "center",
-            }}
-          >
+          </SignUpInputs>
+
+          <SocialLinks>
             <a href="">
               <InstagramIcon fontSize="large" style={{ color: "white" }} />
             </a>
@@ -46,9 +41,10 @@ export const Footer = () => {
             <a href="">
               <FacebookIcon fontSize="large" style={{ color: "white" }} />
             </a>
-          </div>
+          </SocialLinks>
         </div>
       </SignUpContainer>
+
       <FooterContainer>
         <FooterContent>
           <div>
@@ -92,3 +88,6 @@ export const Footer = () => {
     </>
   );
 };
+
+
+export default Footer;

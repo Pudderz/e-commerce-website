@@ -12,8 +12,53 @@ import {
 } from "../Redux/actions/actions";
 import { connect } from "react-redux";
 import Image from "next/image";
+import styled from "styled-components";
 
 const promise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_API_KEY);
+
+const OrderContainer = styled.div`
+  width: 40%;
+  min-width: min(400px, 100%);
+  margin: 0 auto;
+  top: 70px;
+  height: fit-content;
+  overflow: auto;
+`;
+
+const OrderWrapper = styled.ul`
+  list-style: none;
+  display: grid;
+  gap: 50px;
+  padding: 0;
+  max-width: 100%;
+`;
+
+const OrderListItem = styled.li`
+  display: flex;
+  justify-content: flex-start;
+  gap: 20px;
+`;
+
+const CheckoutContainer = styled.div`
+  margin: 30px auto;
+  padding: 15px;
+  border-radius: 30px;
+  -webkit-border-radius: 30px;
+  -moz-border-radius: 30px;
+  -ms-border-radius: 30px;
+  -o-border-radius: 30px;
+  display: flex;
+  flex-flow: wrap-reverse;
+  align-items: flex-end;
+`;
+
+const OrderItemInfo = styled.div`
+  display: grid;
+  * {
+    margin: 0;
+    width: fit-content;
+  }
+`;
 
 export const Checkout = (props) => {
   const { cart: stateCart, cartInfo } = props;
@@ -47,9 +92,9 @@ export const Checkout = (props) => {
     setPrice(data.amount);
   };
 
-  const handleEmptyCart = (cart)=>{
+  const handleEmptyCart = (cart) => {
     props.emptyCart();
-  }
+  };
 
   return (
     <>
@@ -60,7 +105,7 @@ export const Checkout = (props) => {
         </Breadcrumbs>
       </div>
 
-      <div className="checkoutContainer">
+      <CheckoutContainer>
         <Elements stripe={promise}>
           <Payment
             cartInfo={stateCart}
@@ -71,28 +116,10 @@ export const Checkout = (props) => {
           />
         </Elements>
 
-        <div
-          style={{
-            width: "40%",
-            minWidth: "min(400px,100%)",
-            margin: "0 auto",
-            // position: "sticky",
-            top: "70px",
-            height: "fit-content",
-            overflow: "auto",
-          }}
-        >
+        <OrderContainer>
           <h3 style={{ textAlign: "start" }}>Your Order</h3>
           <hr />
-          <ul
-            style={{
-              listStyle: "none",
-              display: "grid",
-              gap: "50px",
-              padding: "0",
-              maxWidth: "100%",
-            }}
-          >
+          <OrderWrapper>
             {stateCart?.length === 0 ? (
               <div>
                 <h3>Your Basket is empty</h3>
@@ -111,52 +138,44 @@ export const Checkout = (props) => {
                 )}
                 <ul style={{ padding: "0" }}>
                   {items?.map((item) => (
-                    <li key={`${item.id}${item.size}`}>
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "flex-start",
-                          gap: "20px",
-                        }}
-                      >
-                        <Link href={`/product/${item.slug}`}>
-                          <a>
-                            <Image
-                              src={`${process.env.GOOGLE_CLOUD_PUBLIC_URL}${item?.images[0]}`}
-                              width={100}
-                              height={100}
-                              alt={item.name}
-                              style={{ cursor: "pointer" }}
-                            />
-                          </a>
-                        </Link>
+                    <OrderListItem key={`${item.id}${item.size}`}>
+                      <Link href={`/product/${item.slug}`}>
+                        <a>
+                          <Image
+                            src={`${process.env.GOOGLE_CLOUD_PUBLIC_URL}${item?.images[0]}`}
+                            width={100}
+                            height={100}
+                            alt={item.name}
+                            style={{ cursor: "pointer" }}
+                          />
+                        </a>
+                      </Link>
 
-                        <div className="checkoutItemInfo">
-                          <h3>{item.name}</h3>
-                          <p>Size: UK {item?.size}</p>
-                          <p>£{(price / 100).toFixed(2)}</p>
+                      <OrderItemInfo>
+                        <h3>{item.name}</h3>
+                        <p>Size: UK {item?.size}</p>
+                        <p>£{(price / 100).toFixed(2)}</p>
 
-                          <p>Quantity: {item.quantity}</p>
-                        </div>
-                      </div>
-                    </li>
+                        <p>Quantity: {item.quantity}</p>
+                      </OrderItemInfo>
+                    </OrderListItem>
                   ))}
                 </ul>
               </>
             )}
-          </ul>
+          </OrderWrapper>
           <hr />
-          <div
-            className="inputContainer"
-            style={{ display: "flex", width: "100%", gap: "20px" }}
-          >
+          <div style={{ display: "flex", width: "100%", gap: "20px" }}>
             <label style={{ width: "80%" }}>
               <input
+              aria-label="discount code input"
                 placeholder="Discount Code"
                 style={{
                   boxSizing: "border-box",
                   fontSize: "20px",
+                  width: "100%",
                   height: "100%",
+                  fontSize: "18px",
                 }}
               />
             </label>
@@ -178,13 +197,12 @@ export const Checkout = (props) => {
               ): £{(price / 100).toFixed(2)}
             </p>
           </div>
-        </div>
-      </div>
+        </OrderContainer>
+      </CheckoutContainer>
     </>
   );
 };
 const mapStateToProps = (state, ownProps) => ({
-  // ... computed data from state and optionally ownProps
   cart: state.cart.cart,
   cartInfo: state.cart.cartInfo,
   props: { ...ownProps },
@@ -194,7 +212,7 @@ const mapDispatchToProps = {
   addCartItem,
   removeCartItem,
   addCartItemQuantity,
-  emptyCart
+  emptyCart,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Checkout);
