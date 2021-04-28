@@ -7,9 +7,9 @@ const TabHeader = styled(Button)`
   justify-content: space-between !important;
   min-height: 60px;
   border-radius: 5px;
-    position:sticky !important;
+    /* position:sticky !important;
     z-index:1;
-    top:52px;
+    top:52px; */
     background-color:#fff !important;
     box-shadow: 0px 1px 5px rgb(0, 0, 0, 0.2);
   span {
@@ -31,7 +31,7 @@ const TabWrapper = styled.div`
   border: 1px solid #d6d6d6;
   margin: 10px;
   border-radius: 5px;
-  div:nth-child(1) {
+  &>div {
     transition: 1s all;
     padding:20px;
     
@@ -43,13 +43,13 @@ const TabWrapper = styled.div`
       transition: 1s all;
     }
 `;
-export const Tab = ({ name, children }) => {
-  const [min, setMin] = useState(true);
+export const Tab = ({ name, children, id }) => {
+  const [min, setMin] = useState(false);
 
   const handleMinimize = () => setMin((prevState) => !prevState);
 
   return (
-    <TabWrapper>
+    <TabWrapper id={id}>
       <TabHeader onClick={handleMinimize}>{name}</TabHeader>
       <div className={min && "hide"} >{children}</div>
     </TabWrapper>
