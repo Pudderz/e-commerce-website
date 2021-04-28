@@ -76,7 +76,7 @@ export const Item = ({ item }) => {
               textAlign: "start",
             }}
           >
-            <h4 style={{ margin: "0px", fontWeight: "500" }}>
+            <h4 style={{ margin: "0px", fontWeight: "500", width:"200px",textOverflow:"ellipsis" }}>
               {item.name || item.productName}
             </h4>
             {item.discounted ? (

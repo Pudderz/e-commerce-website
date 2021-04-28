@@ -155,7 +155,9 @@ export const StorePage = () => {
           {search || "Store"}
         </h3>
         <div style={{ display: "flex", alignContent: "center" }}>
-          <div style={{ width: "100%" }}>
+          <div
+            style={{ width: "100%", height: "fit-content", padding: "10px" }}
+          >
             <label htmlFor="sortBy" style={{ marginRight: "20px" }}>
               Sort By:
             </label>
@@ -174,8 +176,12 @@ export const StorePage = () => {
               </option>
             </select>
           </div>
-          <Button onClick={handleFilterVisibility}>
-            {filterVisible ? "Show Filters" : "Hide Filters"}
+          <Button
+        
+            onClick={handleFilterVisibility}
+            style={{ textTransform: "none" }}
+          >
+            {"Filters"}
           </Button>
         </div>
       </div>
