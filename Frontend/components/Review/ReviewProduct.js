@@ -9,7 +9,7 @@ import { LoginButton } from "../Authentication/LoginButton";
 
 export const ReviewProduct = ({ productId, productName, product }) => {
   const [showForm, setShowForm] = useState(false);
-  const { user, isAuthenticated } = useAuth0();
+  const { isAuthenticated } = useAuth0();
   const [getReviews, { data }] = useLazyQuery(LOAD_REVIEWS);
 
   const handleRefetch = () => {
@@ -33,12 +33,12 @@ export const ReviewProduct = ({ productId, productName, product }) => {
     });
   }, [productId, productName]);
 
-  useEffect(() => {
-    console.log(product);
-  }, [product]);
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
+  // useEffect(() => {
+  //   console.log(product);
+  // }, [product]);
+  // useEffect(() => {
+  //   console.log(data);
+  // }, [data]);
 
   return (
     <div style={{ textAlign: "start", margin: "auto" }}>

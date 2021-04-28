@@ -14,8 +14,9 @@ export const GetReviews = ({ data }) => {
       )}
 
         <div>
-        <p>Average Rating: {data?.getProduct?.[0]?.averageRating/10}/5</p>
-        <Rating value={data?.getProduct?.[0]?.averageRating/10} precision={0.1} readOnly />
+
+        <p style={{fontSize:'1.5rem'}}>Average Rating: <Rating value={data?.getProduct?.[0]?.averageRating/10} precision={0.1} readOnly /></p>
+        
         </div>
 
 
@@ -37,15 +38,16 @@ export const GetReviews = ({ data }) => {
             <div style={{ display: "flex" }}>
               {/* Review stars */}
               <Rating value={review?.rating/10} precision={0.5} readOnly />
-              <h4 style={{ margin: "5px 0" }}>{review?.descriptionTitle}</h4>
+             
             </div>
 
             <div>
+               <h4 style={{ margin: "5px 0" }}>{review?.descriptionTitle}</h4>
               <p>{review?.description}</p>
             </div>
-            <div>
+            {/* <div>
               <p style={{ margin: "5px 0" }}>Reviewed on ...</p>
-            </div>
+            </div> */}
           </li>
         ))}
       </ol>
