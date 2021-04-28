@@ -57,8 +57,7 @@ export async function getStaticPaths() {
     }
   
   products = products.filter(product => product.slug !== null)
-  console.log('[product] paths')
-  console.log(products)
+ 
   return {
     paths:
       products?.map((product) => {

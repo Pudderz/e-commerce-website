@@ -1,4 +1,3 @@
-import { Button } from "@material-ui/core";
 import Skeleton from "@material-ui/lab/Skeleton";
 import React, { useState } from "react";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
@@ -72,8 +71,8 @@ export const ProductImages = ({ images, name }) => {
               <Image
                 src={`${process.env.GOOGLE_CLOUD_PUBLIC_URL}${images?.[main]}`}
                 alt={name}
-                height={500}
-                width={700}
+                height={600}
+                width={800}
                 onLoad={() => setLoading(true)}
               />
             </Skeleton>
@@ -83,8 +82,8 @@ export const ProductImages = ({ images, name }) => {
             <Image
               src={`${process.env.GOOGLE_CLOUD_PUBLIC_URL}${images?.[main]}`}
               alt={name}
-              height={500}
-              width={700}
+              height={600}
+              width={800}
               onLoad={() => setLoading(true)}
             />
           </>

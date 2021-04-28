@@ -9,21 +9,19 @@ import {
 } from "../Redux/actions/actions";
 import { connect } from "react-redux";
 
-// Shows a list of items added to the basket page
 
-//shows total price
 export const Basket = (props) => {
-  console.log(props);
-
   const { cartState: stateCart = [], cartInfo } = props;
-  console.log(stateCart);
-  console.log(`stateCart ${typeof stateCart}`);
-  useEffect(() => {
-    console.log(stateCart);
-    return () => {};
-  }, [stateCart]);
 
   const [isSmallDisplay, setIsSmallDisplay] = useState(false);
+
+  const handleResize = (e) => {
+    if (window.innerWidth < 700 && isSmallDisplay === false) {
+      setIsSmallDisplay(true);
+    } else if (window.innerWidth >= 700 && isSmallDisplay === true) {
+      setIsSmallDisplay(false);
+    }
+  };
 
   useEffect(() => {
     if (window.innerWidth < 700) {
@@ -31,40 +29,24 @@ export const Basket = (props) => {
     } else {
       setIsSmallDisplay(false);
     }
-    window.addEventListener("resize", (e) => {
-      if (window.innerWidth < 700 && isSmallDisplay === false) {
-        setIsSmallDisplay(true);
-      } else if (window.innerWidth >= 1000 && isSmallDisplay === true) {
-        setIsSmallDisplay(false);
-      }
-    });
+    window.addEventListener("resize", (e) => handleResize(e));
     return () => {
-      window.removeEventListener("resize", (e) => {
-        if (window.innerWidth < 700 && isSmallDisplay === false) {
-          setIsSmallDisplay(true);
-        } else if (window.innerWidth >= 700 && isSmallDisplay === true) {
-          setIsSmallDisplay(false);
-        }
-      });
+      window.removeEventListener("resize", (e) => handleResize(e));
     };
   }, []);
 
-  const updateItemQty = (name, size, newQuantity) => {
-    console.log(name, size, newQuantity);
+  const updateItemQty = (name, size, newQuantity) =>
     props.addCartItemQuantity({
       name,
       size,
       quantity: newQuantity,
     });
-  };
 
-  const removeItem = (name, size) => {
-    console.log(name, size);
+  const removeItem = (name, size) =>
     props.removeCartItem({
       name,
       size,
     });
-  };
 
   return (
     <div>
@@ -102,7 +84,7 @@ export const Basket = (props) => {
                     >
                       <div
                         style={{
-                          backgroundColor: "blue",
+                          backgroundColor: "gray",
                           height: "100px",
                           width: "100px",
                           position: "relative",
@@ -142,7 +124,7 @@ export const Basket = (props) => {
                             width: "fit-content",
                           }}
                         >
-                          UK {item?.size} £{(item?.price/100).toFixed(2)}
+                          UK {item?.size} £{(item?.price / 100).toFixed(2)}
                         </p>
                         <p
                           style={{
@@ -248,7 +230,7 @@ export const Basket = (props) => {
                   </div>
                 </td>
                 <td>
-                  <p> £{(item?.price/100).toFixed(2)}</p>
+                  <p> £{(item?.price / 100).toFixed(2)}</p>
                 </td>
                 <td>
                   <div style={{ margin: "0 auto", width: "fit-content" }}>
@@ -302,7 +284,7 @@ export const Basket = (props) => {
                   </div>
                 </td>
                 <td>
-                  <p>£{((item.price * item.quantity)/100).toFixed(2)}</p>
+                  <p>£{((item.price * item.quantity) / 100).toFixed(2)}</p>
                 </td>
                 <td>
                   <Tooltip title="Remove Item">
@@ -332,7 +314,7 @@ export const Basket = (props) => {
         <hr />
         <p>
           Subtotal({cartInfo.totalItems || 0} items):{" "}
-          {(cartInfo.totalPrice/100).toFixed(2)}
+          {(cartInfo.totalPrice / 100).toFixed(2)}
         </p>
         <Link href="/checkout">Proceed to checkout</Link>
       </div>

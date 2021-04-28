@@ -61,8 +61,7 @@ export const Payment = ({ cartInfo, items, price, changeItems,emptyCart }) => {
     });
   };
 
-  // const clientSecret = useRef(null);
-
+  
   const handleServerResponse = async (response) => {
     if (response.error) {
       // Show error from server on payment form
@@ -178,7 +177,7 @@ export const Payment = ({ cartInfo, items, price, changeItems,emptyCart }) => {
       type: "card",
       card: elements.getElement(CardElement),
       billing_details: {
-        // Include any additional collected billing details.
+        
         name: `${shippingInfo.firstName} ${shippingInfo.lastName}`,
         address: {
           line1: shippingInfo.street,
@@ -299,7 +298,6 @@ export const Payment = ({ cartInfo, items, price, changeItems,emptyCart }) => {
 };
 
 const mapStateToProps = (state, ownProps) => ({
-  // ... computed data from state and optionally ownProps
   cartState: state.cart.cart,
   cartInfo: state.cart.cartInfo,
   props: { ...ownProps },

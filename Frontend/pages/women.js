@@ -1,6 +1,5 @@
 import React from "react";
 import { MostPopular } from "components/FrontPage/MostPopular";
-import webBanner from "images/WebBannerPNG.png";
 import { Categories } from "components/FrontPage/Categories";
 import { GetProducts } from "components/FrontPage/GetProducts";
 import runningBackground from "images/runningBackground.jpg"
@@ -31,7 +30,6 @@ export const Women = ({ products }) => {
         layout="fill"
         objectFit="cover"
         />
-        {/* <img src={casualBackground} alt="" style={{ maxWidth: "100vw", maxHeight:'700px', objectFit:'cover', width:'100%' }} /> */}
       </div>
       </div>
 

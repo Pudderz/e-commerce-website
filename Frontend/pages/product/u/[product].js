@@ -60,15 +60,11 @@ export async function getStaticPaths() {
 
   products = products.filter((product) => product.slug !== null);
   
-  console.log("[product] paths", products);
-
-
   return {
     paths:
       products?.map((product) => {
         if (product && product?.slug && product?.gender === "unisex") {
-          let slug = product.slug.replace("u/", "");
-          console.log(slug);
+          const slug = product.slug.replace("u/", "");
           console.log("unisex slug - ", product.slug);
           return `/product/u/${slug}`;
         }
