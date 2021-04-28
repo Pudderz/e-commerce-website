@@ -83,7 +83,7 @@ export const ProductImages = ({ images, name }) => {
               src={`${process.env.GOOGLE_CLOUD_PUBLIC_URL}${images?.[main]}`}
               alt={name}
               height={600}
-              width={800}
+              width={700}
               onLoad={() => setLoading(true)}
             />
           </>

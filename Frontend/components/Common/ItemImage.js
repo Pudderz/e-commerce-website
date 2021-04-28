@@ -28,6 +28,7 @@ export const ItemImage = ({ firstImage, secondImage, name, id, link }) => {
               className={hover ? "active" : ""}
               height={200}
               width={200}
+              objectFit="cover"
               style={{ display: loaded ? "none" : "block" }}
             />
           </Skeleton>
@@ -38,6 +39,7 @@ export const ItemImage = ({ firstImage, secondImage, name, id, link }) => {
           onLoad={handleLoad}
           className={hover ? "active" : ""}
           height={200}
+          objectFit="cover"
           width={200}
         />
         <SecondaryImage
@@ -45,6 +47,7 @@ export const ItemImage = ({ firstImage, secondImage, name, id, link }) => {
           alt={name}
           className={hover ? "active" : ""}
           height={200}
+          objectFit="cover"
           width={200}
         />
       </ImageWrapper>

@@ -78,7 +78,6 @@ export const LargeHeader = ({
             display: "flex",
             gap: "20px",
             margin: "10px 0",
-            height: "100%",
           }}
         >
           <Link className="link" href="/" style={{ height: "fit-content" }}>

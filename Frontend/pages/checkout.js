@@ -145,6 +145,7 @@ export const Checkout = (props) => {
                             src={`${process.env.GOOGLE_CLOUD_PUBLIC_URL}${item?.images[0]}`}
                             width={100}
                             height={100}
+                            objectFit="cover"
                             alt={item.name}
                             style={{ cursor: "pointer" }}
                           />

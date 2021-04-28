@@ -2,9 +2,12 @@ import React, { useState, useEffect } from "react";
 import { ReviewProduct } from "../Review/ReviewProduct";
 import { SizeGuide } from "./SizeGuide";
 import { DeliveryAndReturns } from "./DeliveryAndReturns";
-import { Tab } from "./Tab";
+// import { Tab } from "./Tab";
 import ReactMarkdown from "react-markdown";
 import styled from "styled-components";
+import { Tab, Tabs } from "@material-ui/core";
+import TabPanel from "components/Common/TabPanel";
+// import {TabPanel, Tab} from "components/Common";
 const TabHeader = styled.a`
   width: 100%;
   justify-content: space-between !important;
@@ -31,6 +34,13 @@ const TabHeaderWrapper = styled.div`
 `;
 
 export const ProductTabs = (props) => {
+
+  const [value, setValue] = useState(0);
+ 
+    const handleChange = (event, newValue) => {
+      setValue(newValue);
+      console.log(newValue);
+    };
   const [product, setProduct] = useState({});
 
   useEffect(() => {
@@ -46,6 +56,39 @@ export const ProductTabs = (props) => {
         margin: "auto",
       }}
     >
+ <Tabs
+        value={value}
+        onChange={handleChange}
+          variant="fullWidth"
+        aria-label="full width tabs of products information"
+      >
+        <Tab value={0} label="Description"></Tab>
+        <Tab value={1} label="Size Guide"></Tab>
+        <Tab value={2} label="Delivery & Returns"></Tab>
+        <Tab value={3} label="Reviews"></Tab>
+      </Tabs>
+
+        <TabPanel value={value} index={0}>
+          <div>
+            <h2>{product?.name}</h2>
+
+            <ReactMarkdown children={product?.description} />
+            
+          </div>
+        </TabPanel>
+
+        <TabPanel value={value} index={1}>
+          <SizeGuide/>
+        </TabPanel>
+        <TabPanel value={value} index={2}>
+         <DeliveryAndReturns/>
+        </TabPanel>
+        <TabPanel value={value} index={3}>
+          <ReviewProduct product={product} productId={product?.id} productName={product?.name} />
+        </TabPanel>
+
+
+{/* 
       <TabHeaderWrapper>
         <TabHeader href="#details">Product Details</TabHeader>
         <TabHeader href="#size">Size Guide</TabHeader>
@@ -71,7 +114,7 @@ export const ProductTabs = (props) => {
           productId={product?.id}
           productName={product?.name}
         />
-      </Tab>
+      </Tab> */}
     </div>
   );
 };

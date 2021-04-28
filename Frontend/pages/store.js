@@ -137,8 +137,8 @@ export const StorePage = () => {
 
   return (
     <div style={{ padding: "20px " }}>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <h3>Store</h3>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems:"center" }}>
+        <h3 style={{fontSize:"min(6vw,25px)", margin:"0", height:'fit-content'}}>{search || "Store"}</h3>
         <div style={{ display: "flex", alignContent: "center" }}>
           <div style={{ width: "100%" }}>
             <label htmlFor="sortBy" style={{ marginRight: "20px" }}>

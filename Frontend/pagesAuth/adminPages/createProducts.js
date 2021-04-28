@@ -145,7 +145,7 @@ export const CreateProducts = () => {
               id="product-price"
               inputRef={register}
               name="productPrice"
-              step={"0.01"}
+              step={0.01}
               type="number"
               startAdornment={
                 <InputAdornment position="start">£</InputAdornment>

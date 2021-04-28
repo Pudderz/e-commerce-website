@@ -16,6 +16,7 @@ const List = styled.ul`
   text-align: start;
   display: flex;
   flex-wrap: wrap;
+  min-width:250px;
 `;
 
 const SmallListItem = styled.li`
