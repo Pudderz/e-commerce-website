@@ -85,7 +85,7 @@ export const ProductPageContent = (props) => {
           <h1>{product?.name}</h1>
           <Rating
             precision={0.1}
-            defaultValue={4}
+            value={props.averageRating/10}
             readOnly
             style={{ color: "#111" }}
           />

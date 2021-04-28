@@ -32,6 +32,7 @@ export async function getStaticProps({ params }) {
       id: result?._id || "",
       images: result?.images || [],
       price: result?.price || "",
+      averageRating: result?.averageRating || 0,
       stock: result?.stock ,
       description: result?.description || "",
       variants: result?.stock || [],
