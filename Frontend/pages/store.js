@@ -121,10 +121,7 @@ export const StorePage = () => {
   };
 
   const handleSortByChange = (e) => {
-    console.log(e.target);
-    // handleSort(e.target.value);
     setSortBy(e.target.value);
-    // handleFormChange()
   };
 
   useEffect(
@@ -172,7 +169,13 @@ export const StorePage = () => {
         </div>
       </div>
       <div>
-        <MobileFilters handleOpenAndClose={handleMobileFilter} hide={hide} />
+        <MobileFilters handleOpenAndClose={handleMobileFilter} hide={hide}
+        handleSizeFilterChange={handleSizeChange}
+        handleOnSubmit={onSubmit}
+        handleFilterChange={handleChange}
+        filters={filters}
+        sizes={sizes}
+        />
       </div>
       <div className="storeContainer" style={{ display: "flex" }}>
         <FilterWrapper className={filterVisible && "hide"}>
