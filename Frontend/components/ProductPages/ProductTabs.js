@@ -9,14 +9,10 @@ import styled from "styled-components";
 const TabHeader = styled.a`
   width: 100%;
   justify-content: space-between !important;
-  min-height: 60px;
-  position: sticky !important;
-  top: 52px;
-  background-color: #fff !important;
-  box-shadow: 0px 1px 5px rgb(0, 0, 0, 0.2);
+
+
   text-align: center;
     height: fit-content;
-    padding: 20px;
   font-size: min(15px,1rem);
   &:hover {
     /* border: 1px solid black; */
@@ -26,6 +22,21 @@ const TabHeader = styled.a`
     height:100%
   }
 `;
+
+
+// display: "flex", position:"sticky", top:'52px', zIndex:"1" 
+const TabHeaderWrapper = styled.div`
+  display:flex;
+  align-items: center;
+  min-height: 50px;
+  z-index: 1;
+  position: sticky;
+  top: 52px;
+  background-color: #fff !important;
+  box-shadow: 0px 1px 5px rgb(0, 0, 0, 0.2);
+`;
+
+
 
 export const ProductTabs = (props) => {
   const [product, setProduct] = useState({});
@@ -43,12 +54,12 @@ export const ProductTabs = (props) => {
         margin: "auto",
       }}
     >
-      <div style={{ display: "flex", position:"sticky", top:'52px', zIndex:"1" }}>
+      <TabHeaderWrapper>
           <TabHeader href="#details">Product Details</TabHeader>
           <TabHeader href="#size">Size Guide</TabHeader>
           <TabHeader href="#returns">Delivery & Returns</TabHeader>
           <TabHeader href="#reviews">Reviews</TabHeader>
-      </div>
+      </TabHeaderWrapper>
       <Tab name={"Product Details"} id={"details"}>
         <div>
           <h2>{product?.name}</h2>
