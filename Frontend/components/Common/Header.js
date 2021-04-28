@@ -199,7 +199,8 @@ export const Header = (props) => {
             margin: "auto",
             flexDirection: "column",
             padding: "20px 20px",
-            widtH: "100%",
+            width: "100%",
+            gap: "20px",
           }}
         >
           <div style={{ width: "100%", textAlign: "start" }}>
