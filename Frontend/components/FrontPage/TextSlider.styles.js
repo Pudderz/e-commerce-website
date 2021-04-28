@@ -30,7 +30,7 @@ export const Wrapper = styled.div`
   position: relative;
   width: ${sliderWidth};
   height: ${sliderHeight};
-  z-index: 1;
+  z-index: 0;
   max-width: 100%;
 `;
 
@@ -43,9 +43,12 @@ export const Buttons = styled.a`
   border-radius: 50px;
   margin-top: -20px;
   box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.3);
-  z-index: 2;
+  z-index: 1;
   background-size: 22px;
   background-position: center;
   background-repeat: no-repeat;
   cursor: pointer;
+  @media (max-width: 700px){
+    display:none;
+  }
 `;

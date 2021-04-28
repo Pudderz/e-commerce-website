@@ -1,10 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import {
-  SlideContainer,
-  Slide,
-  Wrapper,
-  Buttons,
-} from "./TextSlider.styles";
+import { SlideContainer, Slide, Wrapper, Buttons } from "./TextSlider.styles";
 
 const THRESHOLD = 100;
 
@@ -19,7 +14,7 @@ export const TextSlider = () => {
   const slideSize = useRef(null);
   const allowShift = useRef(true);
   const index = useRef(0);
-
+  const isMounted = useRef(0);
   //prevents dragAction from firing when user is not dragging
   const dragging = useRef(false);
 
@@ -52,24 +47,25 @@ export const TextSlider = () => {
   const handleNext = (e) => shiftSlide(-1);
   const handlePrevious = (e) => shiftSlide(1);
 
-
   const dragStart = (e) => {
+    if(!isMounted.current) return;
     e = e || window.event;
     e.preventDefault();
     if (!canDrag.current) return;
     posInitial.current = slidesRef.current.offsetLeft;
     dragging.current = true;
-    if (e.type == "touchstart") {
+    if (e?.touches) {
       posX1.current = e.touches[0].clientX;
+      console.log(e.touches[0].clientX)
     } else {
       posX1.current = e.clientX;
     }
   };
 
   function dragAction(e) {
-    if (!dragging.current) return;
+    if (!dragging.current || !isMounted.current) return;
     e = e || window.event;
-    if (e.type == "touchmove") {
+    if (e?.touches) {
       posX2.current = posX1.current - e.touches[0].clientX;
       posX1.current = e.touches[0].clientX;
     } else {
@@ -81,11 +77,12 @@ export const TextSlider = () => {
   }
 
   const dragEnd = (e) => {
-    if (dragging.current == false) return;
+    if (!dragging.current|| !isMounted.current) return;
+    
     canDrag.current = false;
     dragging.current = false;
-    console.log("dragEnd");
     posFinal.current = slidesRef.current.offsetLeft;
+
     // completes the slide left or right once drag has ended
     if (posFinal.current - posInitial.current < -THRESHOLD) {
       shiftSlide(1, "drag");
@@ -98,6 +95,7 @@ export const TextSlider = () => {
   };
 
   const checkIndex = () => {
+    if (!isMounted.current) return;
     slidesRef.current.classList.remove("shifting");
     canDrag.current = true;
     if (index.current == -1) {
@@ -114,34 +112,33 @@ export const TextSlider = () => {
     allowShift.current = true;
   };
 
-  useEffect(() => {
+  const handleResize = () => {
+    if (!isMounted.current) return;
+    slidesRef.current.classList.remove("shifting");
     slidesLength.current = slidesRef.current.children.length;
     slideSize.current = slidesRef.current.children[0].offsetWidth;
     slidesRef.current.style.left =
-          -1 * (index.current * slideSize.current + slideSize.current) + "px";
-    let firstSlide = slidesRef.current.children[0];
-    let lastSlide = slidesRef.current.children[slidesLength.current - 1];
-    let cloneFirst = firstSlide.cloneNode(true);
-    let cloneLast = lastSlide.cloneNode(true);
+      -1 * (index.current * slideSize.current + slideSize.current) + "px";
+  };
+
+  useEffect(() => {
+    isMounted.current = true;
+    slidesLength.current = slidesRef.current.children.length;
+    slideSize.current = slidesRef.current.children[0].offsetWidth;
+    slidesRef.current.style.left =
+      -1 * (index.current * slideSize.current + slideSize.current) + "px";
+    const firstSlide = slidesRef.current.children[0];
+    const lastSlide = slidesRef.current.children[slidesLength.current - 1];
+    const cloneFirst = firstSlide.cloneNode(true);
+    const cloneLast = lastSlide.cloneNode(true);
     slidesRef.current.appendChild(cloneFirst);
     slidesRef.current.insertBefore(cloneLast, firstSlide);
 
-    window.addEventListener("resize", (e) => {
-      slidesRef.current.classList.remove("shifting");
-      slidesLength.current = slidesRef.current.children.length;
-      slideSize.current = slidesRef.current.children[0].offsetWidth;
-      slidesRef.current.style.left =
-        -1 * (index.current * slideSize.current + slideSize.current) + "px";
-    });
+    window.addEventListener("resize", (e) => handleResize());
 
     return () => {
-      window.removeEventListener("resize", (e) => {
-        slidesRef.current.classList.remove("shifting");
-        slidesLength.current = slidesRef.current.children.length;
-        slideSize.current = slidesRef.current.children[0].offsetWidth;
-        slidesRef.current.style.left =
-          -1 * (index.current * slideSize.current + slideSize.current) + "px";
-      });
+      isMounted.current = false;
+      window.removeEventListener("resize", (e) => handleResize());
     };
   }, []);
 
@@ -152,14 +149,19 @@ export const TextSlider = () => {
           <SlideContainer
             className="slides"
             ref={slidesRef}
-            onMouseDown={dragStart}
-            onMouseUp={dragEnd}
-            onMouseMove={dragAction}
-            onTouchStart={dragStart}
-            onTouchEnd={dragEnd}
-            onTouchMove={dragAction}
+            // onMouseDown={dragStart}
+            // onMouseUp={dragEnd}
+            // onMouseMove={dragAction}
+            // onTouchStart={dragStart}
+            // onTouchEnd={dragEnd}
+            // onTouchMove={dragAction}
             onTransitionEnd={checkIndex}
             onPointerLeave={dragEnd}
+            onPointerDown={dragStart}
+            onPointerMove={dragAction}
+            onPointerUp={dragEnd}
+            onPointerOver={dragAction}
+            
           >
             <Slide>30 Days return policy</Slide>
             <Slide>Free Delivery</Slide>
@@ -176,7 +178,6 @@ export const TextSlider = () => {
           className={"control next"}
           onClick={handlePrevious}
         ></Buttons>
-
       </div>
     </div>
   );
