@@ -62,8 +62,8 @@ export const StorePage = () => {
       stock,
     } = getFilterSearchQuery();
     setSizes(stock);
-    
-    if(sortByParam !== sortBy){
+
+    if (sortByParam !== sortBy) {
       setSortBy(sortByParam);
     }
     setFilters({ ...initialFilterState, ...filterState });
@@ -124,31 +124,42 @@ export const StorePage = () => {
     setSortBy(e.target.value);
   };
 
-  useEffect(
-    () => {
-      if (!firstLoad.current) {
-        firstLoad.current = false;
-        return;
-      }
-      handleFormChange();
-    },
-    [sortBy]
-  );
+  useEffect(() => {
+    if (!firstLoad.current) {
+      firstLoad.current = false;
+      return;
+    }
+    handleFormChange();
+  }, [sortBy]);
 
   return (
     <div style={{ padding: "20px " }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems:"center" }}>
-        <h3 style={{fontSize:"min(6vw,25px)", margin:"0", height:'fit-content'}}>{search || "Store"}</h3>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <h3
+          style={{
+            fontSize: "min(6vw,25px)",
+            margin: "0",
+            height: "fit-content",
+            textOverflow: "ellipsis",
+            whiteSpace: "pre-wrap",
+            maxWidth: "200px",
+            overflow: "auto",
+          }}
+        >
+          {search || "Store"}
+        </h3>
         <div style={{ display: "flex", alignContent: "center" }}>
           <div style={{ width: "100%" }}>
             <label htmlFor="sortBy" style={{ marginRight: "20px" }}>
               Sort By:
             </label>
-            <select
-              name="sortBy"
-              onChange={handleSortByChange}
-              value={sortBy}
-            >
+            <select name="sortBy" onChange={handleSortByChange} value={sortBy}>
               <option value="" key="date">
                 Newest
               </option>
@@ -169,12 +180,14 @@ export const StorePage = () => {
         </div>
       </div>
       <div>
-        <MobileFilters handleOpenAndClose={handleMobileFilter} hide={hide}
-        handleSizeFilterChange={handleSizeChange}
-        handleOnSubmit={onSubmit}
-        handleFilterChange={handleChange}
-        filters={filters}
-        sizes={sizes}
+        <MobileFilters
+          handleOpenAndClose={handleMobileFilter}
+          hide={hide}
+          handleSizeFilterChange={handleSizeChange}
+          handleOnSubmit={onSubmit}
+          handleFilterChange={handleChange}
+          filters={filters}
+          sizes={sizes}
         />
       </div>
       <div className="storeContainer" style={{ display: "flex" }}>

@@ -39,16 +39,16 @@ export const Buttons = styled.a`
   top: 50%;
   width: 50px;
   height: 50px;
-  background-color: #fff;
+  /* background-color: #fff; */
   border-radius: 50px;
   margin-top: -20px;
-  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.3);
+  /* box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.3); */
   z-index: 1;
   background-size: 22px;
   background-position: center;
   background-repeat: no-repeat;
   cursor: pointer;
-  @media (max-width: 700px){
+  /* @media (max-width: 700px){
     display:none;
-  }
+  } */
 `;

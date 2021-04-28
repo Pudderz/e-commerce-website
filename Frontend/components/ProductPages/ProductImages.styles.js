@@ -4,11 +4,11 @@ import styled from "styled-components";
 export const ProductImagesWrapper = styled.div`
   display: flex;
   margin: auto;
-  max-width: 100%;
+  max-width: 60%;
 
   @media (max-width: 1200px) {
     flex-flow: column-reverse;
-
+    max-width:100%;
     div ul {
       display: flex;
       padding: 0;
@@ -45,13 +45,14 @@ export const ImageContainer = styled.div`
 export const ProductList = styled.ul`
   list-style: none;
   max-width: 100%;
-  overflow: auto;
+  /* overflow: auto; */
   img {
     object-fit: cover;
   }
   @media (max-width: 1200px) {
     display: flex;
     padding: 0;
+    overflow-x:auto;
     justify-content: center;
   }
 

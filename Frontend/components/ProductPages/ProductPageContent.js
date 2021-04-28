@@ -31,10 +31,10 @@ const ItemHeaderInfo = styled.div`
     /* .selectSize {
       width: 100%;
     } */
+    max-width:800px;
     margin: auto;
-    max-width: 100%;
+    width: 100%;
     padding: 0;
-    width: 90%;
     /* button {
       width: 50%;
     } */
