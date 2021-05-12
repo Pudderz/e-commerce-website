@@ -13,9 +13,7 @@ Demo - https://e-commerce-website-j8wvkus9z-pudderz.vercel.app/
 * Add searchBar and search page
 * Add filter options to category and store pages
 * Add darkMode option
-* Add stripe payments server side
 * store order information
-* create mens, womens, discounts main pages
 * responsive header
 * sanitize file upload
 
