@@ -10,12 +10,10 @@ Demo - https://e-commerce-website-j8wvkus9z-pudderz.vercel.app/
 
 ## To Do
 
-* Add searchBar and search page
-* Add filter options to category and store pages
 * Add darkMode option
-* store order information
-* responsive header
+* store more order information
 * sanitize file upload
+* work on styling admin routes
 
 
 
